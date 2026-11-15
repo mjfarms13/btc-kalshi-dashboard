@@ -50,6 +50,8 @@ h1{font-size:16px;margin:0}
 .fliptitle{font-size:15px;font-weight:800}
 .flipbar{height:9px;background:#354052;border-radius:10px;overflow:hidden;margin:9px 0}
 .flipbar div{height:100%;width:0;background:#f5c46a;transition:width .3s}
+.countdown{font-size:19px!important;font-weight:900!important;letter-spacing:.4px}
+.countdown-note{color:#f5c46a!important;font-size:10px!important;font-weight:700}
 @media(max-width:740px){
 .layout{grid-template-columns:1fr}
 .chart{height:300px}
@@ -132,20 +134,22 @@ h1{font-size:16px;margin:0}
 <div class="calls">
 <div class="call">
 <span class="muted">EARLY · 2M</span>
-<b id="early" class="neutral">PENDING</b>
+<b id="early" class="yellow countdown">⏳ --:--</b>
 <div id="earlyScore" class="detail">—</div>
 <div id="earlyPressure" class="detail">—</div>
 <div id="earlyShift" class="detail">—</div>
-<div id="earlyTime" class="detail">—</div>
+<div id="earlyTime" class="detail countdown-note">UNTIL EARLY CALL</div>
 </div>
+
 <div class="call">
 <span class="muted">FINAL · 5M LEFT</span>
-<b id="final" class="neutral">PENDING</b>
+<b id="final" class="yellow countdown">⏳ --:--</b>
 <div id="finalScore" class="detail">—</div>
 <div id="finalPressure" class="detail">—</div>
 <div id="finalShift" class="detail">—</div>
-<div id="finalTime" class="detail">—</div>
+<div id="finalTime" class="detail countdown-note">UNTIL FINAL CALL</div>
 </div>
+
 <div class="call">
 <span class="muted">LIVE · ROUND END</span>
 <b id="live" class="neutral">CONNECTING</b>
@@ -224,7 +228,8 @@ Waiting for Rosie's flip-check data
 
 <div class="small" style="margin-top:12px">
 EARLY and FINAL are locked for each round. LIVE updates throughout the round.
-Flip checks are conditions met, not a probability. A flip is not confirmed until Rosie confirms it.
+Countdowns show time until Rosie's scheduled call windows.
+Flip checks are conditions met, not a probability.
 Estimates are uncalibrated. Manual trading only.
 </div>
 </section>
@@ -279,12 +284,20 @@ return p>=60?"BUYERS GAINING":
 p<=40?"SELLERS GAINING":"MIXED";
 }
 
+function fmtSeconds(seconds){
+let s=Math.max(0,Math.ceil(seconds));
+return String(Math.floor(s/60)).padStart(2,"0")+":"+
+String(s%60).padStart(2,"0");
+}
+
 let bars=[],price=0,chart,candle,emaLines=[],targetLine;
 let levels=[],markers=null,rosie=null,rosieAt=0;
 let trades=[],whales=[],socket=null;
 let marketTicker="",kalshiClose=0;
 let loadingRosie=false,loadingKalshi=false;
 let lockedCache={ticker:null,EARLY:null,FINAL:null};
+let latestRoundSeconds=null;
+let latestRoundAt=0;
 
 function ema(a,n){
 if(!a.length)return [];
@@ -689,7 +702,11 @@ put("whale500",huge.length+" ("+
 huge.filter(x=>x.side==="buy").length+" buy)");
 }
 
-/* EARLY AND FINAL LOCKED CALLS */
+/* ========================================
+   EARLY AND FINAL COUNTDOWN ENGINE
+   EARLY: 13:00 REMAINING
+   FINAL: 10:00 REMAINING
+   ======================================== */
 
 function resetStage(prefix){
 put(prefix,"PENDING");
@@ -761,10 +778,69 @@ if(other&&typeof other==="object")return other;
 return null;
 }
 
-/* FLIP CHECKS */
+function currentRoundSeconds(){
+if(kalshiClose){
+return Math.max(0,Math.ceil(
+(kalshiClose-Date.now())/1000
+));
+}
+
+if(latestRoundSeconds!==null&&
+Date.now()-latestRoundAt<30000){
+return Math.max(0,Math.ceil(
+latestRoundSeconds-
+(Date.now()-latestRoundAt)/1000
+));
+}
+
+return Math.ceil(
+(900000-Date.now()%900000)/1000
+);
+}
+
+function updateCallCountdowns(seconds){
+const stages=[
+{prefix:"early",name:"EARLY",threshold:780},
+{prefix:"final",name:"FINAL",threshold:600}
+];
+
+for(const stage of stages){
+const record=lockedCache[stage.name];
+
+if(record){
+lockedStage(stage.prefix,record);
+continue;
+}
+
+const left=Math.ceil(seconds-stage.threshold);
+const title=$(stage.prefix);
+const time=$(stage.prefix+"Time");
+
+if(left>0){
+put(stage.prefix,"⏳ "+fmtSeconds(left));
+title.className="yellow countdown";
+put(stage.prefix+"Time","UNTIL "+stage.name+" CALL");
+time.className="detail countdown-note";
+}else{
+put(stage.prefix,"⏳ CALL DUE");
+title.className="yellow";
+put(stage.prefix+"Time","AWAITING ROSIE LOCK");
+time.className="detail countdown-note";
+}
+
+put(stage.prefix+"Score","—");
+put(stage.prefix+"Pressure","—");
+put(stage.prefix+"Shift","—");
+}
+}
+
+/* ========================================
+   FLIP CHECKS
+   ======================================== */
 
 function updateFlip(d){
 let raw=first(
+d.flip_confirmations,
 d.flip_checks,
 d.flip_check_count,
 d.flip_count,
@@ -794,7 +870,7 @@ put("flipChecks","— / 4");
 put("flipStatus","DATA UNAVAILABLE");
 put("flipDirection","—");
 put("flipExplanation",
-"Rosie must publish flip_checks through the signal API.");
+"Waiting for Rosie's flip confirmations.");
 $("flipFill").style.width="0%";
 return;
 }
@@ -807,7 +883,8 @@ $("flipFill").style.width=(count/total*100)+"%";
 let flip=dir(first(
 d.flip_direction,
 d.flip_side,
-d.reversal_direction
+d.reversal_direction,
+d.live_flip_direction
 ));
 
 put("flipDirection",flip?"WATCH "+flip:"MONITORING");
@@ -828,10 +905,13 @@ count>=2?"yellow":"neutral";
 
 put("flipExplanation",confirmed
 ?"Rosie reports a confirmed flip."
-:count+" of "+total+" conditions met. Not a confirmed reversal.");
+:count+" of "+total+
+" conditions support the current LIVE direction. Not a confirmed reversal.");
 }
 
-/* LIVE ROSIE */
+/* ========================================
+   LIVE ROSIE
+   ======================================== */
 
 function renderRosie(d){
 if(!d||typeof d!=="object"||d.ok===false)return;
@@ -843,12 +923,22 @@ return;
 }
 
 if(lockedCache.ticker!==d.ticker){
-lockedCache={ticker:d.ticker,EARLY:null,FINAL:null};
+lockedCache={
+ticker:d.ticker,
+EARLY:null,
+FINAL:null
+};
 }
 
 rosie=d;
 rosieAt=Date.now();
 put("rosieStatus","LIVE");
+
+let remaining=num(d.seconds_left);
+if(remaining!==null){
+latestRoundSeconds=remaining;
+latestRoundAt=Date.now();
+}
 
 for(let name of ["EARLY","FINAL"]){
 let record=getStage(d,name);
@@ -857,8 +947,7 @@ lockedCache[name]=JSON.parse(JSON.stringify(record));
 }
 }
 
-lockedStage("early",lockedCache.EARLY);
-lockedStage("final",lockedCache.FINAL);
+updateCallCountdowns(currentRoundSeconds());
 
 let live=dir(first(
 d.live_projection,d.live_direction,d.live_call
@@ -959,14 +1048,9 @@ loadingRosie=false;
 }
 
 function clock(){
-let s=kalshiClose
-?Math.max(0,Math.ceil((kalshiClose-Date.now())/1000))
-:Math.ceil((900000-Date.now()%900000)/1000);
+let s=currentRoundSeconds();
 
-put("clock",
-String(Math.floor(s/60)).padStart(2,"0")+":"+
-String(s%60).padStart(2,"0"));
-
+put("clock",fmtSeconds(s));
 $("clock").className=s<=60?"clock yellow":"clock";
 
 if(rosie&&Date.now()-rosieAt>90000){
@@ -976,6 +1060,8 @@ put("rosieStatus","STALE");
 put("liveTime",s<=60
 ?"CUTOFF WINDOW"
 :s+"s LEFT");
+
+updateCallCountdowns(s);
 }
 
 async function refreshKalshi(){
@@ -1012,14 +1098,42 @@ d.down_ask_cents,d.no_ask,d.down_ask
 put("kalshiUp",up!==null?up.toFixed(1)+"¢":"—");
 put("kalshiDown",down!==null?down.toFixed(1)+"¢":"—");
 
-marketTicker=d.ticker||d.market_ticker||"";
+let newTicker=d.ticker||d.market_ticker||"";
+
+if(newTicker&&newTicker!==marketTicker){
+marketTicker=newTicker;
+kalshiClose=0;
+latestRoundSeconds=null;
+latestRoundAt=0;
+
+if(lockedCache.ticker!==newTicker){
+lockedCache={
+ticker:newTicker,
+EARLY:null,
+FINAL:null
+};
+}
+
+if(rosie&&rosie.ticker!==newTicker){
+rosie=null;
+put("rosieStatus","NEW ROUND");
+}
+}
 
 let close=Date.parse(first(
 d.close_time,d.expiration_time,""
 ));
+
 kalshiClose=Number.isFinite(close)?close:0;
 
+let seconds=num(d.seconds_left);
+if(seconds!==null){
+latestRoundSeconds=seconds;
+latestRoundAt=Date.now();
+}
+
 put("kalshiMarket",marketTicker||"ACTIVE MARKET");
+clock();
 
 }catch(e){
 console.error(e);
