@@ -59,7 +59,6 @@ margin-right:3px
 .down{color:#ff7787}
 .wait{color:#a7b4c8}
 .yellow{color:#f5c46a}
-
 .calls{
 display:grid;
 grid-template-columns:repeat(3,minmax(0,1fr));
@@ -105,7 +104,6 @@ font-size:9px;
 color:#8496ad;
 margin-top:5px
 }
-
 .metric{
 background:#202d3e;
 border-radius:8px;
@@ -217,6 +215,12 @@ border:1px solid #52647d;
 padding:4px 7px;
 border-radius:6px
 }
+.sync-label{
+font-size:10px;
+text-align:center;
+color:#9baac0;
+margin-top:7px
+}
 @media(max-width:740px){
 .wrap{padding:7px}
 .layout{
@@ -273,9 +277,7 @@ Coinbase BTC-USD · Rosie live signals · manual trading
 <div class="patternbox">
 <div class="between">
 <b>LIVE CANDLE PATTERN · 1M</b>
-<span id="patternStatus" class="patternstatus">
-SCANNING
-</span>
+<span id="patternStatus" class="patternstatus">SCANNING</span>
 </div>
 <div id="patternName" class="patternname wait">
 WAITING FOR PATTERN
@@ -331,7 +333,7 @@ Historical chart labels are independent of Rosie's live calls.
 <div class="calls">
 
 <div class="call">
-<span class="muted">EARLY · 15–10m</span>
+<span class="muted">EARLY · 2M ELAPSED</span>
 <b id="early" class="wait">PENDING</b>
 <div id="earlyScore" class="stage-score">—</div>
 <div id="earlyPressure" class="stage-detail">—</div>
@@ -341,7 +343,7 @@ Historical chart labels are independent of Rosie's live calls.
 </div>
 
 <div class="call">
-<span class="muted">MID · 10–5m</span>
+<span class="muted">MID · OBSERVATION</span>
 <b id="mid" class="wait">PENDING</b>
 <div id="midScore" class="stage-score">—</div>
 <div id="midPressure" class="stage-detail">—</div>
@@ -351,7 +353,7 @@ Historical chart labels are independent of Rosie's live calls.
 </div>
 
 <div class="call">
-<span class="muted">FINAL · LAST 5m</span>
+<span class="muted">FINAL · 5M LEFT</span>
 <b id="final" class="wait">PENDING</b>
 <div id="finalScore" class="stage-score">—</div>
 <div id="finalPressure" class="stage-detail">—</div>
@@ -363,8 +365,8 @@ Historical chart labels are independent of Rosie's live calls.
 </div>
 
 <div class="small" style="text-align:center">
-Stage readings update while active and remain visible
-through the current round. A lean is not a confirmed call.
+EARLY and FINAL show Rosie's locked Telegram calls.
+MID is a live observation, not a tracked prediction.
 </div>
 
 <div class="metrics">
@@ -378,9 +380,15 @@ through the current round. A lean is not a confirmed call.
 </div>
 </div>
 
+<div class="sync-label">TELEGRAM · LIVE ROUND-END PREDICTION</div>
 <div id="main" class="big wait">WAIT</div>
 <div id="reason" class="reason">
 Waiting for Rosie live signal feed
+</div>
+
+<div class="row">
+<span>Confirmed score signal</span>
+<b id="confirmed" class="wait">—</b>
 </div>
 
 <div class="metrics">
@@ -396,7 +404,7 @@ Waiting for Rosie live signal feed
 
 <div class="between">
 <b>BUY / SELL PRESSURE</b>
-<span class="tag">Coinbase · 2m</span>
+<span id="pressureSource" class="tag">Rosie · Coinbase 3m</span>
 </div>
 
 <div class="bar">
@@ -424,13 +432,18 @@ Waiting for Rosie live signal feed
 </div>
 
 <div class="row">
-<span>RSI (14) · chart</span>
+<span>RSI (14) · Rosie 15m</span>
 <b id="rsi">—</b>
 </div>
 
 <div class="row">
-<span>MACD · chart</span>
+<span>MACD histogram · Rosie 15m</span>
 <b id="macd">—</b>
+</div>
+
+<div class="row">
+<span>Rosie momentum</span>
+<b id="momentum">—</b>
 </div>
 
 <div class="row">
@@ -449,13 +462,13 @@ Waiting for Rosie live signal feed
 </div>
 
 <div class="note">
-Rosie's estimated percentages are uncalibrated,
+Rosie's LIVE prediction matches the background worker
+used for Telegram. It is separate from the confirmed
+score signal. Estimated percentages are uncalibrated,
 not verified winning probabilities.
-Stage leans describe observed directional pressure,
-not trading instructions.
-Rosie calls come from the background bot.
-Candle patterns, chart indicators and local Coinbase
-pressure are separate.
+EARLY and FINAL are locked calls when recorded.
+MID and historical chart markers are observations.
+Coinbase websocket whale counts are separate.
 Kalshi quotes are asks, not fills.
 Manual trading only.
 </div>
@@ -686,8 +699,6 @@ name,short,dir,meaning,priority,time:c.time
 let priorDown=p.close<p2.close;
 let priorUp=p.close>p2.close;
 
-/* Engulfing */
-
 if(
 p.close<p.open&&bull&&
 c.open<=p.close&&c.close>=p.open&&
@@ -716,8 +727,6 @@ return result(
 );
 }
 
-/* Morning and Evening Star */
-
 let firstBody=Math.abs(p2.close-p2.open);
 let middleBody=prevBody;
 let firstRange=p2.high-p2.low;
@@ -728,7 +737,6 @@ firstBody/firstRange>=0.5&&
 middleBody/prevRange<=0.35&&
 body/range>=0.5
 ){
-
 if(
 p2.close<p2.open&&bull&&
 c.close>(p2.open+p2.close)/2
@@ -755,8 +763,6 @@ return result(
 );
 }
 }
-
-/* Hammer and Shooting Star */
 
 if(
 body/range<=0.38&&
@@ -785,8 +791,6 @@ return result(
 8
 );
 }
-
-/* Doji */
 
 if(body/range<=0.10){
 return result(
@@ -1042,10 +1046,6 @@ $("trend").className=
 d.trend==="UP"?"up":
 d.trend==="DOWN"?"down":"wait";
 
-$("rsi").textContent=d.r.toFixed(1);
-$("macd").textContent=d.h>0?"BULLISH":"BEARISH";
-$("macd").className=d.h>0?"up":"down";
-
 $("tp").textContent=
 d.r>72||d.r<28?"WATCH":"—";
 
@@ -1057,7 +1057,7 @@ target&&lastPrice
 :"Target unavailable";
 }
 
-/* LIVE COINBASE PRESSURE */
+/* LOCAL COINBASE FLOW AND WHALES */
 
 function flow(){
 let now=Date.now();
@@ -1072,12 +1072,37 @@ if(x.side==="buy")buy+=x.notional;
 else sell+=x.notional;
 });
 
-if(buy+sell){
-let pct=Math.round(100*buy/(buy+sell));
+let workerFresh=
+rosieData&&
+Date.now()-rosieReceived<=90000&&
+Number.isFinite(Number(rosieData.buy_pressure))&&
+rosieData.buy_pressure!=null;
+
+let pct=null;
+
+if(workerFresh){
+pct=Number(rosieData.buy_pressure);
+$("pressureSource").textContent=
+"Rosie · Coinbase 3m";
+}else if(buy+sell){
+pct=100*buy/(buy+sell);
+$("pressureSource").textContent=
+"Local · Coinbase 2m";
+}else{
+$("pressureSource").textContent=
+"Coinbase · collecting";
+}
+
+if(pct!=null){
+pct=Math.max(0,Math.min(100,pct));
 
 $("buybar").style.width=pct+"%";
-$("buyers").textContent="Buy "+pct+"%";
-$("sellers").textContent="Sell "+(100-pct)+"%";
+
+$("buyers").textContent=
+"Buy "+pct.toFixed(1)+"%";
+
+$("sellers").textContent=
+"Sell "+(100-pct).toFixed(1)+"%";
 
 $("shift").textContent=
 pct>=60?"BUYERS GAINING":
@@ -1088,9 +1113,11 @@ pct>=60?"up":
 pct<=40?"down":"wait";
 
 }else{
+$("buybar").style.width="50%";
 $("buyers").textContent="Buy —";
 $("sellers").textContent="Sell —";
 $("shift").textContent="Collecting trades";
+$("shift").className="wait";
 }
 
 let a=bigTrades.filter(x=>x.notional>=100000);
@@ -1109,7 +1136,7 @@ b.filter(x=>x.side==="buy").length+
 $("whale500").className=b.length?"yellow":"wait";
 }
 
-/* ROSIE V2.7 STAGE HISTORY DISPLAY */
+/* ROSIE TELEGRAM SYNC V3.3 */
 
 function signalClass(v){
 return v==="UP"?"up":
@@ -1133,7 +1160,6 @@ return "wait";
 function resetStage(id){
 $(id).textContent="PENDING";
 $(id).className="wait";
-
 $(id+"Score").textContent="—";
 $(id+"Pressure").textContent="—";
 $(id+"Shift").textContent="—";
@@ -1177,8 +1203,8 @@ s.buy_pressure!=null&&
 s.sell_pressure!=null
 ){
 $(id+"Pressure").textContent=
-"BUY "+Number(s.buy_pressure).toFixed(0)+"% · "+
-"SELL "+Number(s.sell_pressure).toFixed(0)+"%";
+"BUY "+Number(s.buy_pressure).toFixed(1)+"% · "+
+"SELL "+Number(s.sell_pressure).toFixed(1)+"%";
 }else{
 $(id+"Pressure").textContent="Pressure unavailable";
 }
@@ -1206,8 +1232,101 @@ $(id+"Time").textContent="—";
 });
 }
 
+function renderLockedStage(
+id,
+status,
+snapshot,
+observation
+){
+let direction=
+snapshot&&snapshot.direction?
+snapshot.direction:status;
+
+if(!direction){
+direction="PENDING";
+}
+
+$(id).textContent=
+direction==="UP"?"LOCKED UP":
+direction==="DOWN"?"LOCKED DOWN":
+direction==="WAIT"?"LOCKED WAIT":
+direction;
+
+$(id).className=signalClass(direction);
+
+if(!snapshot){
+$(id+"Score").textContent=
+direction==="PENDING"?"Awaiting lock":
+direction==="NOT RECORDED"?"No locked call":
+"—";
+
+$(id+"Pressure").textContent="—";
+$(id+"Shift").textContent="—";
+$(id+"Reversal").textContent="—";
+$(id+"Time").textContent="—";
+return;
+}
+
+let up=Number(snapshot.up);
+let down=Number(snapshot.down);
+
+if(
+Number.isFinite(up)&&
+Number.isFinite(down)
+){
+$(id+"Score").textContent=
+"UP "+up.toFixed(1)+"% · "+
+"DOWN "+down.toFixed(1)+"%";
+}else{
+$(id+"Score").textContent="—";
+}
+
+if(
+snapshot.up_score!=null&&
+snapshot.down_score!=null
+){
+$(id+"Shift").textContent=
+"Score "+
+Number(snapshot.up_score).toFixed(0)+
+" UP / "+
+Number(snapshot.down_score).toFixed(0)+
+" DOWN";
+}else{
+$(id+"Shift").textContent="Locked call";
+}
+
+if(snapshot.buy_pressure!=null){
+let p=Number(snapshot.buy_pressure);
+
+$(id+"Pressure").textContent=
+"BUY "+p.toFixed(1)+"% · "+
+"SELL "+(100-p).toFixed(1)+"%";
+}else{
+$(id+"Pressure").textContent="—";
+}
+
+$(id+"Reversal").textContent=
+"Locked Telegram prediction";
+
+let stamp=Date.parse(snapshot.recorded_at);
+
+$(id+"Time").textContent=
+Number.isFinite(stamp)
+?"Locked "+
+new Date(stamp).toLocaleTimeString([],{
+hour:"numeric",
+minute:"2-digit"
+})
+:snapshot.seconds_left!=null
+?"Locked with "+
+Math.ceil(snapshot.seconds_left/60)+
+"m remaining"
+:"Locked";
+}
+
 function clearRosie(message){
 rosieData=null;
+rosieReceived=0;
 
 renderStageHistory({});
 
@@ -1218,11 +1337,18 @@ $("rosieUp").textContent="—";
 $("rosieDown").textContent="—";
 $("strength").textContent="—";
 $("reversal").textContent="—";
+$("confirmed").textContent="—";
+$("confirmed").className="wait";
+$("rsi").textContent="—";
+$("macd").textContent="—";
+$("momentum").textContent="—";
 
 $("rosieStatus").textContent="OFFLINE";
 
 $("reason").textContent=
 message||"Rosie feed unavailable";
+
+flow();
 }
 
 function renderRosie(){
@@ -1240,22 +1366,57 @@ clearRosie(
 return;
 }
 
-/* Display saved Early, Mid and Final observations */
+/* Retain MID observation display. */
 
 renderStageHistory(
 d.stage_history||{}
 );
 
-/* Keep original confirmed live call */
+/* EARLY and FINAL use exact Telegram locks. */
 
-let direction=d.direction||"WAIT";
+let locked=d.locked_stages||{};
+
+renderLockedStage(
+"early",
+d.early_call||"PENDING",
+locked.EARLY,
+(d.stage_history||{}).EARLY
+);
+
+renderLockedStage(
+"final",
+d.final_call||"PENDING",
+locked.FINAL,
+(d.stage_history||{}).FINAL
+);
+
+/* Telegram LIVE round-end prediction. */
+
+let projection=
+d.live_projection==="UP"||
+d.live_projection==="DOWN"||
+d.live_projection==="WAIT"
+?d.live_projection
+:null;
 
 $("main").textContent=
-direction==="UP"?"BUY UP":
-direction==="DOWN"?"BUY DOWN":"WAIT";
+projection==="UP"?"LIVE UP":
+projection==="DOWN"?"LIVE DOWN":
+projection==="WAIT"?"LIVE WAIT":
+"AWAITING LIVE";
 
 $("main").className=
-"big "+signalClass(direction);
+"big "+signalClass(projection);
+
+/* Confirmed signal is separate. */
+
+let confirmed=
+d.confirmed_direction||d.direction||"WAIT";
+
+$("confirmed").textContent=confirmed;
+$("confirmed").className=signalClass(confirmed);
+
+/* Exact worker estimates. */
 
 $("rosieUp").textContent=
 d.up_probability!=null&&
@@ -1280,16 +1441,52 @@ $("reversal").className=
 d.reversal==="WATCH UP"?"up":
 d.reversal==="WATCH DOWN"?"down":"wait";
 
+/* Exact worker 15-minute indicators. */
+
+$("rsi").textContent=
+d.rsi_15m!=null
+?Number(d.rsi_15m).toFixed(1)
+:"—";
+
+if(d.macd_15m!=null){
+let macd=Number(d.macd_15m);
+
+$("macd").textContent=
+(macd>=0?"+":"")+macd.toFixed(2);
+
+$("macd").className=
+macd>0?"up":macd<0?"down":"wait";
+}else{
+$("macd").textContent="—";
+$("macd").className="wait";
+}
+
+let momentum=d.momentum||"—";
+let change=d.momentum_change;
+
+$("momentum").textContent=
+momentum+
+(change!=null
+?" ("+(Number(change)>=0?"+":"")+
+Number(change).toFixed(3)+"%)"
+:"");
+
+$("momentum").className=
+momentum==="RISING"?"up":
+momentum==="FALLING"?"down":"wait";
+
 $("rosieStatus").textContent="● LIVE";
 
 let stamp=Date.parse(d.updated_at);
 
 $("reason").textContent=
-"ROSIE "+(d.phase||"")+" CALL · Updated "+
+"Rosie V"+(d.worker_version||"—")+
+" · Updated "+
 (Number.isFinite(stamp)
 ?new Date(stamp).toLocaleTimeString()
 :"—");
 
+flow();
 updateChartMetrics();
 }
 
