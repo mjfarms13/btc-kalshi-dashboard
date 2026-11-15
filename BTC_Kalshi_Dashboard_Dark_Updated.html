@@ -52,6 +52,23 @@ h1{font-size:16px;margin:0}
 .flipbar div{height:100%;width:0;background:#f5c46a;transition:width .3s}
 .countdown{font-size:19px!important;font-weight:900!important;letter-spacing:.4px}
 .countdown-note{color:#f5c46a!important;font-size:10px!important;font-weight:700}
+.unlock-trading{
+display:block;
+margin-top:12px;
+padding:13px;
+background:#263d55;
+color:#edf3ff;
+text-align:center;
+text-decoration:none;
+border:1px solid #4b6885;
+border-radius:9px;
+font-weight:800;
+font-size:14px;
+}
+.unlock-trading:focus-visible{
+outline:2px solid #35d39a;
+outline-offset:3px;
+}
 @media(max-width:740px){
 .layout{grid-template-columns:1fr}
 .chart{height:300px}
@@ -110,6 +127,7 @@ h1{font-size:16px;margin:0}
 </label>
 <span id="gap" class="small">—</span>
 </div>
+
 <div class="quote" style="margin-top:10px">
 <div>
 <div class="muted">UP ASK</div>
@@ -120,9 +138,26 @@ h1{font-size:16px;margin:0}
 <b id="kalshiDown" class="down">—</b>
 </div>
 </div>
-<div id="kalshiMarket" class="small" style="margin-top:8px">Loading market</div>
+
+<div id="kalshiMarket" class="small" style="margin-top:8px">
+Loading market
 </div>
-<div class="small">Chart labels are simplified technical observations, not trade recommendations.</div>
+
+<a class="unlock-trading"
+   href="https://btc-kalshi-api.onrender.com/rosie/login">
+🔐 UNLOCK TRADING
+</a>
+
+<div class="small" style="margin-top:7px">
+Opens Rosie's private Trading Center.
+Manual order execution is not enabled yet.
+</div>
+</div>
+
+<div class="small">
+Chart labels are simplified technical observations,
+not trade recommendations.
+</div>
 </section>
 
 <section class="panel">
@@ -171,9 +206,13 @@ h1{font-size:16px;margin:0}
 </div>
 </div>
 
-<div class="muted" style="text-align:center">LIVE ROUND-END PREDICTION</div>
+<div class="muted" style="text-align:center">
+LIVE ROUND-END PREDICTION
+</div>
 <div id="main" class="big neutral">CONNECTING</div>
-<div id="reason" class="small" style="text-align:center">Connecting to Rosie</div>
+<div id="reason" class="small" style="text-align:center">
+Connecting to Rosie
+</div>
 
 <div class="flipbox">
 <div class="between">
@@ -227,7 +266,8 @@ Waiting for Rosie's next scalp flip alert.
 <div class="row"><span>Take Profit · Chart</span><b id="tp">—</b></div>
 
 <div class="small" style="margin-top:12px">
-EARLY and FINAL are locked for each round. LIVE updates throughout the round.
+EARLY and FINAL are locked for each round.
+LIVE updates throughout the round.
 Countdowns show time until Rosie's scheduled call windows.
 Scalp flip evidence is scored out of 10, not a probability.
 Estimates are uncalibrated. Manual trading only.
