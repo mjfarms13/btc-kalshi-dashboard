@@ -178,15 +178,15 @@ h1{font-size:16px;margin:0}
 <div class="flipbox">
 <div class="between">
 <span class="fliptitle">⚡ ROSIE FLIP WATCH</span>
-<b id="flipChecks" class="yellow">— / 4</b>
+<b id="flipChecks" class="yellow">— / 10</b>
 </div>
 <div class="flipbar"><div id="flipFill"></div></div>
 <div class="between">
-<b id="flipStatus" class="neutral">WAITING FOR DATA</b>
+<b id="flipStatus" class="neutral">MONITORING</b>
 <span id="flipDirection" class="small">—</span>
 </div>
 <div id="flipExplanation" class="small" style="margin-top:7px">
-Waiting for Rosie's flip-check data
+Waiting for Rosie's next scalp flip alert.
 </div>
 </div>
 
@@ -229,7 +229,7 @@ Waiting for Rosie's flip-check data
 <div class="small" style="margin-top:12px">
 EARLY and FINAL are locked for each round. LIVE updates throughout the round.
 Countdowns show time until Rosie's scheduled call windows.
-Flip checks are conditions met, not a probability.
+Scalp flip evidence is scored out of 10, not a probability.
 Estimates are uncalibrated. Manual trading only.
 </div>
 </section>
@@ -702,11 +702,7 @@ put("whale500",huge.length+" ("+
 huge.filter(x=>x.side==="buy").length+" buy)");
 }
 
-/* ========================================
-   EARLY AND FINAL COUNTDOWN ENGINE
-   EARLY: 13:00 REMAINING
-   FINAL: 10:00 REMAINING
-   ======================================== */
+/* EARLY AND FINAL COUNTDOWN ENGINE */
 
 function resetStage(prefix){
 put(prefix,"PENDING");
@@ -834,84 +830,117 @@ put(stage.prefix+"Shift","—");
 }
 }
 
-/* ========================================
-   FLIP CHECKS
-   ======================================== */
+/* ROSIE SCALP FLIP WATCH */
 
 function updateFlip(d){
-let raw=first(
-d.flip_confirmations,
-d.flip_checks,
-d.flip_check_count,
-d.flip_count,
-d.flip_checks_met,
-d.flip_progress,
-d.flip_state&&d.flip_state.checks
-);
 
-let count=null,total=4;
+const flip=d.scalp_flip;
 
-if(typeof raw==="number")count=raw;
-else if(typeof raw==="string"){
-let m=raw.match(/(\d+)\s*\/\s*(\d+)/);
-if(m){
-count=Number(m[1]);
-total=Number(m[2]);
-}else if(/^\d+$/.test(raw)){
-count=Number(raw);
-}
-}else if(raw&&typeof raw==="object"){
-count=num(first(raw.met,raw.count,raw.passed));
-total=num(first(raw.total,raw.required,4))||4;
-}
-
-if(count===null){
-put("flipChecks","— / 4");
-put("flipStatus","DATA UNAVAILABLE");
+function resetFlip(){
+put("flipChecks","— / 10");
+put("flipStatus","MONITORING");
 put("flipDirection","—");
 put("flipExplanation",
-"Waiting for Rosie's flip confirmations.");
+"Waiting for Rosie's next scalp flip alert.");
+$("flipStatus").className="neutral";
+$("flipDirection").className="small";
 $("flipFill").style.width="0%";
+$("flipFill").style.background="#f5c46a";
+}
+
+if(!flip||typeof flip!=="object"){
+resetFlip();
 return;
 }
 
-count=Math.max(0,Math.min(total,count));
-
-put("flipChecks",count+" / "+total);
-$("flipFill").style.width=(count/total*100)+"%";
-
-let flip=dir(first(
-d.flip_direction,
-d.flip_side,
-d.reversal_direction,
-d.live_flip_direction
-));
-
-put("flipDirection",flip?"WATCH "+flip:"MONITORING");
-
-let confirmed=Boolean(first(
-d.flip_confirmed,
-d.confirmed_flip,
-false
-));
-
-let label=confirmed?"FLIP CONFIRMED":
-count>=total?"CHECKS COMPLETE":
-count>=2?"FLIP WATCH":"LOW FLIP EVIDENCE";
-
-put("flipStatus",label);
-$("flipStatus").className=confirmed?"up":
-count>=2?"yellow":"neutral";
-
-put("flipExplanation",confirmed
-?"Rosie reports a confirmed flip."
-:count+" of "+total+
-" conditions support the current LIVE direction. Not a confirmed reversal.");
+if(marketTicker&&d.ticker!==marketTicker){
+resetFlip();
+return;
 }
 
-/* ========================================
-   LIVE ROSIE
-   ======================================== */
+const observed=Date.parse(flip.observed_at);
+
+if(
+!Number.isFinite(observed)||
+Date.now()-observed>120000||
+observed>Date.now()+10000
+){
+resetFlip();
+return;
+}
+
+const stage=String(flip.stage||"").toUpperCase();
+const side=dir(flip.side);
+const score=num(flip.score);
+
+if(
+!["WATCH","RISK","CONFIRMED","FAILED"].includes(stage)||
+!side
+){
+resetFlip();
+return;
+}
+
+const labels={
+WATCH:"EARLY FLIP WATCH",
+RISK:"FLIP RISK",
+CONFIRMED:"FLIP CONFIRMED",
+FAILED:"FLIP FAILED"
+};
+
+const colors={
+WATCH:"#f5c46a",
+RISK:"#ffad65",
+CONFIRMED:"#35d39a",
+FAILED:"#ff7787"
+};
+
+const statusClasses={
+WATCH:"yellow",
+RISK:"yellow",
+CONFIRMED:"up",
+FAILED:"down"
+};
+
+put("flipStatus",labels[stage]);
+$("flipStatus").className=statusClasses[stage];
+
+put("flipDirection",side);
+$("flipDirection").className="small "+cls(side);
+
+const evidence=score===null
+?0:Math.max(0,Math.min(10,score));
+
+put("flipChecks",score===null
+?"— / 10"
+:evidence.toFixed(0)+" / 10");
+
+$("flipFill").style.width=(evidence*10)+"%";
+$("flipFill").style.background=colors[stage];
+
+const reason=String(flip.reason||"").trim();
+const remaining=num(flip.seconds_left);
+
+const timeText=remaining!==null
+?" · "+Math.max(0,Math.round(remaining))+
+"s left when detected"
+:"";
+
+const explanation={
+WATCH:"Early reversal evidence detected.",
+RISK:"Reversal risk is increasing.",
+CONFIRMED:"Rosie's scalp flip conditions confirmed.",
+FAILED:"Price moved against the confirmed scalp flip."
+};
+
+put("flipExplanation",
+explanation[stage]+
+(reason?" "+reason+".":"")+
+timeText+
+" · Observation only.");
+}
+
+/* LIVE ROSIE */
 
 function renderRosie(d){
 if(!d||typeof d!=="object"||d.ok===false)return;
@@ -1062,6 +1091,9 @@ put("liveTime",s<=60
 :s+"s LEFT");
 
 updateCallCountdowns(s);
+
+// Clear expired scalp alerts even between API refreshes.
+if(rosie)updateFlip(rosie);
 }
 
 async function refreshKalshi(){
