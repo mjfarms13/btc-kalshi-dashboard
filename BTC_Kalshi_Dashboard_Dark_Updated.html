@@ -74,6 +74,17 @@ outline-offset:3px;
 .chart{height:300px}
 .panel{padding:9px}
 }
+
+/* ROSIE HOLD / EXIT PANEL */
+.holdpanel{margin:10px 0;padding:10px;border:1px solid #465a72;border-radius:10px;background:#1b2737}
+.holdcards{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}
+.holdcard{min-width:0;background:#202e40;padding:10px;border:1px solid #35485f;border-radius:8px}
+.holdcard strong{display:block;font-size:15px;margin:5px 0}
+.holdreason{font-size:11px;line-height:1.5;color:#cad5e6}
+.holdchecks{font-size:10px;color:#a7b4c8}
+.holdwhy{margin-top:8px;padding:8px;background:#121c2b;border-radius:8px;line-height:1.5}
+.holdwhy b{color:#e7eef8}
+.holdstale{color:#f5c46a;font-size:10px}
 </style>
 </head>
 <body>
@@ -214,6 +225,37 @@ LIVE ROUND-END PREDICTION
 Connecting to Rosie
 </div>
 
+<!-- HOLD / EXIT ENGINE -->
+<div class="holdpanel" id="holdPanel" aria-live="polite">
+<div class="between">
+<b>🧭 ROSIE · HOLD / EXIT</b>
+<span id="holdFresh" class="tag">WAITING</span>
+</div>
+<div class="holdcards">
+<div class="holdcard">
+<div class="muted">IF HOLDING UP</div>
+<strong id="holdUp" class="neutral">WAITING</strong>
+<div id="holdUpChecks" class="holdchecks">—</div>
+<div id="holdUpReason" class="holdreason">Waiting for fresh signals.</div>
+</div>
+<div class="holdcard">
+<div class="muted">IF HOLDING DOWN</div>
+<strong id="holdDown" class="neutral">WAITING</strong>
+<div id="holdDownChecks" class="holdchecks">—</div>
+<div id="holdDownReason" class="holdreason">Waiting for fresh signals.</div>
+</div>
+</div>
+<div class="holdwhy">
+<b>WHY / MARKET CONTEXT</b>
+<div id="holdContext" class="holdreason">Collecting pressure, momentum, RSI and live direction.</div>
+</div>
+<div class="small" style="margin-top:7px">
+Advisory only, not an instruction to sell. This HTML estimate uses 5 available checks;
+Telegram uses 6 including the worker's 15-minute EMA trend.
+It cannot see your entry price, fees or live exit bid.
+</div>
+</div>
+
 <div class="flipbox">
 <div class="between">
 <span class="fliptitle">⚡ ROSIE FLIP WATCH</span>
@@ -339,6 +381,8 @@ let lockedCache={ticker:null,EARLY:null,FINAL:null};
 let latestRoundSeconds=null;
 let latestRoundAt=0;
 
+/* TECHNICAL INDICATORS */
+
 function ema(a,n){
 if(!a.length)return [];
 let k=2/(n+1),v=a[0];
@@ -366,7 +410,8 @@ function calc(){
 if(bars.length<55)return null;
 let c=bars.map(x=>x.close);
 let a=ema(c,9),b=ema(c,21),e=ema(c,50);
-let m=ema(c,12).map((x,i)=>x-ema(c,26)[i]);
+let slow=ema(c,26);
+let m=ema(c,12).map((x,i)=>x-slow[i]);
 let hist=m.at(-1)-ema(m,9).at(-1);
 let r=rsi(c);
 let score=
@@ -377,6 +422,8 @@ let score=
 (r>53?1:r<47?-1:0);
 return {c,a,b,e,hist,r,score};
 }
+
+/* CHART */
 
 function initChart(){
 if(!window.LightweightCharts){
@@ -431,6 +478,8 @@ height:$("chart").clientHeight
 }
 }
 
+/* CANDLE PATTERNS */
+
 function pattern(){
 if(bars.length<3)return;
 let c=bars.at(-1),p=bars.at(-2);
@@ -464,6 +513,8 @@ $("patternName").className=cls(side);
 put("patternMeaning",meaning);
 put("patternStatus",name==="NO PATTERN"?"SCANNING":"FORMING");
 }
+
+/* EMA / SUPPORT / RESISTANCE */
 
 function draw(){
 if(!candle||bars.length<55)return;
@@ -522,6 +573,8 @@ put("sr",(s[0]?money(s[0]):"—")+" / "+
 (r[0]?money(r[0]):"—"));
 }
 
+/* BUY / FLIP / SCALP CHART MARKERS */
+
 function chartSignals(){
 if(!markers||bars.length<60)return;
 let output=[],previous="",lastSignal=-20;
@@ -559,6 +612,8 @@ text:label
 markers.setMarkers(output.slice(-35));
 }
 
+/* COINBASE CANDLE HISTORY */
+
 async function history(){
 try{
 let r=await fetch(
@@ -590,6 +645,8 @@ put("status","HISTORY OFFLINE");
 console.error(e);
 }
 }
+
+/* LIVE PRICE */
 
 function tick(v,time=Date.now()){
 let p=num(v);
@@ -649,6 +706,8 @@ lineWidth:2,lineStyle:2,title:"TARGET"
 }
 }
 
+/* COINBASE LIVE STREAM */
+
 function connect(){
 try{
 socket=new WebSocket("wss://ws-feed.exchange.coinbase.com");
@@ -703,6 +762,8 @@ setTimeout(connect,4000);
 }
 }
 
+/* BUY / SELL PRESSURE */
+
 function flow(){
 let now=Date.now();
 trades=trades.filter(x=>x.t>now-120000);
@@ -742,7 +803,7 @@ put("whale500",huge.length+" ("+
 huge.filter(x=>x.side==="buy").length+" buy)");
 }
 
-/* EARLY AND FINAL COUNTDOWN ENGINE */
+/* EARLY / FINAL LOCKS */
 
 function resetStage(prefix){
 put(prefix,"PENDING");
@@ -870,10 +931,161 @@ put(stage.prefix+"Shift","—");
 }
 }
 
-/* ROSIE SCALP FLIP WATCH */
+/* HOLD / CAUTION / EXIT ENGINE
+   Five checks from existing Rosie API.
+   Telegram's six-check engine remains separate.
+*/
+
+function holdGuidance(d,held){
+const live=dir(first(
+d.live_projection,d.live_direction,d.direction
+));
+const pressure=num(d.buy_pressure);
+const rsiValue=num(d.rsi_15m);
+const us=num(d.up_score);
+const ds=num(d.down_score);
+const momentum=String(d.momentum||"").toUpperCase();
+
+const warnings=[];
+let available=0;
+
+function check(condition,message){
+if(condition===null)return;
+available++;
+if(condition)warnings.push(message);
+}
+
+check(
+live?live!==held:null,
+"Rosie's live direction opposes "+held
+);
+
+check(
+pressure===null?null:
+held==="UP"?pressure<=45:pressure>=55,
+held==="UP"?
+"Selling pressure is elevated":
+"Buying pressure is elevated"
+);
+
+check(
+rsiValue===null?null:
+held==="UP"?rsiValue<47:rsiValue>53,
+held==="UP"?
+"15M RSI is weakening":
+"15M RSI is strengthening"
+);
+
+check(
+["RISING","FALLING"].includes(momentum)?
+(held==="UP"?momentum==="FALLING":momentum==="RISING"):null,
+held==="UP"?
+"Momentum is falling":
+"Momentum is rising"
+);
+
+check(
+us===null||ds===null?null:
+held==="UP"?ds>=us+20:us>=ds+20,
+"Opposite signal score leads by 20 or more"
+);
+
+let state="WAIT / DATA";
+
+if(available===5){
+if(warnings.length>=4)state="EXIT WATCH";
+else if(warnings.length>=2||
+currentRoundSeconds()<=60)state="CAUTION";
+else state="HOLD LEAN";
+}
+
+return {
+state,
+count:warnings.length,
+available,
+reason:available<5?
+"Not enough indicators for a complete assessment.":
+warnings.length?
+warnings.slice(0,3).join(" · "):
+"No major opposing signals in the five checks."
+};
+}
+
+function updateHold(d){
+const stale=!d||
+Date.now()-rosieAt>90000||
+(marketTicker&&d.ticker!==marketTicker);
+
+if(stale){
+for(const side of ["Up","Down"]){
+put("hold"+side,"STALE / WAIT");
+$("hold"+side).className="yellow";
+put("hold"+side+"Checks","No current guidance");
+put("hold"+side+"Reason",
+"Waiting for fresh signals from this market.");
+}
+put("holdFresh","STALE");
+put("holdContext",
+"Current data unavailable. Do not rely on an earlier HOLD / EXIT status.");
+return;
+}
+
+for(const side of ["UP","DOWN"]){
+const result=holdGuidance(d,side);
+const name=side==="UP"?"Up":"Down";
+
+put("hold"+name,result.state);
+
+$("hold"+name).className=
+result.state==="EXIT WATCH"?"down":
+result.state==="CAUTION"||
+result.state==="WAIT / DATA"?"yellow":"up";
+
+put("hold"+name+"Checks",
+result.count+"/"+result.available+
+" available warning checks");
+
+put("hold"+name+"Reason",result.reason);
+}
+
+const pressure=num(d.buy_pressure);
+const target=num(d.target);
+const btc=num(d.btc_price);
+const rsiValue=num(d.rsi_15m);
+const parts=[];
+
+if(pressure!==null){
+parts.push(
+"Buyers "+pressure.toFixed(1)+"% · Sellers "+
+(100-pressure).toFixed(1)+"%"
+);
+}
+
+if(d.momentum){
+parts.push("Momentum "+String(d.momentum));
+}
+
+if(btc!==null&&target!==null){
+let diff=btc-target;
+parts.push(
+"BTC vs target "+(diff>=0?"+":"")+
+diff.toFixed(2)+" USD"
+);
+}
+
+if(rsiValue!==null){
+parts.push("15M RSI "+rsiValue.toFixed(1));
+}
+
+put("holdContext",parts.length?
+parts.join(" | "):"Collecting evidence");
+
+put("holdFresh","LIVE");
+}
+
+/* SCALP FLIP MONITOR */
 
 function updateFlip(d){
-
 const flip=d.scalp_flip;
 
 function resetFlip(){
@@ -900,11 +1112,9 @@ return;
 
 const observed=Date.parse(flip.observed_at);
 
-if(
-!Number.isFinite(observed)||
+if(!Number.isFinite(observed)||
 Date.now()-observed>120000||
-observed>Date.now()+10000
-){
+observed>Date.now()+10000){
 resetFlip();
 return;
 }
@@ -913,10 +1123,8 @@ const stage=String(flip.stage||"").toUpperCase();
 const side=dir(flip.side);
 const score=num(flip.score);
 
-if(
-!["WATCH","RISK","CONFIRMED","FAILED"].includes(stage)||
-!side
-){
+if(!["WATCH","RISK","CONFIRMED","FAILED"].includes(stage)||
+!side){
 resetFlip();
 return;
 }
@@ -944,16 +1152,14 @@ FAILED:"down"
 
 put("flipStatus",labels[stage]);
 $("flipStatus").className=statusClasses[stage];
-
 put("flipDirection",side);
 $("flipDirection").className="small "+cls(side);
 
-const evidence=score===null
-?0:Math.max(0,Math.min(10,score));
+const evidence=score===null?0:
+Math.max(0,Math.min(10,score));
 
-put("flipChecks",score===null
-?"— / 10"
-:evidence.toFixed(0)+" / 10");
+put("flipChecks",score===null?"— / 10":
+evidence.toFixed(0)+" / 10");
 
 $("flipFill").style.width=(evidence*10)+"%";
 $("flipFill").style.background=colors[stage];
@@ -961,10 +1167,9 @@ $("flipFill").style.background=colors[stage];
 const reason=String(flip.reason||"").trim();
 const remaining=num(flip.seconds_left);
 
-const timeText=remaining!==null
-?" · "+Math.max(0,Math.round(remaining))+
-"s left when detected"
-:"";
+const timeText=remaining!==null?
+" · "+Math.max(0,Math.round(remaining))+
+"s left when detected":"";
 
 const explanation={
 WATCH:"Early reversal evidence detected.",
@@ -980,7 +1185,7 @@ timeText+
 " · Observation only.");
 }
 
-/* LIVE ROSIE */
+/* LIVE ROSIE SIGNALS */
 
 function renderRosie(d){
 if(!d||typeof d!=="object"||d.ok===false)return;
@@ -988,6 +1193,7 @@ if(!d.ticker)return;
 
 if(marketTicker&&d.ticker!==marketTicker){
 put("rosieStatus","NEW ROUND");
+updateHold(null);
 return;
 }
 
@@ -1025,12 +1231,13 @@ d.live_projection,d.live_direction,d.live_call
 let probability=live==="UP"?d.up_probability:
 live==="DOWN"?d.down_probability:null;
 
-let label=live
-?"LIVE "+live+" "+pct(probability)
-:"NO CLEAR PROJECTION";
+let label=live?
+"LIVE "+live+" "+pct(probability):
+"NO CLEAR PROJECTION";
 
 put("live",label);
 $("live").className=cls(live);
+
 put("main",label);
 $("main").className="big "+cls(live);
 
@@ -1039,9 +1246,10 @@ put("rosieDown",pct(d.down_probability));
 
 let us=num(d.up_score);
 let ds=num(d.down_score);
-let score=us!==null&&ds!==null
-?"UP "+us.toFixed(0)+" / DOWN "+ds.toFixed(0)
-:"—";
+
+let score=us!==null&&ds!==null?
+"UP "+us.toFixed(0)+" / DOWN "+ds.toFixed(0):
+"—";
 
 put("liveScore",score);
 put("strength",score);
@@ -1050,19 +1258,20 @@ let bp=num(d.buy_pressure);
 let sp=num(d.sell_pressure);
 if(sp===null&&bp!==null)sp=100-bp;
 
-put("livePressure",bp!==null
-?"BUY "+pct(bp)+" · SELL "+pct(sp)
-:"—");
+put("livePressure",bp!==null?
+"BUY "+pct(bp)+" · SELL "+pct(sp):
+"—");
 
-put("liveShift",bp!==null?pressureLabel(bp):"—");
+put("liveShift",bp!==null?
+pressureLabel(bp):"—");
 
 let confirmed=dir(first(
 d.confirmed_direction,d.direction
 ));
 
-put("confirmed",confirmed
-?"BUY "+confirmed
-:"NO CONFIRMED CALL");
+put("confirmed",confirmed?
+"BUY "+confirmed:"NO CONFIRMED CALL");
+
 $("confirmed").className=cls(confirmed);
 
 if(num(d.rsi_15m)!==null){
@@ -1078,14 +1287,16 @@ put("reversal",d.reversal||"NONE");
 
 let stamp=Date.parse(d.updated_at);
 put("reason","Updated "+(
-Number.isFinite(stamp)
-?new Date(stamp).toLocaleTimeString()
-:"—"));
+Number.isFinite(stamp)?
+new Date(stamp).toLocaleTimeString():"—"));
 
 updateFlip(d);
+updateHold(d);
 flow();
 clock();
 }
+
+/* ROSIE API REFRESH */
 
 async function refreshRosie(){
 if(loadingRosie)return;
@@ -1095,6 +1306,7 @@ try{
 let r=await fetch(SIGNAL_API+"?t="+Date.now(),{
 cache:"no-store"
 });
+
 if(!r.ok)throw Error("Signals "+r.status);
 
 let d=await r.json();
@@ -1110,31 +1322,37 @@ renderRosie(d);
 
 }catch(e){
 console.error(e);
-put("rosieStatus",rosie?"RECONNECTING":"OFFLINE");
+put("rosieStatus",
+rosie?"RECONNECTING":"OFFLINE");
+updateHold(null);
 }finally{
 loadingRosie=false;
 }
 }
 
+/* ROUND COUNTDOWN */
+
 function clock(){
 let s=currentRoundSeconds();
 
 put("clock",fmtSeconds(s));
-$("clock").className=s<=60?"clock yellow":"clock";
+$("clock").className=
+s<=60?"clock yellow":"clock";
 
 if(rosie&&Date.now()-rosieAt>90000){
 put("rosieStatus","STALE");
+updateHold(null);
 }
 
-put("liveTime",s<=60
-?"CUTOFF WINDOW"
-:s+"s LEFT");
+put("liveTime",s<=60?
+"CUTOFF WINDOW":s+"s LEFT");
 
 updateCallCountdowns(s);
 
-// Clear expired scalp alerts even between API refreshes.
 if(rosie)updateFlip(rosie);
 }
+
+/* KALSHI MARKET */
 
 async function refreshKalshi(){
 if(loadingKalshi)return;
@@ -1144,6 +1362,7 @@ try{
 let r=await fetch(API+"?t="+Date.now(),{
 cache:"no-store"
 });
+
 if(!r.ok)throw Error("Kalshi "+r.status);
 
 let d=await r.json();
@@ -1167,8 +1386,11 @@ let down=num(first(
 d.down_ask_cents,d.no_ask,d.down_ask
 ));
 
-put("kalshiUp",up!==null?up.toFixed(1)+"¢":"—");
-put("kalshiDown",down!==null?down.toFixed(1)+"¢":"—");
+put("kalshiUp",
+up!==null?up.toFixed(1)+"¢":"—");
+
+put("kalshiDown",
+down!==null?down.toFixed(1)+"¢":"—");
 
 let newTicker=d.ticker||d.market_ticker||"";
 
@@ -1189,6 +1411,7 @@ FINAL:null
 if(rosie&&rosie.ticker!==newTicker){
 rosie=null;
 put("rosieStatus","NEW ROUND");
+updateHold(null);
 }
 }
 
@@ -1204,7 +1427,9 @@ latestRoundSeconds=seconds;
 latestRoundAt=Date.now();
 }
 
-put("kalshiMarket",marketTicker||"ACTIVE MARKET");
+put("kalshiMarket",
+marketTicker||"ACTIVE MARKET");
+
 clock();
 
 }catch(e){
@@ -1214,6 +1439,8 @@ put("kalshiMarket","Kalshi data unavailable");
 loadingKalshi=false;
 }
 }
+
+/* START ALL DASHBOARD SYSTEMS */
 
 async function start(){
 initChart();
