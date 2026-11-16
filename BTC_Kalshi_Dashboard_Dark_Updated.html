@@ -1651,17 +1651,8 @@ counted separately.
 </div>
 `;
 
-const flip=document.querySelector(".flipbox");
+document.body.appendChild(panel);
 
-if(flip&&flip.parentNode){
-flip.parentNode.insertBefore(panel,flip);
-}else{
-const panels=document.querySelectorAll(".panel");
-if(panels.length){
-panels[panels.length-1].appendChild(panel);
-}
-}
-}
 
 function showRecord(record){
 if(!record||typeof record!=="object"||
