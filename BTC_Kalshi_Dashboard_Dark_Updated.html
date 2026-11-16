@@ -1781,5 +1781,57 @@ startRecord();
 </script>
 <!-- END ROSIE PERFORMANCE RECORD -->
 
+<!-- ROSIE TRADING BUTTON PLACEMENT FIX -->
+<script>
+(function () {
+  function fixTradingPlacement() {
+    const flip = document.querySelector(".flipbox");
+    const buttons = Array.from(
+      document.querySelectorAll("a.unlock-trading")
+    );
+
+    if (!flip || !buttons.length) return;
+
+    const original = buttons[0];
+    const originalInfo = original.nextElementSibling;
+
+    const tradingBox = document.createElement("div");
+    tradingBox.className = "box";
+    tradingBox.style.marginTop = "10px";
+
+    flip.insertAdjacentElement("afterend", tradingBox);
+    tradingBox.appendChild(original);
+
+    if (originalInfo &&
+        originalInfo.classList.contains("small")) {
+      tradingBox.appendChild(originalInfo);
+    }
+
+    buttons.slice(1).forEach(button => {
+      const parent = button.parentElement;
+
+      if (parent &&
+          parent.classList.contains("quote") &&
+          parent.querySelectorAll("a.unlock-trading").length === 1) {
+        parent.remove();
+      } else {
+        button.remove();
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      fixTradingPlacement,
+      { once: true }
+    );
+  } else {
+    fixTradingPlacement();
+  }
+})();
+</script>
+<!-- END TRADING BUTTON FIX -->
+
 </body>
 </html>
