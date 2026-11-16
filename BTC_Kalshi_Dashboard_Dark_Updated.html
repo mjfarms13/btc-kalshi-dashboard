@@ -1468,6 +1468,276 @@ pattern();
 start();
 </script>
 
-<script src="aggr_multi_exchange.js"></script>
+<script src="aggr_multi_exchange.js"></script> 
+<!-- ROSIE PERFORMANCE RECORD V1 -->
+<style>
+.rosie-record{
+background:#1b2737;
+border:1px solid #465a72;
+border-radius:10px;
+padding:11px;
+margin:10px 0;
+}
+.rosie-record-title{
+font-size:15px;
+font-weight:800;
+margin-bottom:10px;
+}
+.rosie-record-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:7px;
+}
+.rosie-record-stat{
+background:#202d3e;
+border-radius:8px;
+padding:9px 5px;
+text-align:center;
+}
+.rosie-record-stat span{
+display:block;
+font-size:10px;
+color:#a7b4c8;
+}
+.rosie-record-stat b{
+display:block;
+font-size:19px;
+margin-top:5px;
+}
+.rosie-record-row{
+display:grid;
+grid-template-columns:1fr 1fr 1fr 1fr;
+gap:4px;
+padding:7px 0;
+border-bottom:1px solid #35445b;
+font-size:11px;
+}
+.rosie-record-row span:not(:first-child){
+text-align:right;
+}
+.rosie-record-heading{
+font-size:12px;
+font-weight:800;
+margin:12px 0 5px;
+}
+</style>
+
+<script>
+(function(){
+"use strict";
+
+const RECORD_API =
+"https://btc-kalshi-api.onrender.com/api/signals";
+
+function recordElement(id,value){
+const el=document.getElementById(id);
+if(el)el.textContent=value;
+}
+
+function recordNumber(value){
+const n=Number(value);
+return value===null||value===undefined||
+!Number.isFinite(n)?"—":String(n);
+}
+
+function recordPercent(value){
+const n=Number(value);
+return value===null||value===undefined||
+!Number.isFinite(n)?"—":n.toFixed(1)+"%";
+}
+
+function recordRows(stats){
+const phases=["EARLY","FINAL","LIVE","REVERSAL"];
+const byPhase=stats&&stats.by_phase||{};
+
+return phases.map(phase=>{
+const s=byPhase[phase]||{};
+return `
+<div class="rosie-record-row">
+<span>${phase}</span>
+<span>${recordNumber(s.wins)} W</span>
+<span>${recordNumber(s.losses)} L</span>
+<span>${recordPercent(s.accuracy)}</span>
+</div>`;
+}).join("");
+}
+
+function createRecord(){
+if(document.getElementById("rosiePerformanceRecord"))
+return;
+
+const panel=document.createElement("div");
+panel.id="rosiePerformanceRecord";
+panel.className="rosie-record";
+
+panel.innerHTML=`
+<div class="between">
+<b class="rosie-record-title">
+📊 ROSIE · PERFORMANCE RECORD
+</b>
+<span id="recordStatus" class="tag">LOADING</span>
+</div>
+
+<div class="rosie-record-heading">
+TODAY · CENTRAL TIME
+</div>
+
+<div class="rosie-record-grid">
+<div class="rosie-record-stat">
+<span>WINS</span>
+<b class="up" id="recordWins">—</b>
+</div>
+<div class="rosie-record-stat">
+<span>LOSSES</span>
+<b class="down" id="recordLosses">—</b>
+</div>
+<div class="rosie-record-stat">
+<span>ACCURACY</span>
+<b id="recordAccuracy">—</b>
+</div>
+</div>
+
+<div class="rosie-record-heading">
+TODAY BY SIGNAL STAGE
+</div>
+<div class="rosie-record-row muted">
+<span>STAGE</span>
+<span>WINS</span>
+<span>LOSSES</span>
+<span>ACCURACY</span>
+</div>
+<div id="recordTodayStages">
+Waiting for Rosie...
+</div>
+
+<div class="rosie-record-heading">
+OVERALL PERFORMANCE
+</div>
+
+<div class="rosie-record-grid">
+<div class="rosie-record-stat">
+<span>WINS</span>
+<b class="up" id="recordAllWins">—</b>
+</div>
+<div class="rosie-record-stat">
+<span>LOSSES</span>
+<b class="down" id="recordAllLosses">—</b>
+</div>
+<div class="rosie-record-stat">
+<span>ACCURACY</span>
+<b id="recordAllAccuracy">—</b>
+</div>
+</div>
+
+<div class="rosie-record-heading">
+OVERALL BY SIGNAL STAGE
+</div>
+<div class="rosie-record-row muted">
+<span>STAGE</span>
+<span>WINS</span>
+<span>LOSSES</span>
+<span>ACCURACY</span>
+</div>
+<div id="recordAllStages">
+Waiting for Rosie...
+</div>
+
+<div class="small" style="margin-top:10px">
+Prediction accuracy based on settled Kalshi
+markets. These are Rosie's recorded calls,
+not actual real-money trading profits.
+EARLY, FINAL, LIVE and REVERSAL are
+counted separately.
+</div>
+`;
+
+const flip=document.querySelector(".flipbox");
+
+if(flip&&flip.parentNode){
+flip.parentNode.insertBefore(panel,flip);
+}else{
+const panels=document.querySelectorAll(".panel");
+if(panels.length){
+panels[panels.length-1].appendChild(panel);
+}
+}
+}
+
+function showRecord(record){
+if(!record||typeof record!=="object"||
+!record.today||!record.overall){
+recordElement("recordStatus","NO RECORD");
+return;
+}
+
+const today=record.today;
+const overall=record.overall;
+
+recordElement("recordWins",
+recordNumber(today.wins));
+recordElement("recordLosses",
+recordNumber(today.losses));
+recordElement("recordAccuracy",
+recordPercent(today.accuracy));
+
+recordElement("recordAllWins",
+recordNumber(overall.wins));
+recordElement("recordAllLosses",
+recordNumber(overall.losses));
+recordElement("recordAllAccuracy",
+recordPercent(overall.accuracy));
+
+document.getElementById("recordTodayStages")
+.innerHTML=recordRows(today);
+
+document.getElementById("recordAllStages")
+.innerHTML=recordRows(overall);
+
+recordElement("recordStatus","LIVE");
+}
+
+async function refreshRecord(){
+try{
+const response=await fetch(
+RECORD_API+"?record="+Date.now(),
+{cache:"no-store"}
+);
+
+if(!response.ok){
+throw new Error("Record unavailable");
+}
+
+const data=await response.json();
+
+if(data.ok!==true){
+throw new Error("Signals unavailable");
+}
+
+showRecord(data.performance_record);
+
+}catch(error){
+recordElement("recordStatus","UNAVAILABLE");
+}
+}
+
+function startRecord(){
+createRecord();
+refreshRecord();
+setInterval(refreshRecord,15000);
+}
+
+if(document.readyState==="loading"){
+document.addEventListener(
+"DOMContentLoaded",
+startRecord,
+{once:true}
+);
+}else{
+startRecord();
+}
+})();
+</script>
+<!-- END ROSIE PERFORMANCE RECORD -->
+
 </body>
 </html>
