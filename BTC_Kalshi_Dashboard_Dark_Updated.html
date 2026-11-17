@@ -395,6 +395,8 @@ let loadingRosie=false,loadingKalshi=false;
 let lockedCache={ticker:null,EARLY:null,MID:null,FINAL:null};
 let latestRoundSeconds=null;
 let latestRoundAt=0;
+let lastCoinbaseTickAt=0;
+let historyLoading=false;
 
 /* TECHNICAL INDICATORS */
 
@@ -457,7 +459,7 @@ grid:{
 vertLines:{color:"#202c3b"},
 horzLines:{color:"#202c3b"}
 },
-timeScale:{timeVisible:true,secondsVisible:false}
+timeScale:{timeVisible:true,secondsVisible:false,barSpacing:9,rightOffset:3}
 });
 
 candle=chart.addSeries(
@@ -630,6 +632,8 @@ markers.setMarkers(output.slice(-35));
 /* COINBASE CANDLE HISTORY */
 
 async function history(zoom=true){
+if(historyLoading)return;
+historyLoading=true;
 try{
 let r=await fetch(
 CB+"/products/BTC-USD/candles?granularity=60",
@@ -638,6 +642,7 @@ CB+"/products/BTC-USD/candles?granularity=60",
 if(!r.ok)throw Error("Coinbase history");
 let data=await r.json();
 
+const freshLiveBar=(lastCoinbaseTickAt && Date.now()-lastCoinbaseTickAt<15000 && bars.length)?{...bars.at(-1)}:null;
 bars=data.map(x=>({
 time:+x[0],low:+x[1],high:+x[2],
 open:+x[3],close:+x[4]
@@ -645,19 +650,28 @@ open:+x[3],close:+x[4]
 .filter((x,i,a)=>i===0||x.time>a[i-1].time);
 
 if(!bars.length)return;
-price=bars.at(-1).close;
-put("price",money(price));
+if(freshLiveBar){
+ const last=bars.at(-1);
+ if(last.time===freshLiveBar.time){
+  last.high=Math.max(last.high,freshLiveBar.high);
+  last.low=Math.min(last.low,freshLiveBar.low);
+  last.close=freshLiveBar.close;
+ }else if(freshLiveBar.time>last.time){bars.push(freshLiveBar)}
+}
+if(!freshLiveBar){price=bars.at(-1).close;put("price",money(price));}
 
 if(candle){
 candle.setData(bars);
 draw();
 chartSignals();
-if(zoom)chart.timeScale().setVisibleLogicalRange({from:Math.max(0,bars.length-65),to:bars.length+3});
+if(zoom)chart.timeScale().setVisibleLogicalRange({from:Math.max(0,bars.length-48),to:bars.length+3});
 }
 pattern();
 }catch(e){
-put("status","HISTORY OFFLINE");
+if(!lastCoinbaseTickAt || Date.now()-lastCoinbaseTickAt>45000)put("status","HISTORY OFFLINE");
 console.error(e);
+}finally{
+historyLoading=false;
 }
 }
 
@@ -667,6 +681,8 @@ function tick(v,time=Date.now()){
 let p=num(v);
 if(p===null||p<=0)return;
 price=p;
+lastCoinbaseTickAt=Date.now();
+put("status","COINBASE LIVE");
 put("price",money(p));
 if(!bars.length)return;
 
@@ -1482,6 +1498,16 @@ setInterval(clock,1000);
 setInterval(flow,2000);
 setInterval(refreshRosie,5000);
 setInterval(refreshKalshi,10000);
+
+// Reconcile candles with Coinbase REST even when WebSocket is quiet.
+// Do not reset the user's chart zoom during background refreshes.
+setInterval(()=>history(false),20000);
+setInterval(()=>{
+ if(Date.now()-lastCoinbaseTickAt>45000){
+  put("status","COINBASE RECONNECTING");
+  try{if(socket && socket.readyState!==WebSocket.CONNECTING)socket.close()}catch(e){}
+ }
+},15000);
 
 setInterval(()=>{
 if(bars.length){
