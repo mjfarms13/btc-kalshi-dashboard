@@ -85,6 +85,24 @@ outline-offset:3px;
 .holdwhy{margin-top:8px;padding:8px;background:#121c2b;border-radius:8px;line-height:1.5}
 .holdwhy b{color:#e7eef8}
 .holdstale{color:#f5c46a;font-size:10px}
+
+/* Compact main-screen trading preview; no private account credentials on GitHub Pages. */
+.rosie-trade{padding:12px}
+.rosie-trade-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rosie-trade button,.rosie-trade a{font:inherit;cursor:pointer}
+.rosie-trade-side{border:2px solid transparent;border-radius:9px;padding:13px 5px;font-weight:850;font-size:15px;color:white;background:#286c51}
+.rosie-trade-side.trade-down{background:#873d49}
+.rosie-trade-side.selected-up,.rosie-trade-side.selected-down{border-color:#e6f1ff;box-shadow:0 0 0 1px #e6f1ff}
+.rosie-trade-input{width:100%;background:#0b1019;color:#edf3ff;border:1px solid #4b5c75;border-radius:8px;padding:12px;margin:7px 0;font-size:18px}
+.rosie-trade-budgets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:9px}
+.rosie-trade-budgets button{background:#34455f;color:#fff;border:0;border-radius:8px;padding:10px 3px;font-weight:750}
+.rosie-trade-review{display:block;width:100%;border:0;border-radius:9px;padding:13px;background:#dfe8f7;color:#111b2a;font-weight:900;font-size:14px}
+.rosie-trade-review:disabled{opacity:.6}
+.rosie-trade-result{background:#121c2b;border:1px solid #34455f;border-radius:8px;padding:10px;margin-top:9px;line-height:1.6;font-size:12px;overflow-wrap:anywhere}
+.rosie-trade-result strong{color:#35d39a}
+.rosie-trade-sell{display:block;background:#2a3b53;border:1px solid #50637c;border-radius:8px;padding:12px 4px;text-align:center;text-decoration:none;color:#edf3ff;font-weight:800}
+.rosie-trade-private{display:block;text-align:center;color:#bcd2ec;font-weight:700;margin-top:10px;text-decoration:underline}
+.rosie-trade button:focus-visible,.rosie-trade a:focus-visible{outline:2px solid #35d39a;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -272,18 +290,29 @@ Waiting for Rosie's next scalp flip alert.
 </div>
 
   
-<!-- ROSIE TRADING CENTER -->
-<div class="box" style="margin-top:10px">
-  <a class="unlock-trading"
-     href="https://btc-kalshi-api.onrender.com/rosie/login">
-    🔐 UNLOCK TRADING
-  </a>
-  <div class="small" style="margin-top:7px">
-    Opens Rosie's private Trading Center.
-    Manual order execution is not enabled yet.
+<!-- ROSIE SIMPLE TRADING PANEL — PREVIEW ONLY -->
+<div class="box rosie-trade" id="rosieTradePanel">
+  <div class="between"><b>💰 ROSIE · TRADING</b><span class="tag">PREVIEW ONLY</span></div>
+  <div class="small" style="margin:6px 0 10px">BTC 15-minute · Rosie finds the current market and estimates contracts.</div>
+  <div class="rosie-trade-actions">
+    <button type="button" id="tradeBuyUp" class="rosie-trade-side selected-up" aria-pressed="true">BUY UP</button>
+    <button type="button" id="tradeBuyDown" class="rosie-trade-side trade-down" aria-pressed="false">BUY DOWN</button>
   </div>
+  <div class="between" style="margin-top:11px"><label for="tradeBudget"><b>Your amount ($)</b></label><span class="small" id="tradeSideLabel">BUY UP</span></div>
+  <input id="tradeBudget" class="rosie-trade-input" type="number" inputmode="decimal" min="0.01" max="100000" step="0.01" value="5" aria-label="Buy budget in dollars">
+  <div class="rosie-trade-budgets">
+    <button type="button" data-trade-budget="5">$5</button><button type="button" data-trade-budget="10">$10</button><button type="button" data-trade-budget="20">$20</button><button type="button" data-trade-budget="50">$50</button>
+  </div>
+  <button type="button" id="tradeReview" class="rosie-trade-review">REVIEW BUY · NO TRADE</button>
+  <div id="tradeResult" class="rosie-trade-result" role="status" aria-live="polite">Choose UP or DOWN, then review your amount. No order will be placed.</div>
+  <div class="rosie-trade-actions" style="margin-top:10px">
+    <a class="rosie-trade-sell" href="https://btc-kalshi-api.onrender.com/rosie/account">SELL NOW</a>
+    <a class="rosie-trade-sell" href="https://btc-kalshi-api.onrender.com/rosie/account">LIMIT SELL</a>
+  </div>
+  <div class="small" style="margin-top:8px">SELL buttons open your private Trading Center to verify owned positions. All estimates are indicative; live trading is disabled.</div>
+  <a class="rosie-trade-private" href="https://btc-kalshi-api.onrender.com/rosie/account">🔒 PRIVATE TRADING CENTER</a>
 </div>
-<!-- END TRADING CENTER -->
+<!-- END ROSIE SIMPLE TRADING PANEL -->
 
 
 <div class="row">
@@ -1521,6 +1550,59 @@ start();
 </script>
 
 <script src="aggr_multi_exchange.js"></script> 
+
+<script>
+/* Public dashboard order estimate ONLY. Never send credentials or orders from this page. */
+(function(){
+"use strict";
+const byId=id=>document.getElementById(id);
+let side="UP";
+function choose(next){
+ side=next;
+ byId("tradeBuyUp").className="rosie-trade-side"+(side==="UP"?" selected-up":"");
+ byId("tradeBuyDown").className="rosie-trade-side trade-down"+(side==="DOWN"?" selected-down":"");
+ byId("tradeBuyUp").setAttribute("aria-pressed",String(side==="UP"));
+ byId("tradeBuyDown").setAttribute("aria-pressed",String(side==="DOWN"));
+ byId("tradeSideLabel").textContent="BUY "+side;
+ byId("tradeResult").textContent="Ready to review BUY "+side+". No order will be placed.";
+}
+const dollar=n=>"$"+n.toFixed(2);
+async function review(){
+ const el=byId("tradeResult"),btn=byId("tradeReview");
+ const budget=Number(byId("tradeBudget").value);
+ if(!Number.isFinite(budget)||budget<.01||budget>100000){el.textContent="Enter an amount between $0.01 and $100,000.";return;}
+ btn.disabled=true;el.textContent="Checking current market quote…";
+ try{
+  const res=await fetch("https://btc-kalshi-api.onrender.com/api/kalshi?trade_preview="+Date.now(),{cache:"no-store"});
+  if(!res.ok)throw Error("Market quote unavailable");
+  const data=await res.json();
+  if(data.ok===false)throw Error("No active market");
+  const ticker=String(data.ticker||data.market_ticker||"");
+  const raw=side==="UP"?(data.up_ask_cents??data.yes_ask??data.up_ask):(data.down_ask_cents??data.no_ask??data.down_ask);
+  const ask=Number(raw);
+  if(!ticker.startsWith("KXBTC15M-")||!Number.isFinite(ask)||ask<1||ask>99)throw Error("No verified current BTC market/ask. Try again shortly.");
+  // Deliberately conservative illustrative reserve; the authenticated server calculates its own estimate.
+  const feeReserveCents=2;
+  const qty=Math.floor(Math.round(budget*100)/(ask+feeReserveCents));
+  if(qty<1)throw Error("Budget is too small for one contract at this quote.");
+  const gross=qty*ask/100,fees=qty*feeReserveCents/100;
+  // Text-only rendering avoids injecting external market data as HTML.
+  el.replaceChildren();
+  const lines=["BUY "+side+" · "+ticker,"Estimated contracts: "+qty,"Indicative ask: "+ask+"¢","Contract cost: "+dollar(gross),"Illustrative fee reserve: "+dollar(fees),"Estimated total: "+dollar(gross+fees)];
+  for(const line of lines){const div=document.createElement("div");div.textContent=line;el.appendChild(div);}
+  const note=document.createElement("div");note.className="yellow";note.style.marginTop="6px";
+  note.textContent="Preview only. 2¢/contract is a placeholder, not Kalshi's actual fee. Market depth, fill price and quote freshness are not guaranteed. No order placed.";el.appendChild(note);
+  const link=document.createElement("a");link.href="https://btc-kalshi-api.onrender.com/rosie/account";link.textContent="Open private center for secure review";link.style.color="#bcd2ec";link.style.display="block";link.style.marginTop="8px";el.appendChild(link);
+ }catch(e){el.textContent=String(e.message||"Quote unavailable");}
+ finally{btn.disabled=false;}
+}
+byId("tradeBuyUp").addEventListener("click",()=>choose("UP"));
+byId("tradeBuyDown").addEventListener("click",()=>choose("DOWN"));
+for(const button of document.querySelectorAll("[data-trade-budget]"))button.addEventListener("click",()=>{byId("tradeBudget").value=button.dataset.tradeBudget;});
+byId("tradeReview").addEventListener("click",review);
+})();
+</script>
+
 <!-- ROSIE PERFORMANCE RECORD V1 -->
 <style>
 .rosie-record{
@@ -1710,7 +1792,7 @@ function nonReversalTotals(stats){
  const phases=stats?.by_phase;
  if(!phases || typeof phases!=="object") return {wins:null,losses:null,accuracy:null};
  let wins=0,losses=0,found=false;
- for(const key of ["EARLY","MID","FINAL","ROUND_ENDING","LIVE"]){
+ for(const key of ["EARLY","MID","FINAL"]){
   const row=phases[key];
   if(!row || (key==="LIVE" && phases.ROUND_ENDING))continue;
   const w=Number(row.wins),l=Number(row.losses);
