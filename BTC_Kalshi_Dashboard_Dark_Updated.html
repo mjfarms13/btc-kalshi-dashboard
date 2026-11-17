@@ -1,4 +1,3 @@
-no
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,10 +23,11 @@ h1{font-size:16px;margin:0}
 .down{color:#ff7787}
 .neutral{color:#a7b4c8}
 .yellow{color:#f5c46a}
-.calls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:9px 0}
+.calls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:9px 0}
 .call{background:#202d3e;border:1px solid #304056;border-radius:8px;padding:8px 4px;text-align:center;overflow-wrap:anywhere}
-.call b{display:block;font-size:13px;margin:8px 0}
+.call b{display:block;font-size:12px;margin:8px 0}
 .call .muted{font-size:9px}
+@media(max-width:440px){.calls{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .detail{font-size:10px;color:#a7b4c8;line-height:1.5;margin-top:5px}
 .metric{background:#202d3e;border-radius:8px;padding:8px;min-width:0}
 .metric b{display:block;font-size:17px;margin-top:4px}
@@ -170,7 +170,7 @@ not trade recommendations.
 
 <div class="calls">
 <div class="call">
-<span class="muted">EARLY · 2M</span>
+<span class="muted">EARLY · 2M IN</span>
 <b id="early" class="yellow countdown">⏳ --:--</b>
 <div id="earlyScore" class="detail">—</div>
 <div id="earlyPressure" class="detail">—</div>
@@ -179,7 +179,16 @@ not trade recommendations.
 </div>
 
 <div class="call">
-<span class="muted">FINAL · 5M LEFT</span>
+<span class="muted">MID · 5M IN</span>
+<b id="mid" class="yellow countdown">⏳ --:--</b>
+<div id="midScore" class="detail">—</div>
+<div id="midPressure" class="detail">—</div>
+<div id="midShift" class="detail">—</div>
+<div id="midTime" class="detail countdown-note">UNTIL MID CALL</div>
+</div>
+
+<div class="call">
+<span class="muted">FINAL · 10M IN</span>
 <b id="final" class="yellow countdown">⏳ --:--</b>
 <div id="finalScore" class="detail">—</div>
 <div id="finalPressure" class="detail">—</div>
@@ -188,7 +197,7 @@ not trade recommendations.
 </div>
 
 <div class="call">
-<span class="muted">LIVE · ROUND END</span>
+<span class="muted">LIVE · AFTER FINAL</span>
 <b id="live" class="neutral">CONNECTING</b>
 <div id="liveScore" class="detail">—</div>
 <div id="livePressure" class="detail">—</div>
@@ -314,9 +323,9 @@ Waiting for Rosie's next scalp flip alert.
 <div class="row"><span>Take Profit · Chart</span><b id="tp">—</b></div>
 
 <div class="small" style="margin-top:12px">
-EARLY and FINAL are locked for each round.
+EARLY, MID and FINAL are locked independently for each round.
 LIVE updates throughout the round.
-Countdowns show time until Rosie's scheduled call windows.
+Countdowns show the 2m, 5m and 10m call windows. MID requires the backend to provide a MID snapshot.
 Scalp flip evidence is scored out of 10, not a probability.
 Estimates are uncalibrated. Manual trading only.
 </div>
@@ -383,7 +392,7 @@ let levels=[],markers=null,rosie=null,rosieAt=0;
 let trades=[],whales=[],socket=null;
 let marketTicker="",kalshiClose=0;
 let loadingRosie=false,loadingKalshi=false;
-let lockedCache={ticker:null,EARLY:null,FINAL:null};
+let lockedCache={ticker:null,EARLY:null,MID:null,FINAL:null};
 let latestRoundSeconds=null;
 let latestRoundAt=0;
 
@@ -904,7 +913,8 @@ return Math.ceil(
 function updateCallCountdowns(seconds){
 const stages=[
 {prefix:"early",name:"EARLY",threshold:780},
-{prefix:"final",name:"FINAL",threshold:600}
+{prefix:"mid",name:"MID",threshold:600},
+{prefix:"final",name:"FINAL",threshold:300}
 ];
 
 for(const stage of stages){
@@ -1207,6 +1217,7 @@ if(lockedCache.ticker!==d.ticker){
 lockedCache={
 ticker:d.ticker,
 EARLY:null,
+MID:null,
 FINAL:null
 };
 }
@@ -1221,7 +1232,7 @@ latestRoundSeconds=remaining;
 latestRoundAt=Date.now();
 }
 
-for(let name of ["EARLY","FINAL"]){
+for(let name of ["EARLY","MID","FINAL"]){
 let record=getStage(d,name);
 if(record&&!lockedCache[name]){
 lockedCache[name]=JSON.parse(JSON.stringify(record));
@@ -1347,6 +1358,10 @@ s<=60?"clock yellow":"clock";
 
 if(rosie&&Date.now()-rosieAt>90000){
 put("rosieStatus","STALE");
+put("live","STALE / WAIT");
+$("live").className="yellow";
+put("main","STALE / WAIT");
+$("main").className="big yellow";
 updateHold(null);
 }
 
@@ -1410,12 +1425,15 @@ if(lockedCache.ticker!==newTicker){
 lockedCache={
 ticker:newTicker,
 EARLY:null,
+MID:null,
 FINAL:null
 };
 }
 
 if(rosie&&rosie.ticker!==newTicker){
 rosie=null;
+put("live","WAITING FOR NEW ROUND");
+put("main","WAITING FOR NEW ROUND");
 put("rosieStatus","NEW ROUND");
 updateHold(null);
 }
@@ -1553,7 +1571,7 @@ return value===null||value===undefined||
 }
 
 function recordRows(stats){
-const phases=["EARLY","FINAL","LIVE","REVERSAL"];
+const phases=["EARLY","MID","FINAL","LIVE","REVERSAL"];
 const byPhase=stats&&stats.by_phase||{};
 
 return phases.map(phase=>{
@@ -1652,7 +1670,7 @@ Waiting for Rosie...
 Prediction accuracy based on settled Kalshi
 markets. These are Rosie's recorded calls,
 not actual real-money trading profits.
-EARLY, FINAL, LIVE and REVERSAL are
+EARLY, MID, FINAL, LIVE and REVERSAL are
 counted separately.
 </div>
 `;
