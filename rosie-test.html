@@ -194,7 +194,6 @@ outline-offset:3px;
 </div>
 
 </div>
-</div>
 
 <div id="chart" class="chart"></div>
 
@@ -716,7 +715,6 @@ updateChartIndicators();
 updateTrapWatch();updatePriceLevels();
 
 }
-}
 
 /*
 No technical pattern alone authorizes a trade.
@@ -725,7 +723,13 @@ backend signal and current Kalshi market.
 */
 
 /* PART 6 — LIVE COINBASE CHART */
+// ROSIE PRICE LEVEL LINES
+let supportLine = null;
+let resistanceLine = null;
+let kalshiTargetLine = null;
 
+function updatePriceLevels() {
+  if (!candle || !bars.length) return; see
 function initChart(){
 const el=$("chart");
 if(!el||!window.LightweightCharts)return;
@@ -764,13 +768,6 @@ borderDownColor:"#ff7787",
 wickUpColor:"#35d39a",
 wickDownColor:"#ff7787"
 });
-// ROSIE PRICE LEVEL LINES
-let supportLine = null;
-let resistanceLine = null;
-let kalshiTargetLine = null;
-
-function updatePriceLevels() {
-  if (!candle || !bars.length) return;
 
   const sr = supportResistance(bars);
   const targetPrice = num($("target")?.value);
