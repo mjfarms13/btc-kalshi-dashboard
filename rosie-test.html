@@ -2864,12 +2864,15 @@ function learningAccuracy(wins, losses, reported) {
 
 function learningPhase(stats, name) {
   const sources = [
+    stats?.overall?.by_phase,
+    stats?.totals?.by_phase,
     stats?.by_phase,
     stats?.phases,
     stats?.stages,
     stats?.phase_stats,
     stats
   ];
+  
 
   const aliases = name === "ROUND_ENDING"
     ? ["ROUND_ENDING", "round_ending", "LIVE", "live"]
