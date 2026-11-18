@@ -723,51 +723,15 @@ backend signal and current Kalshi market.
 */
 
 /* PART 6 — LIVE COINBASE CHART */
+
+
 // ROSIE PRICE LEVEL LINES
 let supportLine = null;
 let resistanceLine = null;
 let kalshiTargetLine = null;
 
 function updatePriceLevels() {
-  if (!candle || !bars.length) return; 
-function initChart(){
-const el=$("chart");
-if(!el||!window.LightweightCharts)return;
-
-chart=LightweightCharts.createChart(el,{
-width:el.clientWidth,
-height:el.clientHeight||350,
-layout:{
-background:{type:"solid",color:"#151e2b"},
-textColor:"#a7b4c8"
-},
-grid:{
-vertLines:{color:"#202b3b"},
-horzLines:{color:"#202b3b"}
-},
-rightPriceScale:{
-borderColor:"#35445b",
-scaleMargins:{top:0.12,bottom:0.12}
-},
-timeScale:{
-borderColor:"#35445b",
-timeVisible:true,
-secondsVisible:false,
-rightOffset:5,
-barSpacing:22
-},
-crosshair:{mode:0}
-});
-
-candle=chart.addSeries(
-LightweightCharts.CandlestickSeries,{
-upColor:"#35d39a",
-downColor:"#ff7787",
-borderUpColor:"#35d39a",
-borderDownColor:"#ff7787",
-wickUpColor:"#35d39a",
-wickDownColor:"#ff7787"
-});
+  if (!candle || !bars.length) return;
 
   const sr = supportResistance(bars);
   const targetPrice = num($("target")?.value);
@@ -818,27 +782,75 @@ wickDownColor:"#ff7787"
     });
   }
 }
-const colors=["#f3c65c","#55aaff","#b994fa"];
-emaLines=colors.map(color=>chart.addSeries(
-LightweightCharts.LineSeries,{
-color,
-lineWidth:2,
-priceLineVisible:false,
-lastValueVisible:false,
-crosshairMarkerVisible:false
-}
-));
 
-const observer=new ResizeObserver(()=>{
-if(chart&&el.clientWidth){
-chart.applyOptions({
-width:el.clientWidth,
-height:el.clientHeight||350
-});
+function initChart() {
+  const el = $("chart");
+  if (!el || !window.LightweightCharts) return;
+
+  chart = LightweightCharts.createChart(el, {
+    width: el.clientWidth,
+    height: el.clientHeight || 350,
+    layout: {
+      background: { type: "solid", color: "#151e2b" },
+      textColor: "#a7b4c8"
+    },
+    grid: {
+      vertLines: { color: "#202b3b" },
+      horzLines: { color: "#202b3b" }
+    },
+    rightPriceScale: {
+      borderColor: "#35445b",
+      scaleMargins: { top: 0.12, bottom: 0.12 }
+    },
+    timeScale: {
+      borderColor: "#35445b",
+      timeVisible: true,
+      secondsVisible: false,
+      rightOffset: 5,
+      barSpacing: 22
+    },
+    crosshair: { mode: 0 }
+  });
+
+  candle = chart.addSeries(
+    LightweightCharts.CandlestickSeries,
+    {
+      upColor: "#35d39a",
+      downColor: "#ff7787",
+      borderUpColor: "#35d39a",
+      borderDownColor: "#ff7787",
+      wickUpColor: "#35d39a",
+      wickDownColor: "#ff7787"
+    }
+  );
+
+  const colors = ["#f3c65c", "#55aaff", "#b994fa"];
+
+  emaLines = colors.map(color =>
+    chart.addSeries(
+      LightweightCharts.LineSeries,
+      {
+        color,
+        lineWidth: 2,
+        priceLineVisible: false,
+        lastValueVisible: false,
+        crosshairMarkerVisible: false
+      }
+    )
+  );
+
+  const observer = new ResizeObserver(() => {
+    if (chart && el.clientWidth) {
+      chart.applyOptions({
+        width: el.clientWidth,
+        height: el.clientHeight || 350
+      });
+    }
+  });
+
+  observer.observe(el);
 }
-});
-observer.observe(el);
-}
+
 
 async function loadCoinbaseHistory(){
 if(historyLoading)return;
