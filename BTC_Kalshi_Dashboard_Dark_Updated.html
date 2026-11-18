@@ -36,121 +36,6 @@ h1{font-size:16px;margin:0}
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}
 .row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid #29384d}
 .row b{text-align:right}
-.bar{height:12px;background:#d64c62;border-radius:20px;overflow:hidden;margin:7px 0}
-.bar div{height:100%;width:50%;background:#25ba86}
-.small{font-size:10px;line-height:1.5;color:#9baac0}
-.tag{border:1px solid #3b4a61;border-radius:6px;padding:3px 6px;font-size:10px}
-.box{background:#202d3e;border:1px solid #35445b;border-radius:9px;padding:10px;margin:9px 0}
-.target{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
-.target input{background:#0e1622;color:white;border:1px solid #40516a;border-radius:7px;padding:7px;width:130px}
-.quote{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.quote b{font-size:21px}
-.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:#9baac0}
-.dot{display:inline-block;width:8px;height:8px;margin-right:4px}
-.flipbox{background:#242c3b;border:1px solid #596177;border-radius:9px;padding:10px;margin:9px 0}
-.fliptitle{font-size:15px;font-weight:800}
-.flipbar{height:9px;background:#354052;border-radius:10px;overflow:hidden;margin:9px 0}
-.flipbar div{height:100%;width:0;background:#f5c46a;transition:width .3s}
-.countdown{font-size:19px!important;font-weight:900!important;letter-spacing:.4px}
-.countdown-note{color:#f5c46a!important;font-size:10px!important;font-weight:700}
-.unlock-trading{
-display:block;
-margin-top:12px;
-padding:13px;
-background:#263d55;
-color:#edf3ff;
-text-align:center;
-text-decoration:none;
-border:1px solid #4b6885;
-border-radius:9px;
-font-weight:800;
-font-size:14px;
-}
-.unlock-trading:focus-visible{
-outline:2px solid #35d39a;
-outline-offset:3px;
-}
-@media(max-width:740px){
-.layout{grid-template-columns:1fr}
-.chart{height:300px}
-.panel{padding:9px}
-}
-
-/* ROSIE HOLD / EXIT PANEL */
-.holdpanel{margin:10px 0;padding:10px;border:1px solid #465a72;border-radius:10px;background:#1b2737}
-.holdcards{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}
-.holdcard{min-width:0;background:#202e40;padding:10px;border:1px solid #35485f;border-radius:8px}
-.holdcard strong{display:block;font-size:15px;margin:5px 0}
-.holdreason{font-size:11px;line-height:1.5;color:#cad5e6}
-.holdchecks{font-size:10px;color:#a7b4c8}
-.holdwhy{margin-top:8px;padding:8px;background:#121c2b;border-radius:8px;line-height:1.5}
-.holdwhy b{color:#e7eef8}
-.holdstale{color:#f5c46a;font-size:10px}
-
-/* Compact main-screen trading preview; no private account credentials on GitHub Pages. */
-.rosie-trade{padding:12px}
-.rosie-trade-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.rosie-trade button,.rosie-trade a{font:inherit;cursor:pointer}
-.rosie-trade-side{border:2px solid transparent;border-radius:9px;padding:13px 5px;font-weight:850;font-size:15px;color:white;background:#286c51}
-.rosie-trade-side.trade-down{background:#873d49}
-.rosie-trade-side.selected-up,.rosie-trade-side.selected-down{border-color:#e6f1ff;box-shadow:0 0 0 1px #e6f1ff}
-.rosie-trade-input{width:100%;background:#0b1019;color:#edf3ff;border:1px solid #4b5c75;border-radius:8px;padding:12px;margin:7px 0;font-size:18px}
-.rosie-trade-budgets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:9px}
-.rosie-trade-budgets button{background:#34455f;color:#fff;border:0;border-radius:8px;padding:10px 3px;font-weight:750}
-.rosie-trade-review{display:block;width:100%;border:0;border-radius:9px;padding:13px;background:#dfe8f7;color:#111b2a;font-weight:900;font-size:14px}
-.rosie-trade-review:disabled{opacity:.6}
-.rosie-trade-result{background:#121c2b;border:1px solid #34455f;border-radius:8px;padding:10px;margin-top:9px;line-height:1.6;font-size:12px;overflow-wrap:anywhere}
-.rosie-trade-result strong{color:#35d39a}
-.rosie-trade-sell{display:block;background:#2a3b53;border:1px solid #50637c;border-radius:8px;padding:12px 4px;text-align:center;text-decoration:none;color:#edf3ff;font-weight:800}
-.rosie-trade-private{display:block;text-align:center;color:#bcd2ec;font-weight:700;margin-top:10px;text-decoration:underline}
-.rosie-trade button:focus-visible,.rosie-trade a:focus-visible{outline:2px solid #35d39a;outline-offset:2px}
-</style>
-</head>
-<body>
-<div class="wrap">
-
-<header>
-<div>
-<h1>₿ BTC · KALSHI 15-MINUTE</h1>
-<div class="muted">Rosie · Live Coinbase · Manual Trading</div>
-</div>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rosie BTC Kalshi Dashboard</title>
-<script src="https://unpkg.com/lightweight-charts@5.0.8/dist/lightweight-charts.standalone.production.js"></script>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#0b1019;color:#edf3ff;font:13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.wrap{max-width:1100px;margin:auto;padding:8px}
-header,.between{display:flex;align-items:center;justify-content:space-between;gap:8px}
-header{margin-bottom:8px}
-h1{font-size:16px;margin:0}
-.muted{color:#9baac0;font-size:11px}
-.status{font-size:11px;color:#7edcb3;text-align:right}
-.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:8px}
-.panel{min-width:0;background:#151e2b;border:1px solid #29384d;border-radius:12px;padding:10px}
-.price{font-size:25px;font-weight:800}
-.clock{font-size:21px;font-weight:800}
-.chart{height:350px;width:100%;margin:7px 0}
-.up{color:#35d39a}
-.down{color:#ff7787}
-.neutral{color:#a7b4c8}
-.yellow{color:#f5c46a}
-.calls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:9px 0}
-.call{background:#202d3e;border:1px solid #304056;border-radius:8px;padding:8px 4px;text-align:center;overflow-wrap:anywhere}
-.call b{display:block;font-size:12px;margin:8px 0}
-.call .muted{font-size:9px}
-@media(max-width:440px){.calls{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.detail{font-size:10px;color:#a7b4c8;line-height:1.5;margin-top:5px}
-.metric{background:#202d3e;border-radius:8px;padding:8px;min-width:0}
-.metric b{display:block;font-size:17px;margin-top:4px}
-.big{font-size:30px;font-weight:900;text-align:center;margin:9px 0}
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}
-.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid #29384d}
 .row b{text-align:right}
 .bar{height:12px;background:#d64c62;border-radius:20px;overflow:hidden;margin:7px 0}
 .bar div{height:100%;width:50%;background:#25ba86}
@@ -230,7 +115,6 @@ outline-offset:3px;
 <h1>₿ BTC · KALSHI 15-MINUTE</h1>
 <div class="muted">Rosie · Live Coinbase · Manual Trading</div>
 </div>
-
 <div id="status" class="status">CONNECTING</div>
 </header>
 
@@ -289,13 +173,11 @@ outline-offset:3px;
 <div id="kalshiMarket" class="small" style="margin-top:8px">
 Loading market
 </div>
+
 </div>
 
 <div class="small">
-Chart BUY / FLIP / SCALP labels are technical observations.
-Rosie's confirmed calls are shown separately.
-Trap markers indicate possible false breakouts,
-not guaranteed reversals or trade instructions.
+Chart BUY / FLIP / SCALP and TRAP markers are technical observations, not Rosie's confirmed calls or executed trades.
 </div>
 </section>
 
@@ -362,161 +244,91 @@ ROUND ENDING · PROJECTED RESULT
 Connecting to Rosie
 </div>
 
-<!-- ROSIE HOLD / EXIT PANEL -->
+<!-- HOLD / EXIT ENGINE -->
 <div class="holdpanel" id="holdPanel" aria-live="polite">
 <div class="between">
 <b>🧭 ROSIE · HOLD / EXIT</b>
 <span id="holdFresh" class="tag">WAITING</span>
 </div>
-
 <div class="holdcards">
 <div class="holdcard">
 <div class="muted">IF HOLDING UP</div>
 <strong id="holdUp" class="neutral">WAITING</strong>
 <div id="holdUpChecks" class="holdchecks">—</div>
-<div id="holdUpReason" class="holdreason">
-Waiting for fresh signals.
+<div id="holdUpReason" class="holdreason">Waiting for fresh signals.</div>
 </div>
-</div>
-
 <div class="holdcard">
 <div class="muted">IF HOLDING DOWN</div>
 <strong id="holdDown" class="neutral">WAITING</strong>
 <div id="holdDownChecks" class="holdchecks">—</div>
-<div id="holdDownReason" class="holdreason">
-Waiting for fresh signals.
+<div id="holdDownReason" class="holdreason">Waiting for fresh signals.</div>
 </div>
 </div>
-</div>
-
 <div class="holdwhy">
 <b>WHY / MARKET CONTEXT</b>
-<div id="holdContext" class="holdreason">
-Collecting pressure, momentum, RSI and live direction.
+<div id="holdContext" class="holdreason">Collecting pressure, momentum, RSI and live direction.</div>
 </div>
-</div>
-
 <div class="small" style="margin-top:7px">
-Advisory only, not an instruction to sell.
-Dashboard uses five available checks.
-Telegram uses six, including the 15-minute EMA trend.
-Entry price, fees and live exit bids must be verified.
+Advisory only, not an instruction to sell. This HTML estimate uses 5 available checks;
+Telegram uses 6 including the worker's 15-minute EMA trend.
+It cannot see your entry price, fees or live exit bid.
 </div>
 </div>
 
-<!-- ROSIE FLIP WATCH -->
 <div class="flipbox">
 <div class="between">
 <span class="fliptitle">⚡ ROSIE FLIP WATCH</span>
 <b id="flipChecks" class="yellow">— / 10</b>
 </div>
-
-<div class="flipbar">
-<div id="flipFill"></div>
-</div>
-
+<div class="flipbar"><div id="flipFill"></div></div>
 <div class="between">
 <b id="flipStatus" class="neutral">MONITORING</b>
 <span id="flipDirection" class="small">—</span>
 </div>
-
 <div id="flipExplanation" class="small" style="margin-top:7px">
 Waiting for Rosie's next scalp flip alert.
 </div>
 </div>
 
-<!-- ROSIE MANUAL TRADING PANEL -->
+<!-- ROSIE SIMPLE TRADING PANEL — PREVIEW ONLY -->
 <div class="box rosie-trade" id="rosieTradePanel">
 <div class="between">
 <b>💰 ROSIE · TRADING</b>
 <span class="tag">PREVIEW ONLY</span>
 </div>
-
 <div class="small" style="margin:6px 0 10px">
-BTC 15-minute · Rosie finds the current market
-and estimates contracts.
+BTC 15-minute · Rosie finds the current market and estimates contracts.
 </div>
-
 <div class="rosie-trade-actions">
-<button type="button"
-id="tradeBuyUp"
-class="rosie-trade-side selected-up"
-aria-pressed="true">
-BUY UP
-</button>
-
-<button type="button"
-id="tradeBuyDown"
-class="rosie-trade-side trade-down"
-aria-pressed="false">
-BUY DOWN
-</button>
+<button type="button" id="tradeBuyUp" class="rosie-trade-side selected-up" aria-pressed="true">BUY UP</button>
+<button type="button" id="tradeBuyDown" class="rosie-trade-side trade-down" aria-pressed="false">BUY DOWN</button>
 </div>
-
 <div class="between" style="margin-top:11px">
-<label for="tradeBudget">
-<b>Your amount ($)</b>
-</label>
+<label for="tradeBudget"><b>Your amount ($)</b></label>
 <span class="small" id="tradeSideLabel">BUY UP</span>
 </div>
-
-<input
-id="tradeBudget"
-class="rosie-trade-input"
-type="number"
-inputmode="decimal"
-min="0.01"
-max="100000"
-step="0.01"
-value="5"
-aria-label="Buy budget in dollars">
-
+<input id="tradeBudget" class="rosie-trade-input" type="number" inputmode="decimal" min="0.01" max="100000" step="0.01" value="5" aria-label="Buy budget in dollars">
 <div class="rosie-trade-budgets">
 <button type="button" data-trade-budget="5">$5</button>
 <button type="button" data-trade-budget="10">$10</button>
 <button type="button" data-trade-budget="20">$20</button>
 <button type="button" data-trade-budget="50">$50</button>
 </div>
-
-<button type="button"
-id="tradeReview"
-class="rosie-trade-review">
-REVIEW BUY · NO TRADE
-</button>
-
-<div id="tradeResult"
-class="rosie-trade-result"
-role="status"
-aria-live="polite">
-Choose UP or DOWN, then review your amount.
-No order will be placed.
+<button type="button" id="tradeReview" class="rosie-trade-review">REVIEW BUY · NO TRADE</button>
+<div id="tradeResult" class="rosie-trade-result" role="status" aria-live="polite">
+Choose UP or DOWN, then review your amount. No order will be placed.
 </div>
-
 <div class="rosie-trade-actions" style="margin-top:10px">
-<a class="rosie-trade-sell"
-href="https://btc-kalshi-api.onrender.com/rosie/account">
-SELL NOW
-</a>
-
-<a class="rosie-trade-sell"
-href="https://btc-kalshi-api.onrender.com/rosie/account">
-LIMIT SELL
-</a>
+<a class="rosie-trade-sell" href="https://btc-kalshi-api.onrender.com/rosie/account">SELL NOW</a>
+<a class="rosie-trade-sell" href="https://btc-kalshi-api.onrender.com/rosie/account">LIMIT SELL</a>
 </div>
-
 <div class="small" style="margin-top:8px">
-SELL buttons open your private Trading Center.
-Verify owned positions before selling.
-No automatic trades.
+SELL buttons open your private Trading Center to verify owned positions. All estimates are indicative; live trading is disabled.
 </div>
-
-<a class="rosie-trade-private"
-href="https://btc-kalshi-api.onrender.com/rosie/account">
-🔒 PRIVATE TRADING CENTER
-</a>
+<a class="rosie-trade-private" href="https://btc-kalshi-api.onrender.com/rosie/account">🔒 PRIVATE TRADING CENTER</a>
 </div>
+<!-- END ROSIE SIMPLE TRADING PANEL -->
 
-<!-- CONFIRMED SIGNAL -->
 <div class="row">
 <span>Confirmed signal</span>
 <b id="confirmed">NO CONFIRMED CALL</b>
@@ -527,77 +339,38 @@ href="https://btc-kalshi-api.onrender.com/rosie/account">
 <span class="muted">1M TREND</span>
 <b id="trend">—</b>
 </div>
-
 <div class="metric">
 <span class="muted">ROSIE SIGNAL SCORE</span>
 <b id="strength">—</b>
 </div>
 </div>
 
-<!-- BUY / SELL PRESSURE -->
 <div class="between">
 <b>BUY / SELL PRESSURE</b>
 <span id="pressureSource" class="tag">ROSIE</span>
 </div>
-
-<div class="bar">
-<div id="buybar"></div>
-</div>
-
+<div class="bar"><div id="buybar"></div></div>
 <div class="between muted">
 <span id="buyers">Buy —</span>
 <span id="sellers">Sell —</span>
 </div>
 
-<div class="row">
-<span>Pressure shift</span>
-<b id="shift">—</b>
-</div>
-
-<div class="row">
-<span>Whales $100K+</span>
-<b id="whale100">—</b>
-</div>
-
-<div class="row">
-<span>Whales $500K+</span>
-<b id="whale500">—</b>
-</div>
-
-<div class="row">
-<span>RSI · 15M</span>
-<b id="rsi">—</b>
-</div>
-
-<div class="row">
-<span>MACD · 15M</span>
-<b id="macd">—</b>
-</div>
-
-<div class="row">
-<span>Momentum</span>
-<b id="momentum">—</b>
-</div>
-
-<div class="row">
-<span>Support / Resistance</span>
-<b id="sr">—</b>
-</div>
-
-<div class="row">
-<span>Take Profit · Chart</span>
-<b id="tp">—</b>
-</div>
+<div class="row"><span>Pressure shift</span><b id="shift">—</b></div>
+<div class="row"><span>Whales $100K+</span><b id="whale100">—</b></div>
+<div class="row"><span>Whales $500K+</span><b id="whale500">—</b></div>
+<div class="row"><span>RSI · 15M</span><b id="rsi">—</b></div>
+<div class="row"><span>MACD · 15M</span><b id="macd">—</b></div>
+<div class="row"><span>Momentum</span><b id="momentum">—</b></div>
+<div class="row"><span>Support / Resistance</span><b id="sr">—</b></div>
+<div class="row"><span>Take Profit · Chart</span><b id="tp">—</b></div>
 
 <div class="small" style="margin-top:12px">
-EARLY, MID and FINAL lock independently.
-ROUND ENDING updates continuously and is
-tracked separately from locked-stage accuracy.
-Chart markers are technical observations,
-not confirmed orders or executions.
-Manual trading only.
+EARLY, MID and FINAL are locked independently for each round.
+ROUND ENDING updates throughout the round.
+Countdowns follow the 12–13m elapsed, 9–10m left and 4–5m left windows. Calls require matching backend snapshots.
+Scalp flip evidence is scored out of 10, not a probability.
+Estimates are uncalibrated. Manual trading only.
 </div>
-
 </section>
 </div>
 </div>
@@ -605,605 +378,25 @@ Manual trading only.
 <script>
 "use strict";
 
-/* ROSIE DASHBOARD — CHART ENGINE */
+const $=id=>document.getElementById(id);
+const API="https://btc-kalshi-api.onrender.com/api/kalshi";
+const SIGNAL_API="https://btc-kalshi-api.onrender.com/api/signals";
+const CB="https://api.exchange.coinbase.com";
 
-const $ = id => document.getElementById(id);
-
-const API =
-"https://btc-kalshi-api.onrender.com/api/kalshi";
-
-const SIGNAL_API =
-"https://btc-kalshi-api.onrender.com/api/signals";
-
-const CB =
-"https://api.exchange.coinbase.com";
-
-const money = v =>
-"$" + Number(v).toLocaleString("en-US", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2
+const money=v=>"$"+Number(v).toLocaleString("en-US",{
+minimumFractionDigits:2,maximumFractionDigits:2
 });
 
-function num(v) {
-  if (v === null || v === undefined || v === "") {
-    return null;
-  }
-  const n = Number(v);
-  return Number.isFinite(n) ? n : null;
+function num(v){
+if(v===null||v===undefined||v==="")return null;
+let n=Number(v);
+return Number.isFinite(n)?n:null;
 }
 
-function pct(v) {
-  const n = num(v);
-  return n === null ? "—" : n.toFixed(1) + "%";
+function pct(v){
+let n=num(v);
+return n===null?"—":n.toFixed(1)+"%";
 }
-
-function put(id, value) {
-  const element = $(id);
-  if (!element) return;
-  element.textContent =
-    value === null || value === undefined || value === ""
-      ? "—"
-      : String(value);
-}
-
-function first(...values) {
-  return values.find(
-    x => x !== null && x !== undefined && x !== ""
-  );
-}
-
-function dir(value) {
-  const s = String(value ?? "").trim().toUpperCase();
-  if (["UP", "BUY UP", "LIVE UP"].includes(s)) return "UP";
-  if (["DOWN", "BUY DOWN", "LIVE DOWN"].includes(s)) {
-    return "DOWN";
-  }
-  return "";
-}
-
-function cls(value) {
-  return value === "UP"
-    ? "up"
-    : value === "DOWN"
-      ? "down"
-      : "neutral";
-}
-
-function pressureLabel(p) {
-  return p >= 60
-    ? "BUYERS GAINING"
-    : p <= 40
-      ? "SELLERS GAINING"
-      : "MIXED";
-}
-
-function fmtSeconds(seconds) {
-  const s = Math.max(0, Math.ceil(seconds));
-  return String(Math.floor(s / 60)).padStart(2, "0") +
-    ":" + String(s % 60).padStart(2, "0");
-}
-
-/* DASHBOARD STATE */
-
-let bars = [];
-let price = 0;
-let chart = null;
-let candle = null;
-let emaLines = [];
-let targetLine = null;
-let levels = [];
-let markers = null;
-
-let rosie = null;
-let rosieAt = 0;
-let trades = [];
-let whales = [];
-let socket = null;
-
-let marketTicker = "";
-let kalshiClose = 0;
-
-let loadingRosie = false;
-let loadingKalshi = false;
-let historyLoading = false;
-
-let lockedCache = {
-  ticker: null,
-  EARLY: null,
-  MID: null,
-  FINAL: null
-};
-
-let latestRoundSeconds = null;
-let latestRoundAt = 0;
-let lastCoinbaseTickAt = 0;
-
-/* TECHNICAL INDICATORS */
-
-function ema(values, period) {
-  if (!values.length) return [];
-
-  const k = 2 / (period + 1);
-  let current = values[0];
-
-  return values.map(value => {
-    current = value * k + current * (1 - k);
-    return current;
-  });
-}
-
-function rsi(values, period = 14) {
-  if (values.length < period + 2) return null;
-
-  let gains = 0;
-  let losses = 0;
-
-  for (let i = 1; i <= period; i++) {
-    const change = values[i] - values[i - 1];
-    gains += Math.max(change, 0);
-    losses += Math.max(-change, 0);
-  }
-
-  gains /= period;
-  losses /= period;
-
-  for (let i = period + 1; i < values.length; i++) {
-    const change = values[i] - values[i - 1];
-
-    gains =
-      (gains * (period - 1) + Math.max(change, 0)) /
-      period;
-
-    losses =
-      (losses * (period - 1) + Math.max(-change, 0)) /
-      period;
-  }
-
-  if (losses === 0) {
-    return gains === 0 ? 50 : 100;
-  }
-
-  return 100 - 100 / (1 + gains / losses);
-}
-
-function calc() {
-  if (bars.length < 55) return null;
-
-  const closes = bars.map(bar => bar.close);
-
-  const e9 = ema(closes, 9);
-  const e21 = ema(closes, 21);
-  const e50 = ema(closes, 50);
-
-  const slow = ema(closes, 26);
-  const macd = ema(closes, 12).map(
-    (value, i) => value - slow[i]
-  );
-
-  const histogram =
-    macd.at(-1) - ema(macd, 9).at(-1);
-
-  const currentRsi = rsi(closes);
-
-  const score =
-    (closes.at(-1) > e9.at(-1) ? 1 : -1) +
-    (e9.at(-1) > e21.at(-1) ? 1 : -1) +
-    (e21.at(-1) > e50.at(-1) ? 1 : -1) +
-    (histogram > 0 ? 1 : -1) +
-    (currentRsi > 53 ? 1 : currentRsi < 47 ? -1 : 0);
-
-  return {
-    c: closes,
-    a: e9,
-    b: e21,
-    e: e50,
-    hist: histogram,
-    r: currentRsi,
-    score
-  };
-}
-
-/* CREATE CANDLESTICK CHART */
-
-function initChart() {
-  if (!window.LightweightCharts) {
-    put("status", "CHART UNAVAILABLE");
-    return;
-  }
-
-  chart = LightweightCharts.createChart($("chart"), {
-    width: $("chart").clientWidth,
-    height: $("chart").clientHeight,
-
-    layout: {
-      background: { color: "#151e2b" },
-      textColor: "#9baac0"
-    },
-
-    grid: {
-      vertLines: { color: "#202c3b" },
-      horzLines: { color: "#202c3b" }
-    },
-
-    timeScale: {
-      timeVisible: true,
-      secondsVisible: false,
-      barSpacing: 12,
-      rightOffset: 4
-    }
-  });
-
-  candle = chart.addSeries(
-    LightweightCharts.CandlestickSeries,
-    {
-      upColor: "#35d39a",
-      downColor: "#ff7787",
-      wickUpColor: "#35d39a",
-      wickDownColor: "#ff7787",
-      borderUpColor: "#35d39a",
-      borderDownColor: "#ff7787"
-    }
-  );
-
-  ["#f3c65c", "#55aaff", "#b994fa"].forEach(color => {
-    emaLines.push(
-      chart.addSeries(
-        LightweightCharts.LineSeries,
-        {
-          color,
-          lineWidth: 2,
-          priceLineVisible: false,
-          lastValueVisible: false
-        }
-      )
-    );
-  });
-
-  if (LightweightCharts.createSeriesMarkers) {
-    markers = LightweightCharts.createSeriesMarkers(
-      candle,
-      []
-    );
-  }
-
-  if (window.ResizeObserver) {
-    new ResizeObserver(() => {
-      chart.applyOptions({
-        width: $("chart").clientWidth,
-        height: $("chart").clientHeight
-      });
-    }).observe($("chart"));
-  }
-}
-
-/* CANDLE PATTERNS */
-
-function pattern() {
-  if (bars.length < 3) return;
-
-  const current = bars.at(-1);
-  const previous = bars.at(-2);
-
-  const range = current.high - current.low;
-  const body = Math.abs(current.close - current.open);
-
-  if (range <= 0) return;
-
-  const upper =
-    current.high - Math.max(current.open, current.close);
-
-  const lower =
-    Math.min(current.open, current.close) - current.low;
-
-  let name = "NO PATTERN";
-  let meaning = "Monitoring candles";
-  let side = "";
-
-  if (
-    previous.close < previous.open &&
-    current.close > current.open &&
-    current.open <= previous.close &&
-    current.close >= previous.open
-  ) {
-    name = "BULLISH ENGULFING";
-    side = "UP";
-    meaning = "Potential bullish reversal";
-  } else if (
-    previous.close > previous.open &&
-    current.close < current.open &&
-    current.open >= previous.close &&
-    current.close <= previous.open
-  ) {
-    name = "BEARISH ENGULFING";
-    side = "DOWN";
-    meaning = "Potential bearish reversal";
-  } else if (
-    lower > body * 2 &&
-    upper < range * 0.18
-  ) {
-    name = "HAMMER";
-    side = "UP";
-    meaning = "Lower price rejection";
-  } else if (
-    upper > body * 2 &&
-    lower < range * 0.18
-  ) {
-    name = "SHOOTING STAR";
-    side = "DOWN";
-    meaning = "Higher price rejection";
-  } else if (body / range < 0.1) {
-    name = "DOJI";
-    meaning = "Market indecision";
-  }
-
-  put("patternName", name);
-  $("patternName").className = cls(side);
-  put("patternMeaning", meaning);
-  put(
-    "patternStatus",
-    name === "NO PATTERN" ? "SCANNING" : "FORMING"
-  );
-}
-
-/* EMA, SUPPORT AND RESISTANCE */
-
-function draw() {
-  if (!candle || bars.length < 55) return;
-
-  const data = calc();
-  if (!data) return;
-
-  [data.a, data.b, data.e].forEach((values, index) => {
-    emaLines[index].setData(
-      values.map((value, i) => ({
-        time: bars[i].time,
-        value
-      }))
-    );
-  });
-
-  const trend =
-    data.score >= 3
-      ? "UP"
-      : data.score <= -3
-        ? "DOWN"
-        : "MIXED";
-
-  put("trend", trend);
-  $("trend").className = cls(trend);
-
-  if (!rosie || num(rosie.rsi_15m) === null) {
-    put("rsi", data.r.toFixed(1) + " · 1M");
-  }
-
-  if (!rosie || num(rosie.macd_15m) === null) {
-    put("macd", data.hist.toFixed(2) + " · 1M");
-  }
-
-  put(
-    "tp",
-    data.r > 72
-      ? "UP EXTENDED"
-      : data.r < 28
-        ? "DOWN EXTENDED"
-        : "MONITORING"
-  );
-
-  levels.forEach(line => {
-    try {
-      candle.removePriceLine(line);
-    } catch (error) {}
-  });
-
-  levels = [];
-
-  const highs = [];
-  const lows = [];
-
-  for (let i = 3; i < bars.length - 3; i++) {
-    const bar = bars[i];
-
-    const before = bars.slice(i - 3, i);
-    const after = bars.slice(i + 1, i + 4);
-
-    if (
-      bar.high > Math.max(...before.map(x => x.high)) &&
-      bar.high >= Math.max(...after.map(x => x.high))
-    ) {
-      highs.push(bar.high);
-    }
-
-    if (
-      bar.low < Math.min(...before.map(x => x.low)) &&
-      bar.low <= Math.min(...after.map(x => x.low))
-    ) {
-      lows.push(bar.low);
-    }
-  }
-
-  const currentPrice = data.c.at(-1);
-
-  const support = [
-    ...new Set(
-      lows
-        .filter(value => value < currentPrice)
-        .sort((a, b) => b - a)
-    )
-  ].slice(0, 2);
-
-  const resistance = [
-    ...new Set(
-      highs
-        .filter(value => value > currentPrice)
-        .sort((a, b) => a - b)
-    )
-  ].slice(0, 2);
-
-  support.forEach((value, index) => {
-    levels.push(
-      candle.createPriceLine({
-        price: value,
-        color: "#22976d",
-        lineStyle: 2,
-        title: "S" + (index + 1)
-      })
-    );
-  });
-
-  resistance.forEach((value, index) => {
-    levels.push(
-      candle.createPriceLine({
-        price: value,
-        color: "#c75a6b",
-        lineStyle: 2,
-        title: "R" + (index + 1)
-      })
-    );
-  });
-
-  put(
-    "sr",
-    (support[0] ? money(support[0]) : "—") +
-    " / " +
-    (resistance[0] ? money(resistance[0]) : "—")
-  );
-}
-
-<div class="small">
-Chart BUY / FLIP / SCALP and TRAP markers are technical observations, not Rosie's confirmed calls or executed trades.
-</div>
-</section>
-
-<section class="panel">
-<div class="between">
-<b>ROSIE · LIVE SIGNAL ENGINE</b>
-<span id="rosieStatus" class="tag">CONNECTING</span>
-</div>
-
-<div class="calls">
-<div class="call">
-<span class="muted">EARLY · 12–13M ELAPSED</span>
-<b id="early" class="yellow countdown">⏳ --:--</b>
-<div id="earlyScore" class="detail">—</div>
-<div id="earlyPressure" class="detail">—</div>
-<div id="earlyShift" class="detail">—</div>
-<div id="earlyTime" class="detail countdown-note">UNTIL EARLY CALL</div>
-</div>
-
-<div class="call">
-<span class="muted">MID · 9–10M LEFT</span>
-<b id="mid" class="yellow countdown">⏳ --:--</b>
-<div id="midScore" class="detail">—</div>
-<div id="midPressure" class="detail">—</div>
-<div id="midShift" class="detail">—</div>
-<div id="midTime" class="detail countdown-note">UNTIL MID CALL</div>
-</div>
-
-<div class="call">
-<span class="muted">FINAL · 4–5M LEFT</span>
-<b id="final" class="yellow countdown">⏳ --:--</b>
-<div id="finalScore" class="detail">—</div>
-<div id="finalPressure" class="detail">—</div>
-<div id="finalShift" class="detail">—</div>
-<div id="finalTime" class="detail countdown-note">UNTIL FINAL CALL</div>
-</div>
-
-<div class="call">
-<span class="muted">ROUND ENDING · UPDATING</span>
-<b id="live" class="neutral">CONNECTING</b>
-<div id="liveScore" class="detail">—</div>
-<div id="livePressure" class="detail">—</div>
-<div id="liveShift" class="detail">—</div>
-<div id="liveTime" class="detail">—</div>
-</div>
-</div>
-
-<div class="metrics">
-<div class="metric">
-<span class="muted">ESTIMATED UP · UNCALIBRATED</span>
-<b id="rosieUp" class="up">—</b>
-</div>
-<div class="metric">
-<span class="muted">ESTIMATED DOWN · UNCALIBRATED</span>
-<b id="rosieDown" class="down">—</b>
-</div>
-</div>
-
-<div class="muted" style="text-align:center">
-ROUND ENDING · PROJECTED RESULT
-</div>
-<div id="main" class="big neutral">CONNECTING</div>
-<div id="reason" class="small" style="text-align:center">
-Connecting to Rosie
-</div>
-
-<div class="small">
-Chart BUY / FLIP / SCALP and TRAP markers are technical observations, not Rosie's confirmed calls or executed trades.
-</div>
-</section>
-
-<section class="panel">
-<div class="between">
-<b>ROSIE · LIVE SIGNAL ENGINE</b>
-<span id="rosieStatus" class="tag">CONNECTING</span>
-</div>
-
-<div class="calls">
-<div class="call">
-<span class="muted">EARLY · 12–13M ELAPSED</span>
-<b id="early" class="yellow countdown">⏳ --:--</b>
-<div id="earlyScore" class="detail">—</div>
-<div id="earlyPressure" class="detail">—</div>
-<div id="earlyShift" class="detail">—</div>
-<div id="earlyTime" class="detail countdown-note">UNTIL EARLY CALL</div>
-</div>
-
-<div class="call">
-<span class="muted">MID · 9–10M LEFT</span>
-<b id="mid" class="yellow countdown">⏳ --:--</b>
-<div id="midScore" class="detail">—</div>
-<div id="midPressure" class="detail">—</div>
-<div id="midShift" class="detail">—</div>
-<div id="midTime" class="detail countdown-note">UNTIL MID CALL</div>
-</div>
-
-<div class="call">
-<span class="muted">FINAL · 4–5M LEFT</span>
-<b id="final" class="yellow countdown">⏳ --:--</b>
-<div id="finalScore" class="detail">—</div>
-<div id="finalPressure" class="detail">—</div>
-<div id="finalShift" class="detail">—</div>
-<div id="finalTime" class="detail countdown-note">UNTIL FINAL CALL</div>
-</div>
-
-<div class="call">
-<span class="muted">ROUND ENDING · UPDATING</span>
-<b id="live" class="neutral">CONNECTING</b>
-<div id="liveScore" class="detail">—</div>
-<div id="livePressure" class="detail">—</div>
-<div id="liveShift" class="detail">—</div>
-<div id="liveTime" class="detail">—</div>
-</div>
-</div>
-
-<div class="metrics">
-<div class="metric">
-<span class="muted">ESTIMATED UP · UNCALIBRATED</span>
-<b id="rosieUp" class="up">—</b>
-</div>
-<div class="metric">
-<span class="muted">ESTIMATED DOWN · UNCALIBRATED</span>
-<b id="rosieDown" class="down">—</b>
-</div>
-</div>
-
-<div class="muted" style="text-align:center">
-ROUND ENDING · PROJECTED RESULT
-</div>
-<div id="main" class="big neutral">CONNECTING</div>
-<div id="reason" class="small" style="text-align:center">
-Connecting to Rosie
-</div>
 
 function put(id,v){
 let e=$(id);
