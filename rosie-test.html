@@ -2971,7 +2971,9 @@ async function startRosieDashboard() {
     createLearningPanel();
 
     initChart();
-    setupTradeControls();
+    if (typeof setupTradeControls === "function") {
+  setupTradeControls();
+}
 
     put("status", "CONNECTING TO COINBASE");
     put("rosieStatus", "CONNECTING TO ROSIE");
