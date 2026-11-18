@@ -1138,10 +1138,10 @@ function updateRosieChartMarkers() {
 /* Confirmed flip alerts from Rosie */
 if (freshRosie()) {
   const flip = first(
-    rosie.scalp_flip,
-    rosie.flip_watch,
-    rosie.flip
-  );
+  rosie.flip,
+  rosie.scalp_flip,
+  rosie.flip_watch
+);
 
   if (flip && typeof flip === "object") {
     const flipDirection = signalDirection(flip);
