@@ -3076,6 +3076,13 @@ learningPhase(data.performance_record, "ROUND_ENDING")
     "Recorded accuracy does not guarantee future results. " +
     "ROUND ENDING is tracked separately."
   );
+  put(
+  "learningOverall",
+  resultText !== "—"
+    ? "Recorded outcomes: " + resultText +
+      ". ROUND ENDING is tracked separately."
+    : "Waiting for tracked outcomes."
+);
 }
 
 /* END PART 11 */
