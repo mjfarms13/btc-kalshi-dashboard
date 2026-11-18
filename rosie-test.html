@@ -134,18 +134,52 @@ outline-offset:3px;
 <div id="status" class="status">CONNECTING</div>
 </header>
 
+ 
 <section class="rosie-command" id="rosieCommand" aria-live="polite">
- <div class="command-head"><span>⚡ ROSIE · TRADE COMMAND</span><span id="commandFresh" class="tag">WAITING</span></div>
- <div id="commandMain" class="command-main yellow">WAIT · CHECKING</div>
- <div id="commandSub" class="command-sub">Waiting for a fresh, confirmed Rosie signal.</div>
- <div class="command-grid">
-  <div class="command-cell"><small>SIGNAL SCORE</small><b id="commandScore">—</b></div>
-  <div class="command-cell"><small>ROUND LEFT</small><b id="commandTime">—</b></div>
-  <div class="command-cell"><small>PRICE ACTION</small><b id="commandTrap">MONITORING</b></div>
- </div>
- <div id="commandReason" class="command-reason">No trade suggested until the current market and signal agree.</div>
- <div id="commandEntry" class="command-entry">Entry quote appears when you review a buy below. Quotes change; no automatic orders.</div>
+  <div class="command-head">
+    <span>⚡ ROSIE · TRADE COMMAND</span>
+    <span id="commandFresh" class="tag">WAITING</span>
+  </div>
+
+  <div id="commandMain" class="command-main yellow">WAIT · CHECKING</div>
+  <div id="commandSub" class="command-sub">Waiting for a fresh Rosie signal.</div>
+
+  <div class="command-grid">
+    <div class="command-cell">
+      <small>SIGNAL SCORE</small>
+      <b id="commandScore">—</b>
+    </div>
+    <div class="command-cell">
+      <small>ROUND LEFT</small>
+      <b id="commandTime">—</b>
+    </div>
+    <div class="command-cell">
+      <small>FLIP WATCH</small>
+      <b id="topFlipScore">— / 10</b>
+    </div>
+  </div>
+
+  <div id="commandReason" class="command-reason">Waiting for confirmation.</div>
+  <div id="commandEntry" class="command-entry">No entry suggested.</div>
+
+  <div class="box">
+    <b>🧭 TRADE MANAGEMENT</b>
+    <div class="row">
+      <span>IF HOLDING UP</span>
+      <b id="topHoldUp" class="neutral">WAITING</b>
+    </div>
+    <div class="row">
+      <span>IF HOLDING DOWN</span>
+      <b id="topHoldDown" class="neutral">WAITING</b>
+    </div>
+    <div class="small" id="topFlipStatus">Flip Watch: monitoring</div>
+  </div>
+
+  <div class="small">
+    Trading remains manual. Review your current Kalshi position and fees before acting.
+  </div>
 </section>
+
 
 <div class="layout">
 <section class="panel">
@@ -2014,6 +2048,32 @@ SAFETY RULES
 7. A BUY WATCH signal is not a guarantee of profit.
 */
 
+ 
+/* COMBINED TRADE COMMAND — LIVE CONNECTIONS */
+
+function updateTopTradeManagement(){
+  const copyField=(sourceId,targetId)=>{
+    const source=$(sourceId);
+    const target=$(targetId);
+    if(!source||!target)return;
+    target.textContent=source.textContent;
+    target.className=source.className;
+  };
+
+  copyField("holdUp","topHoldUp");
+  copyField("holdDown","topHoldDown");
+  copyField("flipChecks","topFlipScore");
+
+  const status=$("flipStatus")?.textContent||"MONITORING";
+  const direction=$("flipDirection")?.textContent||"";
+
+  put("topFlipStatus",
+    "Flip Watch: "+status+
+    (direction?" · "+direction:"")
+  );
+}
+
+ 
 /* PART 12 — STARTUP AND AUTOMATIC REFRESH */
 
 let rosieRefreshTimer=null;
@@ -2028,7 +2088,8 @@ updateTargetDisplay();
 updateTradeCommand();
 updateHoldExit();
 updateFlipWatch();
-
+updateTopTradeManagement();
+ 
 if(rosieAt&&signalAge()>ROSIE_MAX_AGE_MS){
 put("rosieStatus","SIGNAL STALE");
 }
