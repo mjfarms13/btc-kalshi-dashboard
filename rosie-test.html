@@ -1064,6 +1064,8 @@ Kalshi market.
 
 let rosieMarkerPlugin = null;
 let rosieMarkerHistory = [];
+let lastRosieFlipKey = "";
+let lastRosieFlipTime = 0;
 let lastRosieBuyWatch = {
   ticker: "",
   direction: ""
@@ -1153,7 +1155,16 @@ if (freshRosie()) {
       flip.confirmed === true ||
       flipStage === "CONFIRMED";
 
-    if (flipConfirmed && flipDirection) {
+    if (
+  flipConfirmed &&
+  flipDirection &&
+  (
+    lastRosieFlipKey !== marketTicker + ":" + flipDirection ||
+    Date.now() - lastRosieFlipTime > 900000
+  )
+) {
+  lastRosieFlipKey = marketTicker + ":" + flipDirection;
+  lastRosieFlipTime = Date.now();
       markers.push({
         time: last.time,
         position: flipDirection === "UP"
@@ -1249,7 +1260,16 @@ if (freshRosie()) {
     });
   }
 }
-rosieMarkerHistory.push(...markers);
+for (const marker of markers) {
+  const exists = rosieMarkerHistory.some(
+    m => m.time === marker.time &&
+         m.text === marker.text
+  );
+
+  if (!exists) {
+    rosieMarkerHistory.push(marker);
+  }
+}
 const validTimes = new Set(bars.map(b => b.time));
 rosieMarkerHistory = rosieMarkerHistory.filter(
   m => validTimes.has(m.time)
