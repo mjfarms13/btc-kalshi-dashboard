@@ -1220,43 +1220,36 @@ if (newBuyWatch) {
 }
   /* Display confirmed Rosie direction only */
 
-  if (freshRosie()) {
-    const direction = currentRosieDirection(rosie);
 
-    if (direction === "UP") {
-      markers.push({
-        time: last.time,
-        position: "belowBar",
-        color: "#35d39a",
-        shape: "arrowUp",
-        text: "ROSIE UP"
-      });
-    }
+/* Display Rosie direction when it changes */
 
-    if (direction === "DOWN") {
-      markers.push({
-        time: last.time,
-        position: "aboveBar",
-        color: "#ff7787",
-        shape: "arrowDown",
-        text: "ROSIE DOWN"
-      });
-    }
+if (freshRosie()) {
+  const direction = currentRosieDirection(rosie);
+
+  const previousDirection = [...rosieMarkerHistory]
+    .reverse()
+    .find(m => m.text === "ROSIE UP" ||
+               m.text === "ROSIE DOWN");
+
+  const previousText = previousDirection?.text || "";
+
+  if (
+    direction &&
+    previousText !== "ROSIE " + direction
+  ) {
+    markers.push({
+      time: last.time,
+      position: direction === "UP"
+        ? "belowBar" : "aboveBar",
+      color: direction === "UP"
+        ? "#35d39a" : "#ff7787",
+      shape: direction === "UP"
+        ? "arrowUp" : "arrowDown",
+      text: "ROSIE " + direction
+    });
   }
+}
 
-  markers.sort((a, b) => a.time - b.time);
-// Keep the latest observations for each candle.
-const currentTime = last.time;
-
-rosieMarkerHistory = rosieMarkerHistory.filter(
-  m => m.time !== currentTime
-);
-
-// Save current candle observations.
-rosieMarkerHistory.push(...markers);
-
-// Keep only markers belonging to loaded candles.
-const validTimes = new Set(bars.map(b => b.time));
 
 rosieMarkerHistory = rosieMarkerHistory.filter(
   m => validTimes.has(m.time)
