@@ -36,7 +36,6 @@ h1{font-size:16px;margin:0}
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}
 .row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid #29384d}
 .row b{text-align:right}
-.row b{text-align:right}
 .bar{height:12px;background:#d64c62;border-radius:20px;overflow:hidden;margin:7px 0}
 .bar div{height:100%;width:50%;background:#25ba86}
 .small{font-size:10px;line-height:1.5;color:#9baac0}
@@ -88,7 +87,7 @@ outline-offset:3px;
 .holdwhy b{color:#e7eef8}
 .holdstale{color:#f5c46a;font-size:10px}
 
-/* Compact main-screen trading preview; no private account credentials on GitHub Pages. */
+/* Compact trading preview */
 .rosie-trade{padding:12px}
 .rosie-trade-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .rosie-trade button,.rosie-trade a{font:inherit;cursor:pointer}
@@ -134,7 +133,6 @@ outline-offset:3px;
 <div id="status" class="status">CONNECTING</div>
 </header>
 
- 
 <section class="rosie-command" id="rosieCommand" aria-live="polite">
   <div class="command-head">
     <span>⚡ ROSIE · TRADE COMMAND</span>
@@ -180,7 +178,6 @@ outline-offset:3px;
   </div>
 </section>
 
-
 <div class="layout">
 <section class="panel">
 <div class="between">
@@ -192,7 +189,6 @@ outline-offset:3px;
 <div class="muted">ROUND REMAINING</div>
 <div id="clock" class="clock">--:--</div>
 </div>
-
 </div>
 
 <div id="chart" class="chart"></div>
@@ -237,7 +233,6 @@ outline-offset:3px;
 <div id="kalshiMarket" class="small" style="margin-top:8px">
 Loading market
 </div>
-
 </div>
 
 <div class="small">
@@ -314,85 +309,168 @@ Connecting to Rosie
 <b>🧭 ROSIE · HOLD / EXIT</b>
 <span id="holdFresh" class="tag">WAITING</span>
 </div>
+
 <div class="holdcards">
 <div class="holdcard">
 <div class="muted">IF HOLDING UP</div>
 <strong id="holdUp" class="neutral">WAITING</strong>
 <div id="holdUpChecks" class="holdchecks">—</div>
-<div id="holdUpReason" class="holdreason">Waiting for fresh signals.</div>
+<div id="holdUpReason" class="holdreason">
+Waiting for fresh signals.
 </div>
+</div>
+
 <div class="holdcard">
 <div class="muted">IF HOLDING DOWN</div>
 <strong id="holdDown" class="neutral">WAITING</strong>
 <div id="holdDownChecks" class="holdchecks">—</div>
-<div id="holdDownReason" class="holdreason">Waiting for fresh signals.</div>
+<div id="holdDownReason" class="holdreason">
+Waiting for fresh signals.
 </div>
 </div>
+</div>
+
 <div class="holdwhy">
 <b>WHY / MARKET CONTEXT</b>
-<div id="holdContext" class="holdreason">Collecting pressure, momentum, RSI and live direction.</div>
+<div id="holdContext" class="holdreason">
+Collecting pressure, momentum, RSI and live direction.
 </div>
+</div>
+
 <div class="small" style="margin-top:7px">
-Advisory only, not an instruction to sell. This HTML estimate uses 5 available checks;
-Telegram uses 6 including the worker's 15-minute EMA trend.
+Advisory only, not an instruction to sell.
+This HTML estimate uses 5 available checks;
+Telegram uses 6 including the worker's
+15-minute EMA trend.
 It cannot see your entry price, fees or live exit bid.
 </div>
 </div>
 
+<!-- FLIP WATCH -->
 <div class="flipbox">
 <div class="between">
 <span class="fliptitle">⚡ ROSIE FLIP WATCH</span>
 <b id="flipChecks" class="yellow">— / 10</b>
 </div>
-<div class="flipbar"><div id="flipFill"></div></div>
+
+<div class="flipbar">
+<div id="flipFill"></div>
+</div>
+
 <div class="between">
 <b id="flipStatus" class="neutral">MONITORING</b>
 <span id="flipDirection" class="small">—</span>
 </div>
-<div id="flipExplanation" class="small" style="margin-top:7px">
+
+<div id="flipExplanation"
+class="small"
+style="margin-top:7px">
 Waiting for Rosie's next scalp flip alert.
 </div>
 </div>
 
-<!-- ROSIE SIMPLE TRADING PANEL — PREVIEW ONLY -->
+<!-- MANUAL TRADING PREVIEW -->
 <div class="box rosie-trade" id="rosieTradePanel">
+
 <div class="between">
 <b>💰 ROSIE · TRADING</b>
 <span class="tag">PREVIEW ONLY</span>
 </div>
+
 <div class="small" style="margin:6px 0 10px">
-BTC 15-minute · Rosie finds the current market and estimates contracts.
+BTC 15-minute · Rosie finds the current market
+and estimates contracts.
 </div>
+
 <div class="rosie-trade-actions">
-<button type="button" id="tradeBuyUp" class="rosie-trade-side selected-up" aria-pressed="true">BUY UP</button>
-<button type="button" id="tradeBuyDown" class="rosie-trade-side trade-down" aria-pressed="false">BUY DOWN</button>
+<button
+type="button"
+id="tradeBuyUp"
+class="rosie-trade-side selected-up"
+aria-pressed="true">BUY UP</button>
+
+<button
+type="button"
+id="tradeBuyDown"
+class="rosie-trade-side trade-down"
+aria-pressed="false">BUY DOWN</button>
 </div>
+
 <div class="between" style="margin-top:11px">
-<label for="tradeBudget"><b>Your amount ($)</b></label>
-<span class="small" id="tradeSideLabel">BUY UP</span>
+<label for="tradeBudget">
+<b>Your amount ($)</b>
+</label>
+<span class="small" id="tradeSideLabel">
+BUY UP
+</span>
 </div>
-<input id="tradeBudget" class="rosie-trade-input" type="number" inputmode="decimal" min="0.01" max="100000" step="0.01" value="5" aria-label="Buy budget in dollars">
+
+<input
+id="tradeBudget"
+class="rosie-trade-input"
+type="number"
+inputmode="decimal"
+min="0.01"
+max="100000"
+step="0.01"
+value="5"
+aria-label="Buy budget in dollars">
+
 <div class="rosie-trade-budgets">
 <button type="button" data-trade-budget="5">$5</button>
 <button type="button" data-trade-budget="10">$10</button>
 <button type="button" data-trade-budget="20">$20</button>
 <button type="button" data-trade-budget="50">$50</button>
 </div>
-<button type="button" id="tradeReview" class="rosie-trade-review">REVIEW BUY · NO TRADE</button>
-<div id="tradeResult" class="rosie-trade-result" role="status" aria-live="polite">
-Choose UP or DOWN, then review your amount. No order will be placed.
-</div>
-<div class="rosie-trade-actions" style="margin-top:10px">
-<a class="rosie-trade-sell" href="https://btc-kalshi-api.onrender.com/rosie/account">SELL NOW</a>
-<a class="rosie-trade-sell" href="https://btc-kalshi-api.onrender.com/rosie/account">LIMIT SELL</a>
-</div>
-<div class="small" style="margin-top:8px">
-SELL buttons open your private Trading Center to verify owned positions. All estimates are indicative; live trading is disabled.
-</div>
-<a class="rosie-trade-private" href="https://btc-kalshi-api.onrender.com/rosie/account">🔒 PRIVATE TRADING CENTER</a>
-</div>
-<!-- END ROSIE SIMPLE TRADING PANEL -->
 
+<button
+type="button"
+id="tradeReview"
+class="rosie-trade-review">
+REVIEW BUY · NO TRADE
+</button>
+
+<div
+id="tradeResult"
+class="rosie-trade-result"
+role="status"
+aria-live="polite">
+Choose UP or DOWN, then review your amount.
+No order will be placed.
+</div>
+
+<div class="rosie-trade-actions" style="margin-top:10px">
+
+<a
+class="rosie-trade-sell"
+href="https://btc-kalshi-api.onrender.com/rosie/account">
+SELL NOW
+</a>
+
+<a
+class="rosie-trade-sell"
+href="https://btc-kalshi-api.onrender.com/rosie/account">
+LIMIT SELL
+</a>
+
+</div>
+
+<div class="small" style="margin-top:8px">
+SELL buttons open your private Trading Center
+to verify owned positions. All estimates are
+indicative; this dashboard does not submit orders.
+</div>
+
+<a
+class="rosie-trade-private"
+href="https://btc-kalshi-api.onrender.com/rosie/account">
+🔒 PRIVATE TRADING CENTER
+</a>
+
+</div>
+<!-- END MANUAL TRADING PREVIEW -->
+
+<!-- CONFIRMED SIGNAL -->
 <div class="row">
 <span>Confirmed signal</span>
 <b id="confirmed">NO CONFIRMED CALL</b>
@@ -403,108 +481,287 @@ SELL buttons open your private Trading Center to verify owned positions. All est
 <span class="muted">1M TREND</span>
 <b id="trend">—</b>
 </div>
+
 <div class="metric">
 <span class="muted">ROSIE SIGNAL SCORE</span>
 <b id="strength">—</b>
 </div>
 </div>
 
+<!-- BUY / SELL PRESSURE -->
 <div class="between">
 <b>BUY / SELL PRESSURE</b>
 <span id="pressureSource" class="tag">ROSIE</span>
 </div>
-<div class="bar"><div id="buybar"></div></div>
+
+<div class="bar">
+<div id="buybar"></div>
+</div>
+
 <div class="between muted">
 <span id="buyers">Buy —</span>
 <span id="sellers">Sell —</span>
 </div>
 
-<div class="row"><span>Pressure shift</span><b id="shift">—</b></div>
-<div class="row"><span>Whales $100K+</span><b id="whale100">—</b></div>
-<div class="row"><span>Whales $500K+</span><b id="whale500">—</b></div>
-<div class="row"><span>RSI · 15M</span><b id="rsi">—</b></div>
-<div class="row"><span>MACD · 15M</span><b id="macd">—</b></div>
-<div class="row"><span>Momentum</span><b id="momentum">—</b></div>
-<div class="row"><span>Support / Resistance</span><b id="sr">—</b></div>
-<div class="row"><span>Take Profit · Chart</span><b id="tp">—</b></div>
+<div class="row">
+<span>Pressure shift</span>
+<b id="shift">—</b>
+</div>
+
+<div class="row">
+<span>Whales $100K+</span>
+<b id="whale100">—</b>
+</div>
+
+<div class="row">
+<span>Whales $500K+</span>
+<b id="whale500">—</b>
+</div>
+
+<div class="row">
+<span>RSI · 15M</span>
+<b id="rsi">—</b>
+</div>
+
+<div class="row">
+<span>MACD · 15M</span>
+<b id="macd">—</b>
+</div>
+
+<div class="row">
+<span>Momentum</span>
+<b id="momentum">—</b>
+</div>
+
+<div class="row">
+<span>Support / Resistance</span>
+<b id="sr">—</b>
+</div>
+
+<div class="row">
+<span>Take Profit · Chart</span>
+<b id="tp">—</b>
+</div>
 
 <div class="small" style="margin-top:12px">
-EARLY, MID and FINAL are locked independently for each round.
+EARLY, MID and FINAL are locked independently
+for each round.
+
 ROUND ENDING updates throughout the round.
-Countdowns follow the 12–13m elapsed, 9–10m left and 4–5m left windows. Calls require matching backend snapshots.
-Scalp flip evidence is scored out of 10, not a probability.
-Estimates are uncalibrated. Manual trading only.
+
+Countdowns follow the 12–13m elapsed,
+9–10m left and 4–5m left windows.
+Calls require matching backend snapshots.
+
+Scalp flip evidence is scored out of 10,
+not a probability.
+
+Estimates are uncalibrated.
+Manual trading only.
 </div>
+
 </section>
+</div>
+
+<!-- ADAPTIVE LEARNING -->
+<section
+class="panel"
+id="adaptivePanel"
+style="margin-top:10px"
+aria-live="polite">
+
+<div class="between">
+<b>🧠 ROSIE · ADAPTIVE LEARNING</b>
+<span id="learningStatus" class="tag">
+WAITING FOR DATA
+</span>
+</div>
+
+<div class="small" style="margin-top:7px">
+Shadow analysis only.
+It does not change locked calls or place trades.
+</div>
+
+<div class="metrics">
+<div class="metric">
+<span class="muted">SHADOW DIRECTION</span>
+<b id="learningDirection">—</b>
+</div>
+
+<div class="metric">
+<span class="muted">AGREES WITH ROSIE</span>
+<b id="learningAgreement">—</b>
 </div>
 </div>
 
+<div class="small" id="learningReason">
+Waiting for adaptive engine.
+</div>
+
+<div class="box">
+<b>RECORDED PERFORMANCE</b>
+
+<div
+id="learningOverall"
+class="small"
+style="margin-top:7px">
+Waiting for tracked outcomes.
+</div>
+
+<div
+id="learningStages"
+class="small"
+style="margin-top:7px">
+EARLY · MID · FINAL · ROUND ENDING
+</div>
+
+<div class="small" style="margin-top:7px">
+ROUND ENDING is shown separately and is
+not included in the three-stage summary.
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- DASHBOARD JAVASCRIPT -->
 <script>
 "use strict";
 
-const $=id=>document.getElementById(id);
-const API="https://btc-kalshi-api.onrender.com/api/kalshi";
-const SIGNAL_API="https://btc-kalshi-api.onrender.com/api/signals";
-const CB="https://api.exchange.coinbase.com";
+const $ = id => document.getElementById(id);
 
-const money=v=>"$"+Number(v).toLocaleString("en-US",{
-minimumFractionDigits:2,maximumFractionDigits:2
+const API =
+"https://btc-kalshi-api.onrender.com/api/kalshi";
+
+const SIGNAL_API =
+"https://btc-kalshi-api.onrender.com/api/signals";
+
+const CB =
+"https://api.exchange.coinbase.com";
+
+const money = v =>
+"$" + Number(v).toLocaleString("en-US", {
+minimumFractionDigits: 2,
+maximumFractionDigits: 2
 });
 
-function num(v){
-if(v===null||v===undefined||v==="")return null;
-let n=Number(v);
-return Number.isFinite(n)?n:null;
+function num(v) {
+if (v === null || v === undefined || v === "")
+return null;
+
+let n = Number(v);
+
+return Number.isFinite(n) ? n : null;
 }
 
-function pct(v){
-let n=num(v);
-return n===null?"—":n.toFixed(1)+"%";
+function pct(v) {
+let n = num(v);
+
+return n === null
+? "—"
+: n.toFixed(1) + "%";
 }
 
-function put(id,v){
-let e=$(id);
-if(e)e.textContent=v===null||v===undefined||v===""?"—":String(v);
+function put(id, v) {
+let e = $(id);
+
+if (e) {
+e.textContent =
+v === null || v === undefined || v === ""
+? "—"
+: String(v);
+}
 }
 
-function first(...a){
-return a.find(x=>x!==null&&x!==undefined&&x!=="");
+function first(...a) {
+return a.find(
+x => x !== null &&
+x !== undefined &&
+x !== ""
+);
 }
 
-function dir(v){
-let s=String(v??"").trim().toUpperCase();
-if(["UP","BUY UP","LIVE UP"].includes(s))return "UP";
-if(["DOWN","BUY DOWN","LIVE DOWN"].includes(s))return "DOWN";
+function dir(v) {
+let s = String(v ?? "")
+.trim()
+.toUpperCase();
+
+if (
+["UP", "BUY UP", "LIVE UP"].includes(s)
+) return "UP";
+
+if (
+["DOWN", "BUY DOWN", "LIVE DOWN"].includes(s)
+) return "DOWN";
+
 return "";
 }
 
-function cls(v){
-return v==="UP"?"up":v==="DOWN"?"down":"neutral";
+function cls(v) {
+return v === "UP"
+? "up"
+: v === "DOWN"
+? "down"
+: "neutral";
 }
 
-function pressureLabel(p){
-return p>=60?"BUYERS GAINING":
-p<=40?"SELLERS GAINING":"MIXED";
+function pressureLabel(p) {
+return p >= 60
+? "BUYERS GAINING"
+: p <= 40
+? "SELLERS GAINING"
+: "MIXED";
 }
 
-function fmtSeconds(seconds){
-let s=Math.max(0,Math.ceil(seconds));
-return String(Math.floor(s/60)).padStart(2,"0")+":"+
-String(s%60).padStart(2,"0");
+function fmtSeconds(seconds) {
+let s = Math.max(0, Math.ceil(seconds));
+
+return String(Math.floor(s / 60))
+.padStart(2, "0")
++ ":" +
+String(s % 60).padStart(2, "0");
 }
 
-let bars=[],price=0,chart,candle,emaLines=[],targetLine;
-let levels=[],markers=null,rosie=null,rosieAt=0;
-let trades=[],whales=[],socket=null;
-let marketTicker="",kalshiClose=0;
-let loadingRosie=false,loadingKalshi=false;
-let lockedCache={ticker:null,EARLY:null,MID:null,FINAL:null};
-let latestRoundSeconds=null;
-let latestRoundAt=0;
-let lastCoinbaseTickAt=0;
-let historyLoading=false;
+/* DASHBOARD STATE */
 
-/* TECHNICAL INDICATORS */
+let bars = [];
+let price = 0;
+let chart;
+let candle;
+let emaLines = [];
+let targetLine;
+
+let levels = [];
+let markers = null;
+
+let rosie = null;
+let rosieAt = 0;
+
+let trades = [];
+let whales = [];
+let socket = null;
+
+let marketTicker = "";
+let kalshiClose = 0;
+
+let loadingRosie = false;
+let loadingKalshi = false;
+
+let lockedCache = {
+ticker: null,
+EARLY: null,
+MID: null,
+FINAL: null
+};
+
+let latestRoundSeconds = null;
+let latestRoundAt = 0;
+let lastCoinbaseTickAt = 0;
+let historyLoading = false;
+
+/* END PART 4 */
+
+/* PART 5 — TECHNICAL INDICATORS */
 
 function ema(a,n){
 if(!a.length)return [];
@@ -515,27 +772,34 @@ return a.map(x=>(v=x*k+v*(1-k)));
 function rsi(a,n=14){
 if(a.length<n+2)return null;
 let g=0,l=0;
+
 for(let i=1;i<=n;i++){
 let d=a[i]-a[i-1];
 g+=Math.max(d,0);
 l+=Math.max(-d,0);
 }
-g/=n;l/=n;
+
+g/=n;
+l/=n;
+
 for(let i=n+1;i<a.length;i++){
 let d=a[i]-a[i-1];
 g=(g*(n-1)+Math.max(d,0))/n;
 l=(l*(n-1)+Math.max(-d,0))/n;
 }
+
 return l===0?(g===0?50:100):100-100/(1+g/l);
 }
 
 function macdValues(values){
 if(values.length<35)return null;
+
 const fast=ema(values,12);
 const slow=ema(values,26);
 const line=fast.map((v,i)=>v-slow[i]);
 const signal=ema(line,9);
 const i=line.length-1;
+
 return {
 macd:line[i],
 signal:signal[i],
@@ -543,17 +807,25 @@ histogram:line[i]-signal[i]
 };
 }
 
+/* CANDLE PATTERN DETECTION */
+
 function candlePattern(candles){
 if(!candles||candles.length<2){
-return {name:"SCANNING",status:"FORMING",meaning:"Waiting for candles"};
+return {
+name:"SCANNING",
+status:"FORMING",
+meaning:"Waiting for candles"
+};
 }
 
 const c=candles[candles.length-1];
 const p=candles[candles.length-2];
+
 const body=Math.abs(c.close-c.open);
 const range=Math.max(c.high-c.low,0.000001);
 const upper=c.high-Math.max(c.open,c.close);
 const lower=Math.min(c.open,c.close)-c.low;
+
 const bull=c.close>c.open;
 const bear=c.close<c.open;
 const prevBull=p.close>p.open;
@@ -567,7 +839,11 @@ meaning:"Indecision. Wait for confirmation."
 };
 }
 
-if(bull&&prevBear&&c.open<=p.close&&c.close>=p.open){
+if(
+bull&&prevBear&&
+c.open<=p.close&&
+c.close>=p.open
+){
 return {
 name:"BULLISH ENGULFING",
 status:"FORMING",
@@ -575,7 +851,11 @@ meaning:"Potential upward reversal. Confirm with momentum and pressure."
 };
 }
 
-if(bear&&prevBull&&c.open>=p.close&&c.close<=p.open){
+if(
+bear&&prevBull&&
+c.open>=p.close&&
+c.close<=p.open
+){
 return {
 name:"BEARISH ENGULFING",
 status:"FORMING",
@@ -600,7 +880,8 @@ meaning:"Possible downward rejection. Confirmation required."
 }
 
 return {
-name:bull?"BULLISH CANDLE":bear?"BEARISH CANDLE":"NEUTRAL CANDLE",
+name:bull?"BULLISH CANDLE":
+bear?"BEARISH CANDLE":"NEUTRAL CANDLE",
 status:"FORMING",
 meaning:"Watching the current one-minute candle."
 };
@@ -608,17 +889,23 @@ meaning:"Watching the current one-minute candle."
 
 function updatePattern(){
 if(!bars.length)return;
+
 const p=candlePattern(bars);
+
 put("patternName",p.name);
 put("patternStatus",p.status);
 put("patternMeaning",p.meaning);
 }
 
+/* SUPPORT AND RESISTANCE */
+
 function supportResistance(candles){
 if(!candles||candles.length<5)return null;
+
 const recent=candles.slice(-30);
 const highs=recent.map(c=>c.high);
 const lows=recent.map(c=>c.low);
+
 return {
 support:Math.min(...lows),
 resistance:Math.max(...highs)
@@ -628,19 +915,33 @@ resistance:Math.max(...highs)
 function updateSupportResistance(){
 const sr=supportResistance(bars);
 if(!sr)return;
-put("sr",money(sr.support)+" / "+money(sr.resistance));
+
+put(
+"sr",
+money(sr.support)+" / "+money(sr.resistance)
+);
 }
+
+/* MOMENTUM */
 
 function chartMomentum(){
 if(bars.length<2)return "WAIT";
+
 const last=bars[bars.length-1].close;
-const previous=bars[Math.max(0,bars.length-2)].close;
+const previous=bars[
+Math.max(0,bars.length-2)
+].close;
+
 const delta=last-previous;
 const threshold=Math.max(previous*0.0001,1);
+
 if(delta>threshold)return "RISING";
 if(delta< -threshold)return "FALLING";
+
 return "FLAT";
 }
+
+/* UPDATE INDICATORS */
 
 function updateChartIndicators(){
 if(!bars.length)return;
@@ -657,7 +958,8 @@ const m=macdValues(closes);
 
 /*
 These are one-minute chart observations only.
-Do not overwrite the worker's 15-minute RSI or MACD.
+Do not overwrite the worker's 15-minute
+RSI or MACD.
 */
 
 if(!rosie){
@@ -665,41 +967,64 @@ put("momentum",momentum);
 }
 
 if(emaLines.length===3){
+
 [9,21,50].forEach((period,index)=>{
+
 const values=ema(closes,period);
+
 const data=bars.map((b,i)=>({
 time:b.time,
 value:values[i]
 }));
+
 try{
 emaLines[index].setData(data);
 }catch(e){
 console.warn("EMA update failed",e);
 }
+
 });
 }
 }
 
+/* CANDLE DIRECTION */
+
 function candleDirection(c){
 if(!c)return "WAIT";
+
 if(c.close>c.open)return "UP";
 if(c.close<c.open)return "DOWN";
+
 return "WAIT";
 }
+
+/* TRAP WATCH */
 
 function candleTrapWatch(){
 if(bars.length<4)return "MONITORING";
 
 const current=bars[bars.length-1];
 const previous=bars.slice(-4,-1);
-const priorHigh=Math.max(...previous.map(c=>c.high));
-const priorLow=Math.min(...previous.map(c=>c.low));
 
-if(current.high>priorHigh&&current.close<priorHigh){
+const priorHigh=Math.max(
+...previous.map(c=>c.high)
+);
+
+const priorLow=Math.min(
+...previous.map(c=>c.low)
+);
+
+if(
+current.high>priorHigh&&
+current.close<priorHigh
+){
 return "FAKE UP WATCH";
 }
 
-if(current.low<priorLow&&current.close>priorLow){
+if(
+current.low<priorLow&&
+current.close>priorLow
+){
 return "FAKE DOWN WATCH";
 }
 
@@ -710,21 +1035,26 @@ function updateTrapWatch(){
 put("commandTrap",candleTrapWatch());
 }
 
-function updateTechnicalChart() {
-  updateChartIndicators();
-  updateTrapWatch();
-  updatePriceLevels();
-  updateRosieChartMarkers();
+/* TECHNICAL CHART UPDATE */
+
+function updateTechnicalChart(){
+updateChartIndicators();
+updateTrapWatch();
+updatePriceLevels();
+updateRosieChartMarkers();
 }
 
 /*
 No technical pattern alone authorizes a trade.
-Rosie's Trade Command must also verify a fresh
-backend signal and current Kalshi market.
+
+Rosie's Trade Command must also verify
+a fresh backend signal and current
+Kalshi market.
 */
 
-/* PART 6 — LIVE COINBASE CHART */
+/* END PART 5 */
 
+/* PART 6 — LIVE COINBASE CHART */
 
 // ROSIE PRICE LEVEL LINES
 let supportLine = null;
@@ -852,1600 +1182,1871 @@ function initChart() {
   observer.observe(el);
 }
 
+async function loadCoinbaseHistory() {
+  if (historyLoading) return;
+  historyLoading = true;
 
-async function loadCoinbaseHistory(){
-if(historyLoading)return;
-historyLoading=true;
+  try {
+    const url = CB + "/products/BTC-USD/candles?granularity=60";
+    const response = await fetch(url, { cache: "no-store" });
 
-try{
-const url=CB+"/products/BTC-USD/candles?granularity=60";
-const response=await fetch(url,{cache:"no-store"});
-if(!response.ok)throw Error("Coinbase history unavailable");
+    if (!response.ok) {
+      throw Error("Coinbase history unavailable");
+    }
 
-const raw=await response.json();
-if(!Array.isArray(raw))throw Error("Invalid candle data");
+    const raw = await response.json();
+    if (!Array.isArray(raw)) {
+      throw Error("Invalid candle data");
+    }
 
-const parsed=raw.map(x=>({
-time:Number(x[0]),
-low:Number(x[1]),
-high:Number(x[2]),
-open:Number(x[3]),
-close:Number(x[4]),
-volume:Number(x[5])
-}))
-.filter(x=>
-Number.isFinite(x.time)&&
-Number.isFinite(x.open)&&
-Number.isFinite(x.high)&&
-Number.isFinite(x.low)&&
-Number.isFinite(x.close)
-)
-.sort((a,b)=>a.time-b.time);
+    const parsed = raw.map(x => ({
+      time: Number(x[0]),
+      low: Number(x[1]),
+      high: Number(x[2]),
+      open: Number(x[3]),
+      close: Number(x[4]),
+      volume: Number(x[5])
+    }))
+    .filter(x =>
+      Number.isFinite(x.time) &&
+      Number.isFinite(x.open) &&
+      Number.isFinite(x.high) &&
+      Number.isFinite(x.low) &&
+      Number.isFinite(x.close)
+    )
+    .sort((a, b) => a.time - b.time);
 
-const unique=new Map();
-parsed.forEach(c=>unique.set(c.time,c));
-bars=Array.from(unique.values()).sort((a,b)=>a.time-b.time);
+    const unique = new Map();
+    parsed.forEach(c => unique.set(c.time, c));
 
-if(bars.length){
-price=bars[bars.length-1].close;
-put("price",money(price));
+    bars = Array.from(unique.values())
+      .sort((a, b) => a.time - b.time);
 
-if(candle)candle.setData(bars);
-updateTechnicalChart();
+    if (bars.length) {
+      price = bars[bars.length - 1].close;
+      put("price", money(price));
 
-if(chart){
-chart.timeScale().setVisibleLogicalRange({
-  from: Math.max(0, bars.length - 30),
-  to: bars.length + 3
-});
-}
-}
-}catch(e){
-console.warn("Coinbase history:",e.message);
-}finally{
-historyLoading=false;
-}
-}
+      if (candle) candle.setData(bars);
+      updateTechnicalChart();
 
-function updateCoinbaseTrade(t){
-const p=num(t.price);
-if(p===null||p<=0)return;
+      if (chart) {
+        chart.timeScale().setVisibleLogicalRange({
+          from: Math.max(0, bars.length - 30),
+          to: bars.length + 3
+        });
+      }
+    }
 
-const timestamp=Date.parse(t.time||"");
-const ms=Number.isFinite(timestamp)?timestamp:Date.now();
-const bucket=Math.floor(ms/60000)*60;
-
-price=p;
-lastCoinbaseTickAt=Date.now();
-put("price",money(p));
-
-const last=bars[bars.length-1];
-
-if(last&&bucket<last.time)return;
-
-if(last&&last.time===bucket){
-last.high=Math.max(last.high,p);
-last.low=Math.min(last.low,p);
-last.close=p;
-}else{
-bars.push({
-time:bucket,
-open:p,
-high:p,
-low:p,
-close:p,
-volume:0
-});
-if(bars.length>350)bars.shift();
+  } catch (e) {
+    console.warn("Coinbase history:", e.message);
+  } finally {
+    historyLoading = false;
+  }
 }
 
-const current=bars[bars.length-1];
+function updateCoinbaseTrade(t) {
+  const p = num(t.price);
+  if (p === null || p <= 0) return;
 
-if(candle){
-try{
-candle.update(current);
-}catch(e){
-console.warn("Candle update:",e.message);
+  const timestamp = Date.parse(t.time || "");
+  const ms = Number.isFinite(timestamp)
+    ? timestamp
+    : Date.now();
+
+  const bucket = Math.floor(ms / 60000) * 60;
+
+  price = p;
+  lastCoinbaseTickAt = Date.now();
+  put("price", money(p));
+
+  const last = bars[bars.length - 1];
+
+  if (last && bucket < last.time) return;
+
+  if (last && last.time === bucket) {
+    last.high = Math.max(last.high, p);
+    last.low = Math.min(last.low, p);
+    last.close = p;
+  } else {
+    bars.push({
+      time: bucket,
+      open: p,
+      high: p,
+      low: p,
+      close: p,
+      volume: 0
+    });
+
+    if (bars.length > 350) bars.shift();
+  }
+
+  const current = bars[bars.length - 1];
+
+  if (candle) {
+    try {
+      candle.update(current);
+    } catch (e) {
+      console.warn("Candle update:", e.message);
+    }
+  }
+
+  updateTechnicalChart();
 }
+
+function connectCoinbase() {
+  if (socket) {
+    try { socket.close(); } catch (e) {}
+    socket = null;
+  }
+
+  try {
+    socket = new WebSocket(
+      "wss://ws-feed.exchange.coinbase.com"
+    );
+
+    socket.onopen = () => {
+      socket.send(JSON.stringify({
+        type: "subscribe",
+        product_ids: ["BTC-USD"],
+        channels: ["matches"]
+      }));
+
+      put("status", "COINBASE CONNECTED");
+    };
+
+    socket.onmessage = event => {
+      let d;
+      try {
+        d = JSON.parse(event.data);
+      } catch (e) {
+        return;
+      }
+
+      if (
+        d.type === "match" ||
+        d.type === "last_match"
+      ) {
+        updateCoinbaseTrade(d);
+      }
+    };
+
+    socket.onerror = () => {
+      put("status", "COINBASE RECONNECTING");
+    };
+
+    socket.onclose = () => {
+      put("status", "COINBASE DISCONNECTED");
+      setTimeout(connectCoinbase, 5000);
+    };
+
+  } catch (e) {
+    put("status", "COINBASE UNAVAILABLE");
+    setTimeout(connectCoinbase, 5000);
+  }
 }
 
-updateTechnicalChart();
-}
-
-function connectCoinbase(){
-if(socket){
-try{socket.close()}catch(e){}
-socket=null;
-}
-
-try{
-socket=new WebSocket("wss://ws-feed.exchange.coinbase.com");
-
-socket.onopen=()=>{
-socket.send(JSON.stringify({
-type:"subscribe",
-product_ids:["BTC-USD"],
-channels:["matches"]
-}));
-put("status","COINBASE CONNECTED");
-};
-
-socket.onmessage=event=>{
-let d;
-try{d=JSON.parse(event.data)}catch(e){return}
-
-if(d.type==="match"||d.type==="last_match"){
-updateCoinbaseTrade(d);
-}
-};
-
-socket.onerror=()=>{
-put("status","COINBASE RECONNECTING");
-};
-
-socket.onclose=()=>{
-put("status","COINBASE DISCONNECTED");
-setTimeout(connectCoinbase,5000);
-};
-}catch(e){
-put("status","COINBASE UNAVAILABLE");
-setTimeout(connectCoinbase,5000);
-}
-}
+/* END PART 6 */
 
 /* PART 7 — KALSHI MARKET AND COUNTDOWN */
 
-let kalshiUpdatedAt=0;
-let kalshiQuoteFresh=false;
-let kalshiUpAsk=null;
-let kalshiDownAsk=null;
+let kalshiUpdatedAt = 0;
+let kalshiQuoteFresh = false;
+let kalshiUpAsk = null;
+let kalshiDownAsk = null;
 
-function parseMarketTime(value){
-if(!value)return 0;
+function parseMarketTime(value) {
+  if (!value) return 0;
 
-if(typeof value==="number"){
-return value<1e12?value*1000:value;
+  if (typeof value === "number") {
+    return value < 1e12 ? value * 1000 : value;
+  }
+
+  const ms = Date.parse(String(value));
+  return Number.isFinite(ms) ? ms : 0;
 }
 
-const ms=Date.parse(String(value));
-return Number.isFinite(ms)?ms:0;
+function remainingSeconds() {
+  if (kalshiClose > 0) {
+    return Math.max(0, Math.ceil(
+      (kalshiClose - Date.now()) / 1000
+    ));
+  }
+
+  if (
+    latestRoundSeconds !== null &&
+    latestRoundAt > 0
+  ) {
+    return Math.max(0, Math.ceil(
+      latestRoundSeconds -
+      (Date.now() - latestRoundAt) / 1000
+    ));
+  }
+
+  return null;
 }
 
-function remainingSeconds(){
-if(kalshiClose>0){
-return Math.max(0,Math.ceil(
-(kalshiClose-Date.now())/1000
-));
+function updateRoundClock() {
+  const left = remainingSeconds();
+
+  if (left === null) {
+    put("clock", "--:--");
+    put("commandTime", "—");
+    return;
+  }
+
+  put("clock", fmtSeconds(left));
+  put("commandTime", fmtSeconds(left));
+
+  if (left === 0) {
+    put("clock", "00:00");
+  }
 }
 
-if(latestRoundSeconds!==null&&latestRoundAt>0){
-return Math.max(0,Math.ceil(
-latestRoundSeconds-(Date.now()-latestRoundAt)/1000
-));
+function normalizeAsk(value) {
+  const n = num(value);
+
+  if (n === null || n < 0 || n > 100) {
+    return null;
+  }
+
+  return n;
 }
 
-return null;
+function updateTargetDisplay() {
+  const target = num($("target")?.value);
+
+  if (target === null || price <= 0) {
+    put("gap", "WAITING FOR TARGET");
+    return;
+  }
+
+  const difference = price - target;
+
+  const direction =
+    difference > 0 ? "ABOVE" :
+    difference < 0 ? "BELOW" : "AT";
+
+  put(
+    "gap",
+    direction + " TARGET · " +
+    money(Math.abs(difference))
+  );
 }
 
-function updateRoundClock(){
-const left=remainingSeconds();
+function clearKalshiMarket() {
+  kalshiQuoteFresh = false;
+  kalshiUpAsk = null;
+  kalshiDownAsk = null;
+  kalshiUpdatedAt = 0;
+  marketTicker = "";
+  kalshiClose = 0;
 
-if(left===null){
-put("clock","--:--");
-put("commandTime","—");
-return;
+  $("target").value = "";
+  put("gap", "WAITING FOR MARKET");
+  put("kalshiUp", "—");
+  put("kalshiDown", "—");
+  put("kalshiMarket", "Market unavailable");
 }
 
-put("clock",fmtSeconds(left));
-put("commandTime",fmtSeconds(left));
+async function loadKalshiMarket() {
+  if (loadingKalshi) return;
+  loadingKalshi = true;
 
-if(left===0){
-put("clock","00:00");
-}
-}
+  try {
+    const response = await fetch(API, {
+      cache: "no-store",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
 
-function normalizeAsk(value){
-const n=num(value);
-if(n===null||n<0||n>100)return null;
-return n;
-}
+    if (!response.ok) {
+      throw Error(
+        "Kalshi API returned " + response.status
+      );
+    }
 
-function updateTargetDisplay(){
-const target=num($("target")?.value);
-if(target===null||price<=0){
-put("gap","WAITING FOR TARGET");
-return;
-}
+    const payload = await response.json();
 
-const difference=price-target;
-const direction=difference>0?"ABOVE":
-difference<0?"BELOW":"AT";
+    if (!payload || typeof payload !== "object") {
+      throw Error("Invalid Kalshi response");
+    }
 
-put("gap",
-direction+" TARGET · "+
-money(Math.abs(difference))
-);
-}
+    const d =
+      payload.market &&
+      typeof payload.market === "object"
+      ? { ...payload, ...payload.market }
+      : payload;
 
-function clearKalshiMarket(){
-kalshiQuoteFresh=false;
-kalshiUpAsk=null;
-kalshiDownAsk=null;
-kalshiUpdatedAt=0;
-marketTicker="";
-kalshiClose=0;
+    const ticker = first(
+      d.ticker,
+      d.market_ticker,
+      d.marketTicker
+    );
 
-put("target","");
-put("gap","WAITING FOR MARKET");
-put("kalshiUp","—");
-put("kalshiDown","—");
-put("kalshiMarket","Market unavailable");
-}
+    const target = first(
+      d.target,
+      d.target_price,
+      d.strike_price,
+      d.strike
+    );
 
-async function loadKalshiMarket(){
-if(loadingKalshi)return;
-loadingKalshi=true;
+    const upAsk = first(
+      d.up_ask_cents,
+      d.yes_ask_cents
+    );
 
-try{
-const response=await fetch(API,{
-cache:"no-store",
-headers:{"Accept":"application/json"}
-});
+    const downAsk = first(
+      d.down_ask_cents,
+      d.no_ask_cents
+    );
 
-if(!response.ok){
-throw Error("Kalshi API returned "+response.status);
-}
+    const closeTime = first(
+      d.close_time,
+      d.expiration_time,
+      d.market_close_time
+    );
 
-const payload=await response.json();
+    const secondsLeft = num(first(
+      d.seconds_left,
+      d.remaining_seconds
+    ));
 
-if(!payload||typeof payload!=="object"){
-throw Error("Invalid Kalshi response");
-}
+    if (!ticker) {
+      throw Error("No current market ticker");
+    }
 
-const d=payload.market&&typeof payload.market==="object"
-?{...payload,...payload.market}
-:payload;
+    const newTicker = String(ticker);
 
-const ticker=first(
-d.ticker,
-d.market_ticker,
-d.marketTicker
-);
+    if (
+      marketTicker &&
+      marketTicker !== newTicker
+    ) {
+      lockedCache = {
+        ticker: newTicker,
+        EARLY: null,
+        MID: null,
+        FINAL: null
+      };
 
-const target=first(
-d.target,
-d.target_price,
-d.strike_price,
-d.strike
-);
+      rosie = null;
+      rosieAt = 0;
 
-const upAsk=first(
-d.up_ask_cents,
-d.yes_ask_cents
-);
+      put("rosieStatus", "NEW ROUND");
+    }
 
-const downAsk=first(
-d.down_ask_cents,
-d.no_ask_cents
-);
+    marketTicker = newTicker;
 
-const closeTime=first(
-d.close_time,
-d.expiration_time,
-d.market_close_time
-);
+    const targetNumber = num(target);
 
-const secondsLeft=num(first(
-d.seconds_left,
-d.remaining_seconds
-));
+    if (targetNumber !== null) {
+      $("target").value = String(targetNumber);
+    } else {
+      $("target").value = "";
+    }
 
-if(!ticker){
-throw Error("No current market ticker");
-}
+    kalshiUpAsk = normalizeAsk(upAsk);
+    kalshiDownAsk = normalizeAsk(downAsk);
 
-const newTicker=String(ticker);
+    put(
+      "kalshiUp",
+      kalshiUpAsk === null
+        ? "—"
+        : kalshiUpAsk + "¢"
+    );
 
-if(marketTicker&&marketTicker!==newTicker){
-lockedCache={
-ticker:newTicker,
-EARLY:null,
-MID:null,
-FINAL:null
-};
-rosie=null;
-rosieAt=0;
-put("rosieStatus","NEW ROUND");
-}
+    put(
+      "kalshiDown",
+      kalshiDownAsk === null
+        ? "—"
+        : kalshiDownAsk + "¢"
+    );
 
-marketTicker=newTicker;
+    kalshiUpdatedAt = Date.now();
 
-const targetNumber=num(target);
-if(targetNumber!==null){
-$("target").value=String(targetNumber);
-}else{
-$("target").value="";
-}
+    kalshiQuoteFresh =
+      kalshiUpAsk !== null &&
+      kalshiDownAsk !== null;
 
-kalshiUpAsk=normalizeAsk(upAsk);
-kalshiDownAsk=normalizeAsk(downAsk);
+    const parsedClose = parseMarketTime(closeTime);
 
-put("kalshiUp",
-kalshiUpAsk===null?"—":kalshiUpAsk+"¢"
-);
-put("kalshiDown",
-kalshiDownAsk===null?"—":kalshiDownAsk+"¢"
-);
+    if (parsedClose > 0) {
+      kalshiClose = parsedClose;
+    } else if (secondsLeft !== null) {
+      kalshiClose =
+        Date.now() + secondsLeft * 1000;
+    }
 
-kalshiUpdatedAt=Date.now();
+    if (secondsLeft !== null) {
+      latestRoundSeconds = secondsLeft;
+      latestRoundAt = Date.now();
+    }
 
-kalshiQuoteFresh=
-kalshiUpAsk!==null&&
-kalshiDownAsk!==null;
+    put(
+      "kalshiMarket",
+      "MARKET · " + marketTicker
+    );
 
-const parsedClose=parseMarketTime(closeTime);
+    updateTargetDisplay();
+    updatePriceLevels();
+    updateRoundClock();
 
-if(parsedClose>0){
-kalshiClose=parsedClose;
-}else if(secondsLeft!==null){
-kalshiClose=Date.now()+secondsLeft*1000;
-}
+  } catch (e) {
+    console.warn(
+      "Kalshi market:",
+      e.message
+    );
 
-if(secondsLeft!==null){
-latestRoundSeconds=secondsLeft;
-latestRoundAt=Date.now();
-}
+    kalshiQuoteFresh = false;
 
-put("kalshiMarket","MARKET · "+marketTicker);
+    put(
+      "kalshiMarket",
+      "MARKET DATA UNAVAILABLE"
+    );
 
-updateTargetDisplay();updatePriceLevels();
-updateRoundClock();
-
-}catch(e){
-console.warn("Kalshi market:",e.message);
-kalshiQuoteFresh=false;
-put("kalshiMarket","MARKET DATA UNAVAILABLE");
-}finally{
-loadingKalshi=false;
-}
+  } finally {
+    loadingKalshi = false;
+  }
 }
 
-function currentQuoteAge(){
-if(!kalshiUpdatedAt)return Infinity;
-return Date.now()-kalshiUpdatedAt;
+function currentQuoteAge() {
+  if (!kalshiUpdatedAt) return Infinity;
+
+  return Date.now() - kalshiUpdatedAt;
 }
 
-function hasFreshKalshiQuote(){
-return Boolean(
-marketTicker&&
-kalshiQuoteFresh&&
-currentQuoteAge()<30000&&
-remainingSeconds()!==null&&
-remainingSeconds()>0
-);
+function hasFreshKalshiQuote() {
+  return Boolean(
+    marketTicker &&
+    kalshiQuoteFresh &&
+    currentQuoteAge() < 30000 &&
+    remainingSeconds() !== null &&
+    remainingSeconds() > 0
+  );
 }
 
-function currentEntryQuote(side){
-if(!hasFreshKalshiQuote())return null;
+function currentEntryQuote(side) {
+  if (!hasFreshKalshiQuote()) {
+    return null;
+  }
 
-if(side==="UP")return kalshiUpAsk;
-if(side==="DOWN")return kalshiDownAsk;
+  if (side === "UP") {
+    return kalshiUpAsk;
+  }
 
-return null;
+  if (side === "DOWN") {
+    return kalshiDownAsk;
+  }
+
+  return null;
 }
 
 /*
-Quotes are indicative and can change before review.
+Quotes are indicative and can change
+before review.
+
 No order is submitted by this dashboard.
 */
 
+/* END PART 7 */
+
 /* PART 8 — ROSIE LIVE SIGNAL ENGINE */
 
-const ROSIE_MAX_AGE_MS=90000;
+const ROSIE_MAX_AGE_MS = 90000;
 
-function signalAge(){
-return rosieAt?Date.now()-rosieAt:Infinity;
+function signalAge() {
+  return rosieAt ? Date.now() - rosieAt : Infinity;
 }
 
-function freshRosie(){
-return Boolean(
-rosie &&
-signalAge()<ROSIE_MAX_AGE_MS &&
-(!marketTicker ||
- !rosie.ticker ||
- String(rosie.ticker)===marketTicker)
-);
+function freshRosie() {
+  return Boolean(
+    rosie &&
+    signalAge() < ROSIE_MAX_AGE_MS &&
+    (!marketTicker ||
+     !rosie.ticker ||
+     String(rosie.ticker) === marketTicker)
+  );
 }
 
-function signalDirection(value){
-if(value&&typeof value==="object"){
-return dir(first(
-value.direction,
-value.call,
-value.prediction,
-value.side
-));
-}
-return dir(value);
+function signalDirection(value) {
+  if (value && typeof value === "object") {
+    return dir(first(
+      value.direction,
+      value.call,
+      value.prediction,
+      value.side
+    ));
+  }
+
+  return dir(value);
 }
 
-
-function signalScore(value){
-  if(!value || typeof value !== "object") return null;
+function signalScore(value) {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
 
   const direct = num(first(
     value.score,
     value.strength
   ));
 
-  if(direct !== null) return direct;
+  if (direct !== null) return direct;
 
   const direction = signalDirection(value);
   const up = num(value.up_score);
   const down = num(value.down_score);
 
-  if(direction === "UP") return up;
-  if(direction === "DOWN") return down;
+  if (direction === "UP") return up;
+  if (direction === "DOWN") return down;
 
   return null;
 }
 
-
-function stageObject(data,name){
-const key=name.toLowerCase();
-
-const locked=first(
-data.locked_stages?.[name],
-data.locked_stages?.[key],
-data.stage_calls?.[name],
-data.stage_calls?.[key],
-data[key+"_call"]
-);
-
-if(locked&&typeof locked==="object"){
-return locked;
-}
-
-if(typeof locked==="string"){
-return {direction:locked};
-}
-
-return null;
-}
-
-function stageTiming(name,left){
-if(left===null)return "WAITING FOR CLOCK";
-
-const elapsed=900-left;
-
-if(name==="EARLY"){
-if(elapsed<720){
-return "IN "+fmtSeconds(720-elapsed);
-}
-if(elapsed<=780)return "CALL WINDOW";
-return "WINDOW PASSED";
-}
-
-if(name==="MID"){
-if(left>600)return "IN "+fmtSeconds(left-600);
-if(left>=540)return "CALL WINDOW";
-return "WINDOW PASSED";
-}
-
-if(name==="FINAL"){
-if(left>300)return "IN "+fmtSeconds(left-300);
-if(left>=240)return "CALL WINDOW";
-return "WINDOW PASSED";
-}
-
-return "—";
-}
-
-function showStage(name,data){
-const key=name.toLowerCase();
-const left=remainingSeconds();
-const stage=stageObject(data,name);
-
-put(key+"Time",stageTiming(name,left));
-
-if(!stage){
-put(key,"⏳ "+(
-left===null?"--:--":
-stageTiming(name,left).startsWith("IN ")
-?stageTiming(name,left).slice(3)
-:"WAIT"
-));
-put(key+"Score","NO LOCKED CALL");
-put(key+"Pressure","—");
-put(key+"Shift","—");
-$(key).className="yellow countdown";
-return;
-}
-
-const direction=signalDirection(stage);
-const score=signalScore(stage);
-const pressure=num(first(
-stage.buy_pressure,
-stage.pressure
-));
-
-put(key,direction||"WAIT");
-$(key).className=(direction?cls(direction):"yellow")+" countdown";
-
-put(key+"Score",
-score===null?"SCORE —":"SCORE "+score.toFixed(0)+"/100"
-);
-
-put(key+"Pressure",
-pressure===null?"PRESSURE —":
-"BUY "+pressure.toFixed(0)+"%"
-);
-
-put(key+"Shift",first(
-stage.pressure_shift,
-stage.momentum,
-"LOCKED"
-));
-}
-
-function showRoundEnding(data){
-const projection=first(
-data.live_projection,
-data.round_ending,
-data.live_call,
-data.live_direction
-);
-
-const direction=signalDirection(projection);
-
-
-const directionScores = {
-  direction,
-  up_score: first(projection?.up_score, data.up_score),
-  down_score: first(projection?.down_score, data.down_score)
-};
-
-const score = signalScore(projection) ??
-  signalScore(directionScores) ??
-  num(data.live_score);
-
-
-put("live",direction||"WAIT");
-$("live").className=cls(direction);
-
-put("liveScore",
-score===null?"SCORE —":"SCORE "+score.toFixed(0)+"/100"
-);
-
-put("livePressure",
-"BUY "+pct(first(
-projection?.buy_pressure,
-data.buy_pressure
-))
-);
-
-put("liveShift",first(
-projection?.momentum,
-data.momentum,
-"—"
-));
-
-put("liveTime","CONTINUOUS PROJECTION");
-
-put("main",direction||"WAIT");
-$("main").className="big "+cls(direction);
-
-put("reason",first(
-projection?.reason,
-data.reason,
-"Projection updates throughout the round."
-));
-}
-
-function showRosieIndicators(data){
-const buy=num(first(data.buy_pressure,data.buyers));
-const sell=num(first(data.sell_pressure,data.sellers));
-
-if(buy!==null){
-$("buybar").style.width=
-Math.max(0,Math.min(100,buy))+"%";
-}
-
-put("buyers",buy===null?"Buy —":"Buy "+buy.toFixed(1)+"%");
-put("sellers",sell===null?"Sell —":"Sell "+sell.toFixed(1)+"%");
-
-put("shift",first(data.pressure_shift,"—"));
-put("whale100",first(data.whales_100k,data.whale100,"—"));
-put("whale500",first(data.whales_500k,data.whale500,"—"));
-put("rsi",first(data.rsi_15m,"—"));
-put("macd",first(data.macd_15m,"—"));
-put("momentum",first(data.momentum,"—"));
-
-const up=num(first(data.up_probability,data.up_percent));
-const down=num(first(data.down_probability,data.down_percent));
-
-put("rosieUp",pct(up));
-put("rosieDown",pct(down));
-
-const confirmed=signalDirection(first(
-data.confirmed_direction,
-data.confirmed_call
-));
-
-put("confirmed",confirmed||"NO CONFIRMED CALL");
-$("confirmed").className=cls(confirmed);
-
-const score=num(first(
-data.signal_score,
-data.score,
-data.strength
-));
-
-put("strength",
-score===null?"—":score.toFixed(0)+"/100"
-);
-}
-
-function showRosie(data){
-showStage("EARLY",data);
-showStage("MID",data);
-showStage("FINAL",data);
-showRoundEnding(data);
-showRosieIndicators(data);
-
-put("rosieStatus","LIVE · CONNECTED");
-}
-
-async function loadRosieSignals(){
-if(loadingRosie)return;
-loadingRosie=true;
-
-try{
-const response=await fetch(SIGNAL_API,{
-cache:"no-store",
-headers:{"Accept":"application/json"}
-});
-
-if(!response.ok){
-throw Error("Signal API returned "+response.status);
-}
-
-const payload=await response.json();
-const data=payload.signal&&typeof payload.signal==="object"
-?payload.signal:payload;
-
-if(!data||typeof data!=="object"){
-throw Error("Invalid Rosie signal");
-}
-
-const incomingTicker=first(
-data.ticker,
-data.market_ticker
-);
-
-if(marketTicker&&incomingTicker&&
-String(incomingTicker)!==marketTicker){
-throw Error("Signal belongs to another market");
-}
-
-rosie=data;
-rosieAt=Date.now();
-
-showRosie(data);
-
-}catch(e){
-console.warn("Rosie signals:",e.message);
-put("rosieStatus","WAITING FOR FRESH SIGNAL");
-}finally{
-loadingRosie=false;
-}
-}
-
-/* PART 9 — ROSIE TRADE COMMAND */
-
-function currentRosieDirection(data){
-return signalDirection(first(
-data.confirmed_direction,
-data.confirmed_call,
-data.direction
-));
-}
-
-function directionalScore(data,direction){
-if(!direction)return null;
-
-const direct=direction==="UP"
-?first(data.up_score,data.buy_up_score)
-:first(data.down_score,data.buy_down_score);
-
-return num(first(
-direct,
-data.signal_score,
-data.score
-));
-}
-
-function commandWait(message,reason){
-put("commandMain","WAIT");
-$("commandMain").className="command-main yellow";
-
-put("commandSub",message);
-put("commandReason",reason);
-put("commandScore","—");
-put("commandEntry","No entry suggested.");
-}
-
-function updateTradeCommand(){
-const left=remainingSeconds();
-
-updateRoundClock();
-updateTrapWatch();
-
-if(!marketTicker){
-commandWait(
-"Waiting for current Kalshi market.",
-"Rosie needs the correct market before evaluating a trade."
-);
-put("commandFresh","NO MARKET");
-return;
-}
-
-if(left===null||left<=0){
-commandWait(
-"Waiting for the next round.",
-"Current market has ended or its countdown is unavailable."
-);
-put("commandFresh","ROUND ENDED");
-return;
-}
-
-if(!freshRosie()){
-commandWait(
-"Waiting for a fresh Rosie signal.",
-"Old or mismatched signals cannot authorize a new entry."
-);
-put("commandFresh","SIGNAL STALE");
-return;
-}
-
-const data=rosie;
-const direction=currentRosieDirection(data);
-const score=directionalScore(data,direction);
-const trap=candleTrapWatch();
-
-if(!direction){
-commandWait(
-"No confirmed UP or DOWN direction.",
-"Rosie is still evaluating this round."
-);
-put("commandFresh","MONITORING");
-return;
-}
-
-if(score===null){
-commandWait(
-"Signal score unavailable.",
-"Rosie must provide a valid score before suggesting an entry."
-);
-put("commandFresh","NO SCORE");
-return;
-}
-
-put("commandScore",score.toFixed(0)+"/100");
-
-if(score<75){
-put("commandMain","WAIT · "+direction);
-$("commandMain").className="command-main yellow";
-
-put("commandSub",
-"Signal below the 75/100 watch threshold."
-);
-
-put("commandReason",
-"Current score: "+score.toFixed(0)+
-"/100. This is not a qualified paper-trade signal."
-);
-
-put("commandEntry","No entry suggested.");
-put("commandFresh","LOW SCORE");
-return;
-}
-
-const buyPressure=num(data.buy_pressure);
-const sellPressure=num(data.sell_pressure);
-
-const pressureAgrees=
-direction==="UP"
-?buyPressure!==null&&buyPressure>=55
-:sellPressure!==null&&sellPressure>=55;
-
-if(!pressureAgrees){
-put("commandMain","WAIT · PRESSURE");
-$("commandMain").className="command-main yellow";
-
-put("commandSub",
-"Rosie's direction and trade pressure are not aligned."
-);
-
-put("commandReason",
-"Waiting for supporting buy/sell pressure."
-);
-
-put("commandEntry","No entry suggested.");
-put("commandFresh","CHECKING");
-return;
-}
-
-if(
-(direction==="UP"&&trap==="FAKE UP WATCH")||
-(direction==="DOWN"&&trap==="FAKE DOWN WATCH")
-){
-put("commandMain","WAIT · POSSIBLE TRAP");
-$("commandMain").className="command-main yellow";
-
-put("commandSub",trap);
-
-put("commandReason",
-"Price briefly broke a recent level but moved back inside it. "+
-"Wait for confirmation rather than chasing the move."
-);
-
-put("commandEntry","No entry suggested.");
-put("commandFresh","TRAP WATCH");
-return;
-}
-
-if(!hasFreshKalshiQuote()){
-put("commandMain","WAIT · CHECK QUOTE");
-$("commandMain").className="command-main yellow";
-
-put("commandSub",
-"Signal is aligned, but a fresh Kalshi entry quote is required."
-);
-
-put("commandReason",
-"Rosie has not verified a current ask price for this market."
-);
-
-put("commandEntry","No entry suggested.");
-put("commandFresh","QUOTE STALE");
-return;
-}
-
-const quote=currentEntryQuote(direction);
-
-if(quote===null||quote<=0||quote>=100){
-commandWait(
-"No usable entry quote.",
-"Kalshi quote is unavailable or outside the valid range."
-);
-put("commandFresh","QUOTE INVALID");
-return;
-}
-
-put("commandMain","BUY "+direction+" · WATCH");
-$("commandMain").className="command-main "+cls(direction);
-
-put("commandSub",
-"Rosie's confirmed direction, score and pressure currently align."
-);
-
-put("commandScore",score.toFixed(0)+"/100");
-
-put("commandReason",
-"Signal "+score.toFixed(0)+"/100 · "+
-pressureLabel(buyPressure??50)+
-" · "+trap+
-". Review the live market before deciding."
-);
-
-put("commandEntry",
-"Indicative "+direction+" ask: "+quote+"¢ per contract. "+
-"This is not a limit-price recommendation or an executed order."
-);
-
-put("commandFresh","WATCH ONLY");
-}
-
-/*
-Trade Command is advisory only.
-A score of 75 is a screening threshold, not a
-75% probability of winning.
-
-No live orders are submitted here.
-All real-money trading requires a separate,
-authenticated review and explicit confirmation.
-*/
-
-/* PART 10 — HOLD / EXIT AND FLIP WATCH */
-
-function holdDecision(side,data){
-const opposite=side==="UP"?"DOWN":"UP";
-const direction=currentRosieDirection(data);
-const buy=num(data.buy_pressure);
-const sell=num(data.sell_pressure);
-const r=num(data.rsi_15m);
-const momentum=String(data.momentum||"").toUpperCase();
-const macd=num(first(
-data.macd_histogram,
-data.macd_hist_15m
-));
-
-let favorable=0;
-let checked=0;
-const reasons=[];
-
-function check(available,passes,label){
-if(!available)return;
-checked++;
-if(passes)favorable++;
-else reasons.push(label);
-}
-
-check(Boolean(direction),
-direction===side,
-"Rosie's direction favors "+opposite
-);
-
-check(buy!==null&&sell!==null,
-side==="UP"?buy>=55:sell>=55,
-"Pressure is not supporting "+side
-);
-
-check(r!==null,
-side==="UP"?r>=53:r<=47,
-"RSI is not supporting "+side
-);
-
-check(Boolean(momentum)&&momentum!=="—",
-side==="UP"
-?momentum==="RISING"
-:momentum==="FALLING",
-"Momentum is not supporting "+side
-);
-
-check(macd!==null,
-side==="UP"?macd>0:macd<0,
-"MACD histogram is not supporting "+side
-);
-
-let action="WAIT";
-let color="neutral";
-
-if(checked>=3){
-if(favorable===checked){
-action="HOLD WATCH";
-color="up";
-}else if(favorable<=1){
-action="EXIT WATCH";
-color="down";
-}else{
-action="CAUTION";
-color="yellow";
-}
-}
-
-return {
-action,
-color,
-favorable,
-checked,
-reason:reasons.length
-?reasons.join("; ")+"."
-:"Available indicators favor "+side+"."
-};
-}
-
-function updateHoldExit(){
-if(!freshRosie()){
-put("holdFresh","SIGNAL STALE");
-put("holdUp","WAITING");
-put("holdDown","WAITING");
-put("holdUpChecks","—");
-put("holdDownChecks","—");
-put("holdUpReason","Fresh data required.");
-put("holdDownReason","Fresh data required.");
-put("holdContext","No current hold/exit guidance.");
-return;
-}
-
-const up=holdDecision("UP",rosie);
-const down=holdDecision("DOWN",rosie);
-
-for(const [side,result] of [
-["Up",up],
-["Down",down]
-]){
-put("hold"+side,result.action);
-$("hold"+side).className=result.color;
-put("hold"+side+"Checks",
-result.favorable+" / "+result.checked+
-" favorable checks"
-);
-put("hold"+side+"Reason",result.reason);
-}
-
-put("holdFresh","LIVE");
-put("holdContext",
-"These are technical watch signals, not account-specific exit instructions. "+
-"Review your actual position, entry price, exit bid and fees before selling."
-);
-}
-
-function updateFlipWatch(){
-if(!freshRosie()){
-put("flipChecks","— / 10");
-put("flipStatus","WAITING");
-put("flipDirection","—");
-put("flipExplanation","Fresh Rosie signal required.");
-$("flipFill").style.width="0%";
-return;
-}
-
-const d=rosie;
-const current=currentRosieDirection(d);
-const buy=num(d.buy_pressure);
-const sell=num(d.sell_pressure);
-const r=num(d.rsi_15m);
-const momentum=String(d.momentum||"").toUpperCase();
-const flip=d.scalp_flip;
-
-let target="";
-let score=0;
-let explanation="No confirmed flip alert.";
-
-if(flip&&typeof flip==="object"){
-target=signalDirection(flip);
-const reported=num(first(
-flip.watch_score,
-flip.flip_score,
-flip.score
-));
-
-if(reported!==null){
-score=Math.max(0,Math.min(10,reported));
-}
-
-explanation=String(first(
-flip.reason,
-flip.explanation,
-explanation
-));
-}else if(typeof flip==="string"){
-target=signalDirection(flip);
-}
-
-if(!target&&current){
-target=current==="UP"?"DOWN":"UP";
-}
-
-if(!target){
-put("flipChecks","— / 10");
-put("flipStatus","MONITORING");
-put("flipDirection","—");
-put("flipExplanation","Waiting for directional data.");
-$("flipFill").style.width="0%";
-return;
-}
-
-const pressureSupports=target==="UP"
-?buy!==null&&buy>=55
-:sell!==null&&sell>=55;
-
-const rsiSupports=target==="UP"
-?r!==null&&r>=53
-:r!==null&&r<=47;
-
-const momentumSupports=target==="UP"
-?momentum==="RISING"
-:momentum==="FALLING";
-
-if(score===0){
-score=
-(pressureSupports?3:0)+
-(rsiSupports?3:0)+
-(momentumSupports?2:0);
-}
-
-score=Math.max(0,Math.min(10,score));
-
-put("flipChecks",score.toFixed(0)+" / 10");
-put("flipDirection","WATCH "+target);
-$("flipFill").style.width=(score*10)+"%";
-
-const confirmedFlip=Boolean(
-flip&&typeof flip==="object"&&
-(flip.confirmed===true||flip.alert===true)
-);
-
-if(confirmedFlip){
-put("flipStatus","FLIP ALERT");
-$("flipStatus").className="yellow";
-}else{
-put("flipStatus",score>=7?"FLIP BUILDING":"MONITORING");
-$("flipStatus").className=score>=7?"yellow":"neutral";
-}
-
-put("flipExplanation",
-confirmedFlip
-?explanation
-:"Watch estimate only. "+explanation+
-" A high meter alone does not confirm a flip."
-);
-}
-
-/* PART 11 — MANUAL TRADE PREVIEW */
-
-let tradeSide="UP";
-
-function setTradeSide(side){
-if(side!=="UP"&&side!=="DOWN")return;
-
-tradeSide=side;
-
-$("tradeBuyUp").classList.toggle(
-"selected-up",side==="UP"
-);
-$("tradeBuyDown").classList.toggle(
-"selected-down",side==="DOWN"
-);
-
-$("tradeBuyUp").setAttribute(
-"aria-pressed",String(side==="UP")
-);
-$("tradeBuyDown").setAttribute(
-"aria-pressed",String(side==="DOWN")
-);
-
-put("tradeSideLabel","BUY "+side);
-
-put("tradeResult",
-"BUY "+side+" selected. Review your amount before trading."
-);
-}
-
-function formatDollars(value){
-return "$"+Number(value).toFixed(2);
-}
-
-function reviewTrade(){
-const budget=num($("tradeBudget").value);
-
-if(budget===null||budget<0.01||budget>100000){
-put("tradeResult",
-"Enter a valid dollar amount between $0.01 and $100,000."
-);
-return;
-}
-
-if(!hasFreshKalshiQuote()){
-put("tradeResult",
-"Cannot preview: current Kalshi market or quote is unavailable. "+
-"Wait for fresh market data."
-);
-return;
-}
-
-const ask=currentEntryQuote(tradeSide);
-
-if(ask===null||ask<=0||ask>=100){
-put("tradeResult",
-"Cannot preview: valid "+tradeSide+" ask price unavailable."
-);
-return;
-}
-
-const pricePerContract=ask/100;
-const estimatedContracts=Math.floor(
-budget/pricePerContract
-);
-
-if(estimatedContracts<1){
-put("tradeResult",
-"Your amount is below the indicative price of one contract."
-);
-return;
-}
-
-const estimatedCost=
-estimatedContracts*pricePerContract;
-
-const remainingBudget=
-Math.max(0,budget-estimatedCost);
-
-const maximumGrossPayout=
-estimatedContracts;
-
-const maximumGrossProfit=
-maximumGrossPayout-estimatedCost;
-
-const html=[
-"<b>MANUAL BUY PREVIEW · "+tradeSide+"</b>",
-"Market: "+marketTicker,
-"Indicative ask: "+ask+"¢",
-"Your budget: "+formatDollars(budget),
-"Estimated contracts: "+estimatedContracts,
-"Estimated cost before fees: "+
-formatDollars(estimatedCost),
-"Unused budget before fees: "+
-formatDollars(remainingBudget),
-"Maximum gross payout if correct: "+
-formatDollars(maximumGrossPayout),
-"Maximum gross profit before fees: "+
-formatDollars(maximumGrossProfit),
-"Maximum loss before fees: "+
-formatDollars(estimatedCost),
-"Fees, slippage and available liquidity are NOT included.",
-"No order has been placed."
-];
-
-const result=$("tradeResult");
-result.textContent=html.join("\n");
-result.style.whiteSpace="pre-line";
-}
-
-function setupTradeControls(){
-$("tradeBuyUp")?.addEventListener("click",()=>{
-setTradeSide("UP");
-});
-
-$("tradeBuyDown")?.addEventListener("click",()=>{
-setTradeSide("DOWN");
-});
-
-document.querySelectorAll(
-"[data-trade-budget]"
-).forEach(button=>{
-button.addEventListener("click",()=>{
-const amount=num(
-button.getAttribute("data-trade-budget")
-);
-
-if(amount!==null){
-$("tradeBudget").value=String(amount);
-put("tradeResult",
-"Amount set to "+formatDollars(amount)+
-". Tap REVIEW BUY to see an estimate."
-);
-}
-});
-});
-
-$("tradeReview")?.addEventListener(
-"click",reviewTrade
-);
-
-$("tradeBudget")?.addEventListener(
-"input",()=>{
-put("tradeResult",
-"Amount changed. Review again for an updated estimate."
-);
-});
-
-setTradeSide("UP");
-}
-
-/*
-SAFETY RULES
-
-1. This page is a public GitHub Pages dashboard.
-2. Never put Kalshi API keys or passwords here.
-3. No automatic real-money trading.
-4. No order-submission endpoint is called.
-5. Quotes and contract counts are estimates.
-6. The private Trading Center handles authenticated
-   account access and any separately confirmed orders.
-7. A BUY WATCH signal is not a guarantee of profit.
-*/
-
- 
-/* COMBINED TRADE COMMAND — LIVE CONNECTIONS */
-
-function updateTopTradeManagement(){
-  const copyField=(sourceId,targetId)=>{
-    const source=$(sourceId);
-    const target=$(targetId);
-    if(!source||!target)return;
-    target.textContent=source.textContent;
-    target.className=source.className;
-  };
-
-  copyField("holdUp","topHoldUp");
-  copyField("holdDown","topHoldDown");
-  copyField("flipChecks","topFlipScore");
-
-  const status=$("flipStatus")?.textContent||"MONITORING";
-  const direction=$("flipDirection")?.textContent||"";
-
-  put("topFlipStatus",
-    "Flip Watch: "+status+
-    (direction?" · "+direction:"")
+function stageObject(data, name) {
+  const key = name.toLowerCase();
+
+  const locked = first(
+    data.locked_stages?.[name],
+    data.locked_stages?.[key],
+    data.stage_calls?.[name],
+    data.stage_calls?.[key],
+    data[key + "_call"]
   );
+
+  if (locked && typeof locked === "object") {
+    return locked;
+  }
+
+  if (typeof locked === "string") {
+    return { direction: locked };
+  }
+
+  return null;
 }
 
- 
-/* ROSIE CANDLE SIGNAL MARKERS — V1
-   Technical observations are not confirmed trades.
-   Locked calls require backend timestamps.
-*/
+function stageTiming(name, left) {
+  if (left === null) {
+    return "WAITING FOR CLOCK";
+  }
 
-let rosieChartMarkers = null;
+  const elapsed = 900 - left;
 
-function markerAt(time, label, direction, type) {
-  const up = direction === "UP";
-  return {
-    time,
-    position: up ? "belowBar" : "aboveBar",
-    color: type === "profit" ? "#f5c46a" :
-      up ? "#35d39a" : "#ff7787",
-    shape: up ? "arrowUp" : "arrowDown",
-    text: label
-  };
+  if (name === "EARLY") {
+    if (elapsed < 720) {
+      return "IN " + fmtSeconds(720 - elapsed);
+    }
+
+    if (elapsed <= 780) {
+      return "CALL WINDOW";
+    }
+
+    return "WINDOW PASSED";
+  }
+
+  if (name === "MID") {
+    if (left > 600) {
+      return "IN " + fmtSeconds(left - 600);
+    }
+
+    if (left >= 540) {
+      return "CALL WINDOW";
+    }
+
+    return "WINDOW PASSED";
+  }
+
+  if (name === "FINAL") {
+    if (left > 300) {
+      return "IN " + fmtSeconds(left - 300);
+    }
+
+    if (left >= 240) {
+      return "CALL WINDOW";
+    }
+
+    return "WINDOW PASSED";
+  }
+
+  return "—";
 }
 
-function lockedCallMarker(name) {
-  if (!freshRosie() || !marketTicker) return null;
+function showStage(name, data) {
+  const key = name.toLowerCase();
+  const left = remainingSeconds();
+  const stage = stageObject(data, name);
 
-  const stage = stageObject(rosie, name);
-  if (!stage) return null;
+  put(key + "Time", stageTiming(name, left));
 
-  const direction = signalDirection(stage);
-  if (!direction) return null;
-
-  
-const timestamp = first(
-  stage.recorded_at,
-  stage.locked_at,
-  stage.timestamp,
-  stage.created_at,
-  stage.call_time
-);
-
-
-  if (!timestamp) return null;
-
-  const raw = typeof timestamp === "number"
-    ? timestamp < 1e12 ? timestamp * 1000 : timestamp
-    : Date.parse(String(timestamp));
-
-  if (!Number.isFinite(raw)) return null;
-
-  const time = Math.floor(raw / 60000) * 60;
-
-  if (!bars.some(b => b.time === time)) return null;
-
-  return markerAt(
-    time,
-    "BUY " + direction + " LOCK",
-    direction,
-    "locked"
-  );
-}
-
-function updateRosieChartMarkers() {
-  if (!candle || !window.LightweightCharts ||
-      bars.length < 55) return;
-
-  try {
-    if (!rosieChartMarkers) {
-      rosieChartMarkers =
-        LightweightCharts.createSeriesMarkers(candle, []);
-    }
-
-    const closes = bars.map(b => b.close);
-    const e9 = ema(closes, 9);
-    const e21 = ema(closes, 21);
-    const e50 = ema(closes, 50);
-    const result = [];
-
-    let lastFlip = -100;
-    let lastScalp = -100;
-    let lastProfit = -100;
-
-    const start = Math.max(52, bars.length - 90);
-
-    for (let i = start; i < bars.length - 1; i++) {
-      const c = bars[i];
-      const previous = bars[i - 1];
-
-      const flipUp =
-        e9[i - 1] <= e21[i - 1] &&
-        e9[i] > e21[i] &&
-        c.close > c.open;
-
-      const flipDown =
-        e9[i - 1] >= e21[i - 1] &&
-        e9[i] < e21[i] &&
-        c.close < c.open;
-
-      if (i - lastFlip >= 3 && flipUp) {
-        result.push(markerAt(
-          c.time, "FLIP UP", "UP", "flip"
-        ));
-        lastFlip = i;
-      } else if (i - lastFlip >= 3 && flipDown) {
-        result.push(markerAt(
-          c.time, "FLIP DOWN", "DOWN", "flip"
-        ));
-        lastFlip = i;
-      }
-
-      const recent = bars.slice(i - 3, i);
-      const high = Math.max(...recent.map(x => x.high));
-      const low = Math.min(...recent.map(x => x.low));
-
-      const scalpUp =
-        c.close > high &&
-        c.close > e9[i] &&
-        e9[i] > e21[i] &&
-        e21[i] > e50[i];
-
-      const scalpDown =
-        c.close < low &&
-        c.close < e9[i] &&
-        e9[i] < e21[i] &&
-        e21[i] < e50[i];
-
-      if (i - lastScalp >= 8) {
-        if (scalpUp) {
-          result.push(markerAt(
-            c.time, "SCALP UP", "UP", "scalp"
-          ));
-          lastScalp = i;
-        } else if (scalpDown) {
-          result.push(markerAt(
-            c.time, "SCALP DOWN", "DOWN", "scalp"
-          ));
-          lastScalp = i;
-        }
-      }
-
-      const recentMove =
-        (c.close - bars[i - 5].close) /
-        bars[i - 5].close * 100;
-
-      const extended =
-        Math.abs(recentMove) >= 0.35;
-
-      const losingMomentum =
-        Math.abs(c.close - previous.close) <
-        Math.abs(previous.close - bars[i - 2].close);
-
-      if (extended && losingMomentum &&
-          i - lastProfit >= 12) {
-        result.push(markerAt(
-          c.time,
-          "TAKE PROFIT WATCH",
-          recentMove > 0 ? "DOWN" : "UP",
-          "profit"
-        ));
-        lastProfit = i;
-      }
-    }
-
-    for (const name of ["EARLY", "MID", "FINAL"]) {
-      const locked = lockedCallMarker(name);
-      if (locked) result.push(locked);
-    }
-
-    result.sort((a, b) => a.time - b.time);
-
-    // Keep one label per candle to avoid overlap.
-    const unique = new Map();
-    for (const m of result) {
-      if (!unique.has(m.time) ||
-          m.text.includes("LOCK")) {
-        unique.set(m.time, m);
-      }
-    }
-
-    rosieChartMarkers.setMarkers(
-      Array.from(unique.values())
-        .sort((a, b) => a.time - b.time)
+  if (!stage) {
+    put(
+      key,
+      "⏳ " + (
+        left === null ? "--:--" :
+        stageTiming(name, left).startsWith("IN ")
+          ? stageTiming(name, left).slice(3)
+          : "WAIT"
+      )
     );
 
-  } catch (error) {
-    console.warn("Rosie chart markers:", error);
+    put(key + "Score", "NO LOCKED CALL");
+    put(key + "Pressure", "—");
+    put(key + "Shift", "—");
+
+    $(key).className = "yellow countdown";
+    return;
+  }
+
+  const direction = signalDirection(stage);
+  const score = signalScore(stage);
+
+  const pressure = num(first(
+    stage.buy_pressure,
+    stage.pressure
+  ));
+
+  put(key, direction || "WAIT");
+
+  $(key).className =
+    (direction ? cls(direction) : "yellow") +
+    " countdown";
+
+  put(
+    key + "Score",
+    score === null
+      ? "SCORE —"
+      : "SCORE " + score.toFixed(0) + "/100"
+  );
+
+  put(
+    key + "Pressure",
+    pressure === null
+      ? "PRESSURE —"
+      : "BUY " + pressure.toFixed(0) + "%"
+  );
+
+  put(
+    key + "Shift",
+    first(
+      stage.pressure_shift,
+      stage.momentum,
+      "LOCKED"
+    )
+  );
+}
+
+function showRoundEnding(data) {
+  const projection = first(
+    data.live_projection,
+    data.round_ending,
+    data.live_call,
+    data.live_direction
+  );
+
+  const direction = signalDirection(projection);
+
+  const directionScores = {
+    direction,
+    up_score: first(
+      projection?.up_score,
+      data.up_score
+    ),
+    down_score: first(
+      projection?.down_score,
+      data.down_score
+    )
+  };
+
+  const score =
+    signalScore(projection) ??
+    signalScore(directionScores) ??
+    num(data.live_score);
+
+  put("live", direction || "WAIT");
+  $("live").className = cls(direction);
+
+  put(
+    "liveScore",
+    score === null
+      ? "SCORE —"
+      : "SCORE " + score.toFixed(0) + "/100"
+  );
+
+  put(
+    "livePressure",
+    "BUY " + pct(first(
+      projection?.buy_pressure,
+      data.buy_pressure
+    ))
+  );
+
+  put(
+    "liveShift",
+    first(
+      projection?.momentum,
+      data.momentum,
+      "—"
+    )
+  );
+
+  put("liveTime", "CONTINUOUS PROJECTION");
+
+  put("main", direction || "WAIT");
+  $("main").className = "big " + cls(direction);
+
+  put(
+    "reason",
+    first(
+      projection?.reason,
+      data.reason,
+      "Projection updates throughout the round."
+    )
+  );
+}
+
+function showRosieIndicators(data) {
+  const buy = num(first(
+    data.buy_pressure,
+    data.buyers
+  ));
+
+  const sell = num(first(
+    data.sell_pressure,
+    data.sellers
+  ));
+
+  if (buy !== null) {
+    $("buybar").style.width =
+      Math.max(0, Math.min(100, buy)) + "%";
+  }
+
+  put(
+    "buyers",
+    buy === null
+      ? "Buy —"
+      : "Buy " + buy.toFixed(1) + "%"
+  );
+
+  put(
+    "sellers",
+    sell === null
+      ? "Sell —"
+      : "Sell " + sell.toFixed(1) + "%"
+  );
+
+  put("shift", first(data.pressure_shift, "—"));
+  put("whale100", first(data.whales_100k, data.whale100, "—"));
+  put("whale500", first(data.whales_500k, data.whale500, "—"));
+  put("rsi", first(data.rsi_15m, "—"));
+  put("macd", first(data.macd_15m, "—"));
+  put("momentum", first(data.momentum, "—"));
+
+  const up = num(first(
+    data.up_probability,
+    data.up_percent
+  ));
+
+  const down = num(first(
+    data.down_probability,
+    data.down_percent
+  ));
+
+  put("rosieUp", pct(up));
+  put("rosieDown", pct(down));
+
+  const confirmed = signalDirection(first(
+    data.confirmed_direction,
+    data.confirmed_call
+  ));
+
+  put(
+    "confirmed",
+    confirmed || "NO CONFIRMED CALL"
+  );
+
+  $("confirmed").className = cls(confirmed);
+
+  const score = num(first(
+    data.signal_score,
+    data.score,
+    data.strength,
+    signalScore(data.live_projection),
+    signalScore(data)
+  ));
+
+  put(
+    "strength",
+    score === null
+      ? "—"
+      : score.toFixed(0) + "/100"
+  );
+}
+
+function showRosie(data) {
+  showStage("EARLY", data);
+  showStage("MID", data);
+  showStage("FINAL", data);
+  showRoundEnding(data);
+  showRosieIndicators(data);
+
+  put("rosieStatus", "LIVE · CONNECTED");
+}
+
+async function loadRosieSignals() {
+  if (loadingRosie) return;
+  loadingRosie = true;
+
+  try {
+    const response = await fetch(SIGNAL_API, {
+      cache: "no-store",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw Error(
+        "Signal API returned " + response.status
+      );
+    }
+
+    const payload = await response.json();
+
+    const data =
+      payload.signal &&
+      typeof payload.signal === "object"
+        ? payload.signal
+        : payload;
+
+    if (!data || typeof data !== "object") {
+      throw Error("Invalid Rosie signal");
+    }
+
+    const incomingTicker = first(
+      data.ticker,
+      data.market_ticker
+    );
+
+    if (
+      marketTicker &&
+      incomingTicker &&
+      String(incomingTicker) !== marketTicker
+    ) {
+      throw Error(
+        "Signal belongs to another market"
+      );
+    }
+
+    rosie = data;
+    rosieAt = Date.now();
+
+    showRosie(data);
+
+  } catch (e) {
+    console.warn(
+      "Rosie signals:",
+      e.message
+    );
+
+    put(
+      "rosieStatus",
+      "WAITING FOR FRESH SIGNAL"
+    );
+
+  } finally {
+    loadingRosie = false;
   }
 }
 
+/* END PART 8 */
+
+/* PART 9 — ROSIE TRADE COMMAND */
+
+function currentRosieDirection(data) {
+  return signalDirection(first(
+    data.confirmed_direction,
+    data.confirmed_call,
+    data.direction
+  ));
+}
+
+function directionalScore(data, direction) {
+  if (!direction) return null;
+
+  const direct = direction === "UP"
+    ? first(data.up_score, data.buy_up_score)
+    : first(data.down_score, data.buy_down_score);
+
+  return num(first(
+    direct,
+    data.signal_score,
+    data.score
+  ));
+}
+
+function commandWait(message, reason) {
+  put("commandMain", "WAIT");
+  $("commandMain").className = "command-main yellow";
+
+  put("commandSub", message);
+  put("commandReason", reason);
+  put("commandScore", "—");
+  put("commandEntry", "No entry suggested.");
+}
+
+function updateTradeCommand() {
+  const left = remainingSeconds();
+
+  updateRoundClock();
+  updateTrapWatch();
+
+  if (!marketTicker) {
+    commandWait(
+      "Waiting for current Kalshi market.",
+      "Rosie needs the correct market before evaluating a trade."
+    );
+    put("commandFresh", "NO MARKET");
+    return;
+  }
+
+  if (left === null || left <= 0) {
+    commandWait(
+      "Waiting for the next round.",
+      "Current market has ended or its countdown is unavailable."
+    );
+    put("commandFresh", "ROUND ENDED");
+    return;
+  }
+
+  if (!freshRosie()) {
+    commandWait(
+      "Waiting for a fresh Rosie signal.",
+      "Old or mismatched signals cannot authorize a new entry."
+    );
+    put("commandFresh", "SIGNAL STALE");
+    return;
+  }
+
+  const data = rosie;
+  const direction = currentRosieDirection(data);
+  const score = directionalScore(data, direction);
+  const trap = candleTrapWatch();
+
+  if (!direction) {
+    commandWait(
+      "No confirmed UP or DOWN direction.",
+      "Rosie is still evaluating this round."
+    );
+    put("commandFresh", "MONITORING");
+    return;
+  }
+
+  if (score === null) {
+    commandWait(
+      "Signal score unavailable.",
+      "Rosie must provide a valid score before suggesting an entry."
+    );
+    put("commandFresh", "NO SCORE");
+    return;
+  }
+
+  put("commandScore", score.toFixed(0) + "/100");
+
+  if (score < 75) {
+    put("commandMain", "WAIT · " + direction);
+    $("commandMain").className = "command-main yellow";
+
+    put(
+      "commandSub",
+      "Signal below the 75/100 watch threshold."
+    );
+
+    put(
+      "commandReason",
+      "Current score: " + score.toFixed(0) +
+      "/100. This is not a qualified paper-trade signal."
+    );
+
+    put("commandEntry", "No entry suggested.");
+    put("commandFresh", "LOW SCORE");
+    return;
+  }
+
+  const buyPressure = num(data.buy_pressure);
+  const sellPressure = num(data.sell_pressure);
+
+  const pressureAgrees =
+    direction === "UP"
+      ? buyPressure !== null && buyPressure >= 55
+      : sellPressure !== null && sellPressure >= 55;
+
+  if (!pressureAgrees) {
+    put("commandMain", "WAIT · PRESSURE");
+    $("commandMain").className = "command-main yellow";
+
+    put(
+      "commandSub",
+      "Rosie's direction and trade pressure are not aligned."
+    );
+
+    put(
+      "commandReason",
+      "Waiting for supporting buy/sell pressure."
+    );
+
+    put("commandEntry", "No entry suggested.");
+    put("commandFresh", "CHECKING");
+    return;
+  }
+
+  if (
+    (direction === "UP" && trap === "FAKE UP WATCH") ||
+    (direction === "DOWN" && trap === "FAKE DOWN WATCH")
+  ) {
+    put("commandMain", "WAIT · POSSIBLE TRAP");
+    $("commandMain").className = "command-main yellow";
+
+    put("commandSub", trap);
+
+    put(
+      "commandReason",
+      "Price briefly broke a recent level but moved back inside it. " +
+      "Wait for confirmation rather than chasing the move."
+    );
+
+    put("commandEntry", "No entry suggested.");
+    put("commandFresh", "TRAP WATCH");
+    return;
+  }
+
+  if (!hasFreshKalshiQuote()) {
+    put("commandMain", "WAIT · NO FRESH QUOTE");
+    $("commandMain").className = "command-main yellow";
+
+    put(
+      "commandSub",
+      "Kalshi quote is missing or outdated."
+    );
+
+    put(
+      "commandReason",
+      "A current market quote is required before considering entry."
+    );
+
+    put("commandEntry", "No entry suggested.");
+    put("commandFresh", "QUOTE STALE");
+    return;
+  }
+
+  const quote = currentEntryQuote(direction);
+
+  if (quote === null || quote <= 0 || quote >= 100) {
+    put("commandMain", "WAIT · PRICE");
+    $("commandMain").className = "command-main yellow";
+
+    put(
+      "commandSub",
+      "The current contract price is not suitable for review."
+    );
+
+    put(
+      "commandReason",
+      "Check the current Kalshi ask and available liquidity."
+    );
+
+    put("commandEntry", "No entry suggested.");
+    put("commandFresh", "PRICE CHECK");
+    return;
+  }
+
+  put("commandMain", "BUY " + direction + " · WATCH");
+  $("commandMain").className =
+    "command-main " + cls(direction);
+
+  put(
+    "commandSub",
+    "Rosie has a qualifying directional signal."
+  );
+
+  put(
+    "commandReason",
+    "Signal " + score.toFixed(0) +
+    "/100 · Supporting pressure · " +
+    "Kalshi ask " + quote + "¢. " +
+    "This is an advisory signal, not a trade execution."
+  );
+
+  put(
+    "commandEntry",
+    "Review BUY " + direction +
+    " at approximately " + quote +
+    "¢ per contract. Check fees, spread, " +
+    "remaining time, and your risk before deciding."
+  );
+
+  put("commandFresh", "SIGNAL READY");
+}
+
+/* END PART 9 */
+
+/* PART 10 — HOLD / EXIT + FLIP WATCH */
+
+function holdDecision(side, data) {
+  if (!freshRosie()) {
+    return {
+      status: "WAITING",
+      color: "neutral",
+      checks: "—",
+      reason: "Waiting for fresh Rosie signals."
+    };
+  }
+
+  const direction = currentRosieDirection(data);
+
+  const buy = num(data.buy_pressure);
+  const sell = num(data.sell_pressure);
+  const rsiValue = num(first(
+    data.rsi_15m,
+    data.rsi
+  ));
+
+  const macdValue = num(first(
+    data.macd_histogram,
+    data.macd_hist,
+    data.macd_15m_hist
+  ));
+
+  const momentum = String(
+    first(data.momentum, "UNKNOWN")
+  ).toUpperCase();
+
+  const tests = [
+    direction === side,
+
+    side === "UP"
+      ? buy !== null && buy >= 55
+      : sell !== null && sell >= 55,
+
+    side === "UP"
+      ? rsiValue !== null && rsiValue >= 53
+      : rsiValue !== null && rsiValue <= 47,
+
+    side === "UP"
+      ? momentum === "RISING"
+      : momentum === "FALLING",
+
+    side === "UP"
+      ? macdValue !== null && macdValue > 0
+      : macdValue !== null && macdValue < 0
+  ];
+
+  const passed = tests.filter(Boolean).length;
+
+  const checks =
+    passed + " / 5 SUPPORTING CHECKS";
+
+  if (passed >= 4) {
+    return {
+      status: "HOLD WATCH",
+      color: "up",
+      checks,
+      reason:
+        "Most available checks support this position. " +
+        "Monitor price, time remaining, and your exit quote."
+    };
+  }
+
+  if (passed >= 3) {
+    return {
+      status: "CAUTION",
+      color: "yellow",
+      checks,
+      reason:
+        "Signals are mixed. Watch for weakening " +
+        "pressure or a confirmed directional flip."
+    };
+  }
+
+  return {
+    status: "EXIT WATCH",
+    color: "down",
+    checks,
+    reason:
+      "Fewer than three checks support this position. " +
+      "Review your actual Kalshi position and exit price."
+  };
+}
+
+function updateHoldExit() {
+  const valid = freshRosie();
+
+  put(
+    "holdFresh",
+    valid ? "LIVE · ADVISORY" : "SIGNAL STALE"
+  );
+
+  const up = holdDecision("UP", rosie || {});
+  const down = holdDecision("DOWN", rosie || {});
+
+  put("holdUp", up.status);
+  put("holdUpChecks", up.checks);
+  put("holdUpReason", up.reason);
+
+  put("holdDown", down.status);
+  put("holdDownChecks", down.checks);
+  put("holdDownReason", down.reason);
+
+  if ($("holdUp")) {
+    $("holdUp").className = up.color;
+  }
+
+  if ($("holdDown")) {
+    $("holdDown").className = down.color;
+  }
+
+  // Top panel uses the SAME decisions.
+  put("topHoldUp", up.status);
+  put("topHoldDown", down.status);
+
+  if ($("topHoldUp")) {
+    $("topHoldUp").className = up.color;
+  }
+
+  if ($("topHoldDown")) {
+    $("topHoldDown").className = down.color;
+  }
+
+  if (!valid) {
+    put(
+      "holdContext",
+      "Fresh market signals are required. " +
+      "No HOLD or EXIT conclusion is available."
+    );
+    return;
+  }
+
+  const data = rosie;
+
+  put(
+    "holdContext",
+    "Direction: " +
+    (currentRosieDirection(data) || "WAIT") +
+    " · Buy pressure: " +
+    pct(data.buy_pressure) +
+    " · RSI: " +
+    (first(data.rsi_15m, "—")) +
+    " · Momentum: " +
+    (first(data.momentum, "—")) +
+    ". Technical guidance only."
+  );
+}
+
+function updateTopTradeManagement() {
+  updateHoldExit();
+}
+
+function updateFlipWatch() {
+  const valid = freshRosie();
+
+  if (!valid) {
+    put("flipChecks", "— / 10");
+    put("topFlipScore", "— / 10");
+    put("flipStatus", "WAITING");
+    put("flipDirection", "—");
+    put(
+      "flipExplanation",
+      "Waiting for a fresh flip signal."
+    );
+    put("topFlipStatus", "Flip Watch: waiting");
+
+    if ($("flipFill")) {
+      $("flipFill").style.width = "0%";
+    }
+    return;
+  }
+
+  const data = rosie;
+
+  const flip = first(
+    data.scalp_flip,
+    data.flip_watch,
+    data.flip
+  );
+
+  const flipObject =
+    flip && typeof flip === "object"
+      ? flip
+      : {};
+
+  const score = num(first(
+    flipObject.watch_score,
+    flipObject.flip_score,
+    flipObject.score_10
+  ));
+
+  const boundedScore =
+    score === null
+      ? null
+      : Math.max(0, Math.min(10, score));
+
+  const direction = signalDirection(flipObject);
+
+  const stage = String(first(
+    flipObject.stage,
+    flipObject.status,
+    "MONITORING"
+  )).toUpperCase();
+
+  const confirmed =
+    flipObject.confirmed === true ||
+    stage === "CONFIRMED";
+
+  const scoreText =
+    boundedScore === null
+      ? "— / 10"
+      : boundedScore.toFixed(0) + " / 10";
+
+  put("flipChecks", scoreText);
+  put("topFlipScore", scoreText);
+
+  put(
+    "flipStatus",
+    confirmed ? "CONFIRMED FLIP" : stage
+  );
+
+  put(
+    "flipDirection",
+    direction || "NO DIRECTION"
+  );
+
+  put(
+    "flipExplanation",
+    first(
+      flipObject.reason,
+      flipObject.explanation,
+      confirmed
+        ? "Worker reports a confirmed flip. Review before acting."
+        : "Monitoring for a confirmed directional change."
+    )
+  );
+
+  put(
+    "topFlipStatus",
+    "Flip Watch: " +
+    (confirmed ? "CONFIRMED" : stage) +
+    (direction ? " · " + direction : "")
+  );
+
+  if ($("flipFill")) {
+    $("flipFill").style.width =
+      boundedScore === null
+        ? "0%"
+        : (boundedScore * 10) + "%";
+  }
+}
+
+/*
+HOLD / EXIT is technical guidance only.
+
+It does not read actual positions,
+entry prices, fees, or live exit bids.
+
+A flip is not confirmed merely because
+its watch score is high.
+
+No orders are submitted here.
+*/
+
+/* END PART 10 */
+
+/* PART 11 — ROSIE ADAPTIVE LEARNING */
+
+/*
+Shadow learning only.
+
+Displays recorded performance and learning
+observations from Rosie's backend.
+
+Does not modify signals or place trades.
+*/
+
+function learningObject(value) {
+  return value &&
+    typeof value === "object" &&
+    !Array.isArray(value)
+      ? value
+      : null;
+}
+
+function learningNumber(value) {
+  const n = num(value);
+  return n === null || n < 0 ? null : n;
+}
+
+function learningAccuracy(wins, losses, reported) {
+  const w = learningNumber(wins);
+  const l = learningNumber(losses);
+
+  if (w !== null && l !== null) {
+    const total = w + l;
+
+    return total > 0
+      ? (100 * w / total).toFixed(1) + "%"
+      : "—";
+  }
+
+  const a = learningNumber(reported);
+
+  return a !== null && a <= 100
+    ? a.toFixed(1) + "%"
+    : "—";
+}
+
+function learningPhase(stats, name) {
+  const sources = [
+    stats?.by_phase,
+    stats?.phases,
+    stats?.stages,
+    stats?.phase_stats,
+    stats
+  ];
+
+  const aliases = name === "ROUND_ENDING"
+    ? ["ROUND_ENDING", "round_ending", "LIVE", "live"]
+    : [name, name.toLowerCase()];
+
+  let phase = null;
+
+  for (const source of sources) {
+    if (!learningObject(source)) continue;
+
+    for (const key of aliases) {
+      const candidate = learningObject(source[key]);
+
+      if (candidate) {
+        phase = candidate;
+        break;
+      }
+    }
+
+    if (phase) break;
+  }
+
+  if (!phase) return "—";
+
+  const wins = learningNumber(first(
+    phase.wins,
+    phase.correct
+  ));
+
+  const losses = learningNumber(first(
+    phase.losses,
+    phase.incorrect
+  ));
+
+  const accuracy = learningAccuracy(
+    wins,
+    losses,
+    first(
+      phase.accuracy,
+      phase.accuracy_pct,
+      phase.win_rate
+    )
+  );
+
+  const count =
+    wins !== null && losses !== null
+      ? wins + "W / " + losses + "L"
+      : "RESULTS —";
+
+  return count + " · " + accuracy;
+}
+
+function updateAdaptiveLearning() {
+  const valid = freshRosie();
+
+  if (!valid) {
+    put("learningStatus", "SIGNAL STALE");
+    put("learningResults", "—");
+    put("learningAccuracy", "—");
+    put("learningEarly", "—");
+    put("learningMid", "—");
+    put("learningFinal", "—");
+    put("learningEnding", "—");
+
+    put(
+      "learningNote",
+      "Waiting for a fresh Rosie signal. " +
+      "Historical performance is not verified."
+    );
+
+    return;
+  }
+
+  const data = rosie;
+
+  const performance = learningObject(first(
+    data.performance_record,
+    data.performance,
+    data.statistics
+  ));
+
+  const learning = learningObject(first(
+    data.adaptive_learning,
+    data.adaptive_brain
+  ));
+
+  const stats = performance
+    ? learningObject(first(
+        performance.overall,
+        performance.totals,
+        performance
+      ))
+    : null;
+
+  if (!stats) {
+    put("learningStatus", "NO TRACKER DATA");
+    put("learningResults", "—");
+    put("learningAccuracy", "—");
+    put("learningEarly", "—");
+    put("learningMid", "—");
+    put("learningFinal", "—");
+    put("learningEnding", "—");
+
+    put(
+      "learningNote",
+      "The API is connected, but no usable " +
+      "performance totals were supplied."
+    );
+
+    return;
+  }
+
+  const wins = learningNumber(first(
+    stats.wins,
+    stats.correct
+  ));
+
+  const losses = learningNumber(first(
+    stats.losses,
+    stats.incorrect
+  ));
+
+  const resultText =
+    wins !== null && losses !== null
+      ? wins + "W / " + losses + "L"
+      : "—";
+
+  put("learningResults", resultText);
+
+  put(
+    "learningAccuracy",
+    learningAccuracy(
+      wins,
+      losses,
+      first(
+        stats.accuracy,
+        stats.accuracy_pct,
+        stats.win_rate
+      )
+    )
+  );
+
+  put("learningEarly", learningPhase(performance, "EARLY"));
+  put("learningMid", learningPhase(performance, "MID"));
+  put("learningFinal", learningPhase(performance, "FINAL"));
+
+  put(
+    "learningEnding",
+    learningPhase(performance, "ROUND_ENDING")
+  );
+
+  const mode = first(
+    learning?.status,
+    learning?.mode,
+    learning?.learning_status,
+    "SHADOW OBSERVATION"
+  );
+
+  put("learningStatus", String(mode).toUpperCase());
+
+  const sampleCount = learningNumber(first(
+    learning?.samples,
+    learning?.sample_count,
+    learning?.observations
+  ));
+
+  const sampleText = sampleCount === null
+    ? "Sample count unavailable."
+    : "Learning observations: " + sampleCount + ".";
+
+  put(
+    "learningNote",
+    sampleText +
+    " Adaptive learning is observational. " +
+    "Recorded accuracy does not guarantee future results. " +
+    "ROUND ENDING is tracked separately."
+  );
+}
+
+/* END PART 11 */
+
 /* PART 12 — STARTUP AND AUTOMATIC REFRESH */
 
-let rosieRefreshTimer=null;
-let kalshiRefreshTimer=null;
-let dashboardTimer=null;
-let coinbaseHistoryTimer=null;
+let rosieRefreshTimer = null;
+let kalshiRefreshTimer = null;
+let dashboardTimer = null;
+let coinbaseHistoryTimer = null;
 
-function updateDashboard(){
-try{
-updateRoundClock();
-updateTargetDisplay();
-updateTradeCommand();
-updateHoldExit();
-updateFlipWatch();
-updateTopTradeManagement();
-updateRosieChartMarkers();
- 
-if(rosieAt&&signalAge()>ROSIE_MAX_AGE_MS){
-put("rosieStatus","SIGNAL STALE");
+/* CREATE ADAPTIVE LEARNING PANEL */
+
+function createLearningPanel() {
+  if ($("learningPanel")) return;
+
+  const panel = document.createElement("section");
+  panel.id = "learningPanel";
+
+  panel.style.cssText = `
+    background:#151e2b;
+    color:#edf3ff;
+    border:1px solid #35445b;
+    border-radius:12px;
+    padding:14px;
+    margin:12px auto;
+    max-width:1100px;
+    font-family:-apple-system,BlinkMacSystemFont,
+      "Segoe UI",sans-serif;
+  `;
+
+  panel.innerHTML = `
+    <div style="display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      margin-bottom:12px;">
+      <strong style="font-size:15px;">
+        ROSIE ADAPTIVE LEARNING
+      </strong>
+      <span id="learningStatus"
+        style="color:#f3c65c;font-size:11px;">
+        CONNECTING
+      </span>
+    </div>
+
+    <div style="display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;">
+
+      <div class="box">
+        <small>RECORDED RESULTS</small>
+        <div id="learningResults">—</div>
+      </div>
+
+      <div class="box">
+        <small>RECORDED ACCURACY</small>
+        <div id="learningAccuracy">—</div>
+      </div>
+
+      <div class="box">
+        <small>EARLY</small>
+        <div id="learningEarly">—</div>
+      </div>
+
+      <div class="box">
+        <small>MID</small>
+        <div id="learningMid">—</div>
+      </div>
+
+      <div class="box">
+        <small>FINAL</small>
+        <div id="learningFinal">—</div>
+      </div>
+
+      <div class="box">
+        <small>ROUND ENDING</small>
+        <div id="learningEnding">—</div>
+      </div>
+
+    </div>
+
+    <div id="learningNote"
+      style="color:#9baac0;
+      font-size:11px;
+      line-height:1.5;
+      margin-top:12px;">
+      Waiting for recorded performance data.
+    </div>
+  `;
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    #learningPanel .box {
+      background:#0b1019;
+      border:1px solid #27364b;
+      border-radius:8px;
+      padding:12px;
+      min-width:0;
+      font-size:14px;
+      font-weight:700;
+    }
+
+    #learningPanel small {
+      display:block;
+      color:#9baac0;
+      font-size:10px;
+      font-weight:500;
+      margin-bottom:7px;
+    }
+
+    #learningPanel .box div {
+      overflow-wrap:anywhere;
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const wrap = document.querySelector(".wrap");
+
+  if (wrap) {
+    wrap.appendChild(panel);
+  } else {
+    document.body.appendChild(panel);
+  }
 }
 
-if(lastCoinbaseTickAt&&
-Date.now()-lastCoinbaseTickAt>30000){
-put("status","COINBASE DATA STALE");
-}
-}catch(error){
-console.warn("Dashboard refresh:",error);
-}
-}
+/* REFRESH DASHBOARD */
 
-async function refreshMarketData(){
-await loadKalshiMarket();
-updateDashboard();
-}
+function updateDashboard() {
+  try {
+    updateRoundClock();
+    updateTargetDisplay();
+    updateTradeCommand();
+    updateHoldExit();
+    updateFlipWatch();
+    updateTopTradeManagement();
+    updateAdaptiveLearning();
+    updateRosieChartMarkers();
 
-async function refreshRosieData(){
-await loadRosieSignals();
-updateDashboard();
-}
+    if (
+      rosieAt &&
+      signalAge() > ROSIE_MAX_AGE_MS
+    ) {
+      put("rosieStatus", "SIGNAL STALE");
+    }
 
-async function startRosieDashboard(){
-try{
-initChart();
-setupTradeControls();
+    if (
+      lastCoinbaseTickAt &&
+      Date.now() - lastCoinbaseTickAt > 30000
+    ) {
+      put("status", "COINBASE DATA STALE");
+    }
 
-put("status","CONNECTING TO COINBASE");
-put("rosieStatus","CONNECTING TO ROSIE");
-put("commandFresh","STARTING");
-
-await loadCoinbaseHistory();
-
-connectCoinbase();
-
-await Promise.allSettled([
-refreshMarketData(),
-refreshRosieData()
-]);
-
-updateDashboard();
-
-rosieRefreshTimer=setInterval(
-refreshRosieData,5000
-);
-
-kalshiRefreshTimer=setInterval(
-refreshMarketData,10000
-);
-
-dashboardTimer=setInterval(
-updateDashboard,1000
-);
-
-coinbaseHistoryTimer=setInterval(
-()=>{
-if(!lastCoinbaseTickAt||
-Date.now()-lastCoinbaseTickAt>60000){
-loadCoinbaseHistory();
-}
-},60000
-);
-
-}catch(error){
-console.error("Rosie startup:",error);
-put("status","CONNECTION ERROR");
-put("rosieStatus","RETRY REQUIRED");
-}
+  } catch (error) {
+    console.warn(
+      "Dashboard refresh:",
+      error
+    );
+  }
 }
 
-if(document.readyState==="loading"){
-document.addEventListener(
-"DOMContentLoaded",
-startRosieDashboard,
-{once:true}
-);
-}else{
-startRosieDashboard();
+/* REFRESH KALSHI */
+
+async function refreshMarketData() {
+  await loadKalshiMarket();
+  updateDashboard();
 }
+
+/* REFRESH ROSIE */
+
+async function refreshRosieData() {
+  await loadRosieSignals();
+  updateDashboard();
+}
+
+/* START DASHBOARD */
+
+async function startRosieDashboard() {
+  try {
+    createLearningPanel();
+
+    initChart();
+    setupTradeControls();
+
+    put("status", "CONNECTING TO COINBASE");
+    put("rosieStatus", "CONNECTING TO ROSIE");
+    put("commandFresh", "STARTING");
+
+    await loadCoinbaseHistory();
+
+    connectCoinbase();
+
+    await Promise.allSettled([
+      refreshMarketData(),
+      refreshRosieData()
+    ]);
+
+    updateDashboard();
+
+    /* ROSIE SIGNALS EVERY 5 SECONDS */
+
+    rosieRefreshTimer = setInterval(
+      refreshRosieData,
+      5000
+    );
+
+    /* KALSHI EVERY 10 SECONDS */
+
+    kalshiRefreshTimer = setInterval(
+      refreshMarketData,
+      10000
+    );
+
+    /* DASHBOARD EVERY SECOND */
+
+    dashboardTimer = setInterval(
+      updateDashboard,
+      1000
+    );
+
+    /* COINBASE HISTORY RECOVERY */
+
+    coinbaseHistoryTimer = setInterval(
+      () => {
+        if (
+          !lastCoinbaseTickAt ||
+          Date.now() - lastCoinbaseTickAt > 60000
+        ) {
+          loadCoinbaseHistory();
+        }
+      },
+      60000
+    );
+
+  } catch (error) {
+    console.error(
+      "Rosie startup:",
+      error
+    );
+
+    put("status", "CONNECTION ERROR");
+    put("rosieStatus", "RETRY REQUIRED");
+  }
+}
+
+/* INITIALIZE WHEN PAGE IS READY */
+
+if (document.readyState === "loading") {
+  document.addEventListener(
+    "DOMContentLoaded",
+    startRosieDashboard,
+    { once: true }
+  );
+} else {
+  startRosieDashboard();
+}
+
+/* END PART 12 */
 
 </script>
 </body>
