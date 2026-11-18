@@ -710,9 +710,12 @@ function updateTrapWatch(){
 put("commandTrap",candleTrapWatch());
 }
 
-function updateTechnicalChart(){
-updateChartIndicators();
-updateTrapWatch();updatePriceLevels();
+function updateTechnicalChart() {
+  updateChartIndicators();
+  updateTrapWatch();
+  updatePriceLevels();
+  updateRosieChartMarkers();
+}
 
 }
 
@@ -2340,6 +2343,7 @@ updateTradeCommand();
 updateHoldExit();
 updateFlipWatch();
 updateTopTradeManagement();
+updateRosieChartMarkers();
  
 if(rosieAt&&signalAge()>ROSIE_MAX_AGE_MS){
 put("rosieStatus","SIGNAL STALE");
