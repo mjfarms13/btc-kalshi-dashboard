@@ -1054,11 +1054,118 @@ Kalshi market.
 
 /* END PART 5 */
 
+/* ROSIE CHART MARKERS — LIGHTWEIGHT CHARTS V5 */
+
+let rosieMarkerPlugin = null;
+
+function updateRosieChartMarkers() {
+  if (!candle || !bars.length || !window.LightweightCharts) {
+    return;
+  }
+
+  if (!rosieMarkerPlugin) {
+    if (typeof LightweightCharts.createSeriesMarkers !== "function") {
+      console.warn("Chart markers are unavailable.");
+      return;
+    }
+
+    rosieMarkerPlugin =
+      LightweightCharts.createSeriesMarkers(candle, []);
+  }
+
+  const markers = [];
+  const last = bars[bars.length - 1];
+  const previous = bars[bars.length - 2];
+
+  if (!last || !previous) return;
+
+  const pattern = candlePattern(bars);
+  const trap = candleTrapWatch();
+
+  /* Show technical candle-pattern observations */
+
+  if (pattern.name === "BULLISH ENGULFING") {
+    markers.push({
+      time: last.time,
+      position: "belowBar",
+      color: "#35d39a",
+      shape: "arrowUp",
+      text: "BULL"
+    });
+  }
+
+  if (pattern.name === "BEARISH ENGULFING") {
+    markers.push({
+      time: last.time,
+      position: "aboveBar",
+      color: "#ff7787",
+      shape: "arrowDown",
+      text: "BEAR"
+    });
+  }
+
+  /* Show potential price traps */
+
+  if (trap === "FAKE UP WATCH") {
+    markers.push({
+      time: last.time,
+      position: "aboveBar",
+      color: "#f5c46a",
+      shape: "circle",
+      text: "TRAP UP?"
+    });
+  }
+
+  if (trap === "FAKE DOWN WATCH") {
+    markers.push({
+      time: last.time,
+      position: "belowBar",
+      color: "#f5c46a",
+      shape: "circle",
+      text: "TRAP DOWN?"
+    });
+  }
+
+  /* Display confirmed Rosie direction only */
+
+  if (freshRosie()) {
+    const direction = currentRosieDirection(rosie);
+
+    if (direction === "UP") {
+      markers.push({
+        time: last.time,
+        position: "belowBar",
+        color: "#35d39a",
+        shape: "arrowUp",
+        text: "ROSIE UP"
+      });
+    }
+
+    if (direction === "DOWN") {
+      markers.push({
+        time: last.time,
+        position: "aboveBar",
+        color: "#ff7787",
+        shape: "arrowDown",
+        text: "ROSIE DOWN"
+      });
+    }
+  }
+
+  markers.sort((a, b) => a.time - b.time);
+
+  rosieMarkerPlugin.setMarkers(markers);
+}
+
+/* END ROSIE CHART MARKERS */
+
 /* PART 6 — LIVE COINBASE CHART */
 
 // ROSIE PRICE LEVEL LINES
 let supportLine = null;
-let resistanceLine = null;
+let resistanceLine = 
+let supportLine2 = null;
+let resistanceLine2 = null;
 let kalshiTargetLine = null;
 
 function updatePriceLevels() {
@@ -1076,6 +1183,17 @@ function updatePriceLevels() {
     candle.removePriceLine(resistanceLine);
     resistanceLine = null;
   }
+  
+if (supportLine2) {
+  candle.removePriceLine(supportLine2);
+  supportLine2 = null;
+}
+
+if (resistanceLine2) {
+  candle.removePriceLine(resistanceLine2);
+  resistanceLine2 = null;
+}
+
 
   if (kalshiTargetLine) {
     candle.removePriceLine(kalshiTargetLine);
@@ -1100,6 +1218,37 @@ function updatePriceLevels() {
       axisLabelVisible: true,
       title: "R1"
     });
+    
+    const recent = bars.slice(-60);
+    const older = recent.slice(0, -30);
+
+    if (older.length >= 5) {
+      const s2 = Math.min(...older.map(b => b.low));
+      const r2 = Math.max(...older.map(b => b.high));
+
+      if (s2 < sr.support) {
+        supportLine2 = candle.createPriceLine({
+          price: s2,
+          color: "#35d39a",
+          lineWidth: 1,
+          lineStyle: 2,
+          axisLabelVisible: true,
+          title: "S2"
+        });
+      }
+
+      if (r2 > sr.resistance) {
+        resistanceLine2 = candle.createPriceLine({
+          price: r2,
+          color: "#ff7787",
+          lineWidth: 1,
+          lineStyle: 2,
+          axisLabelVisible: true,
+          title: "R2"
+        });
+      }
+    }
+
   }
 
   if (targetPrice !== null && targetPrice > 0) {
@@ -1137,8 +1286,8 @@ function initChart() {
       borderColor: "#35445b",
       timeVisible: true,
       secondsVisible: false,
-      rightOffset: 5,
-      barSpacing: 22
+      rightOffset: 2,
+      barSpacing: 12
     },
     crosshair: { mode: 0 }
   });
