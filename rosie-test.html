@@ -2947,7 +2947,33 @@ function updateAdaptiveLearning() {
   }
 
   const data = rosie;
+const shadow = learningObject(data.adaptive_brain);
+const shadowDirection = signalDirection(
+  shadow?.adaptive_direction
+);
 
+const rosieDirection = currentRosieDirection(data);
+
+put(
+  "learningDirection",
+  shadowDirection || "WAIT"
+);
+
+put(
+  "learningAgreement",
+  shadowDirection && rosieDirection
+    ? (shadowDirection === rosieDirection ? "YES" : "NO")
+    : "NOT EVALUATED"
+);
+
+put(
+  "learningReason",
+  first(
+    shadow?.reason,
+    shadow?.learning?.note,
+    "Shadow model is monitoring."
+  )
+);
   const performance = learningObject(first(
     data.performance_record,
     data.performance,
