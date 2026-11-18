@@ -1266,7 +1266,6 @@ rosieMarkerHistory = rosieMarkerHistory.filter(
 rosieMarkerHistory.sort((a, b) => a.time - b.time);
 
 rosieMarkerPlugin.setMarkers(rosieMarkerHistory);
-  rosieMarkerPlugin.setMarkers(markers);
 }
 
 /* END ROSIE CHART MARKERS */
@@ -1492,7 +1491,7 @@ async function loadCoinbaseHistory() {
 
       if (chart) {
         chart.timeScale().setVisibleLogicalRange({
-          from: Math.max(0, bars.length - 60),
+          from: Math.max(0, bars.length - 30),
           to: bars.length + 3
         });
       }
