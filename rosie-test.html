@@ -1249,7 +1249,7 @@ if (freshRosie()) {
     });
   }
 }
-
+rosieMarkerHistory.push(...markers);
 const validTimes = new Set(bars.map(b => b.time));
 rosieMarkerHistory = rosieMarkerHistory.filter(
   m => validTimes.has(m.time)
