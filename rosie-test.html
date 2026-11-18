@@ -1269,16 +1269,27 @@ value.side
 return dir(value);
 }
 
+
 function signalScore(value){
-if(value&&typeof value==="object"){
-return num(first(
-value.score,
-value.signal_score,
-value.strength
-));
+  if(!value || typeof value !== "object") return null;
+
+  const direct = num(first(
+    value.score,
+    value.strength
+  ));
+
+  if(direct !== null) return direct;
+
+  const direction = signalDirection(value);
+  const up = num(value.up_score);
+  const down = num(value.down_score);
+
+  if(direction === "UP") return up;
+  if(direction === "DOWN") return down;
+
+  return null;
 }
-return null;
-}
+
 
 function stageObject(data,name){
 const key=name.toLowerCase();
@@ -1387,8 +1398,17 @@ data.live_direction
 
 const direction=signalDirection(projection);
 
-const score=signalScore(projection) ??
-num(first(data.live_score,data.signal_score));
+
+const directionScores = {
+  direction,
+  up_score: first(projection?.up_score, data.up_score),
+  down_score: first(projection?.down_score, data.down_score)
+};
+
+const score = signalScore(projection) ??
+  signalScore(directionScores) ??
+  num(data.live_score);
+
 
 put("live",direction||"WAIT");
 $("live").className=cls(direction);
