@@ -1057,7 +1057,11 @@ Kalshi market.
 /* ROSIE CHART MARKERS — LIGHTWEIGHT CHARTS V5 */
 
 let rosieMarkerPlugin = null;
-
+let rosieMarkerHistory = [];
+let lastRosieBuyWatch = {
+  ticker: "",
+  direction: ""
+};
 function updateRosieChartMarkers() {
   if (!candle || !bars.length || !window.LightweightCharts) {
     return;
@@ -1125,7 +1129,89 @@ function updateRosieChartMarkers() {
       text: "TRAP DOWN?"
     });
   }
+/* Confirmed flip alerts from Rosie */
+if (freshRosie()) {
+  const flip = first(
+    rosie.scalp_flip,
+    rosie.flip_watch,
+    rosie.flip
+  );
 
+  if (flip && typeof flip === "object") {
+    const flipDirection = signalDirection(flip);
+    const flipStage = String(
+      first(flip.stage, flip.status, "")
+    ).toUpperCase();
+
+    const flipConfirmed =
+      flip.confirmed === true ||
+      flipStage === "CONFIRMED";
+
+    if (flipConfirmed && flipDirection) {
+      markers.push({
+        time: last.time,
+        position: flipDirection === "UP"
+          ? "belowBar" : "aboveBar",
+        color: flipDirection === "UP"
+          ? "#35d39a" : "#ff7787",
+        shape: flipDirection === "UP"
+          ? "arrowUp" : "arrowDown",
+        text: "FLIP " + flipDirection
+      });
+    }
+  }
+}
+  /* Qualified BUY WATCH chart markers */
+if (freshRosie() && marketTicker && remainingSeconds() > 0) {
+  const direction = currentRosieDirection(rosie);
+  const score = directionalScore(rosie, direction);
+  const buy = num(rosie.buy_pressure);
+  const sell = num(rosie.sell_pressure);
+  const trap = candleTrapWatch();
+
+  const pressureOK = direction === "UP"
+    ? buy !== null && buy >= 55
+    : sell !== null && sell >= 55;
+
+  const trapOK = !(
+    (direction === "UP" && trap === "FAKE UP WATCH") ||
+    (direction === "DOWN" && trap === "FAKE DOWN WATCH")
+  );
+
+  const quote = currentEntryQuote(direction);
+
+  if (
+    direction &&
+    score !== null &&
+    score >= 75 &&
+    pressureOK &&
+    trapOK &&
+    quote !== null &&
+    quote > 0 &&
+    quote < 100
+  ) {
+   const newBuyWatch =
+  lastRosieBuyWatch.ticker !== marketTicker ||
+  lastRosieBuyWatch.direction !== direction;
+
+if (newBuyWatch) {
+  lastRosieBuyWatch = {
+    ticker: marketTicker,
+    direction: direction
+  };
+}
+    markers.push({
+      time: last.time,
+      position: direction === "UP"
+        ? "belowBar" : "aboveBar",
+      color: direction === "UP"
+        ? "#35d39a" : "#ff7787",
+      shape: direction === "UP"
+        ? "arrowUp" : "arrowDown",
+      text: "BUY " + direction + " WATCH"
+    });
+  }
+}
   /* Display confirmed Rosie direction only */
 
   if (freshRosie()) {
@@ -1153,7 +1239,27 @@ function updateRosieChartMarkers() {
   }
 
   markers.sort((a, b) => a.time - b.time);
+// Keep the latest observations for each candle.
+const currentTime = last.time;
 
+rosieMarkerHistory = rosieMarkerHistory.filter(
+  m => m.time !== currentTime
+);
+
+// Save current candle observations.
+rosieMarkerHistory.push(...markers);
+
+// Keep only markers belonging to loaded candles.
+const validTimes = new Set(bars.map(b => b.time));
+
+rosieMarkerHistory = rosieMarkerHistory.filter(
+  m => validTimes.has(m.time)
+);
+
+// Display historical and current observations.
+rosieMarkerHistory.sort((a, b) => a.time - b.time);
+
+rosieMarkerPlugin.setMarkers(rosieMarkerHistory);
   rosieMarkerPlugin.setMarkers(markers);
 }
 
@@ -1163,7 +1269,7 @@ function updateRosieChartMarkers() {
 
 // ROSIE PRICE LEVEL LINES
 let supportLine = null;
-let resistanceLine = 
+let resistanceLine = null;
 let supportLine2 = null;
 let resistanceLine2 = null;
 let kalshiTargetLine = null;
