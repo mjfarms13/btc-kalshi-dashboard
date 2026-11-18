@@ -713,7 +713,9 @@ put("commandTrap",candleTrapWatch());
 
 function updateTechnicalChart(){
 updateChartIndicators();
-updateTrapWatch();
+updateTrapWatch();updatePriceLevels();
+
+}
 }
 
 /*
@@ -762,7 +764,63 @@ borderDownColor:"#ff7787",
 wickUpColor:"#35d39a",
 wickDownColor:"#ff7787"
 });
+// ROSIE PRICE LEVEL LINES
+let supportLine = null;
+let resistanceLine = null;
+let kalshiTargetLine = null;
 
+function updatePriceLevels() {
+  if (!candle || !bars.length) return;
+
+  const sr = supportResistance(bars);
+  const targetPrice = num($("target")?.value);
+
+  if (supportLine) {
+    candle.removePriceLine(supportLine);
+    supportLine = null;
+  }
+
+  if (resistanceLine) {
+    candle.removePriceLine(resistanceLine);
+    resistanceLine = null;
+  }
+
+  if (kalshiTargetLine) {
+    candle.removePriceLine(kalshiTargetLine);
+    kalshiTargetLine = null;
+  }
+
+  if (sr) {
+    supportLine = candle.createPriceLine({
+      price: sr.support,
+      color: "#35d39a",
+      lineWidth: 2,
+      lineStyle: 2,
+      axisLabelVisible: true,
+      title: "S1"
+    });
+
+    resistanceLine = candle.createPriceLine({
+      price: sr.resistance,
+      color: "#ff7787",
+      lineWidth: 2,
+      lineStyle: 2,
+      axisLabelVisible: true,
+      title: "R1"
+    });
+  }
+
+  if (targetPrice !== null && targetPrice > 0) {
+    kalshiTargetLine = candle.createPriceLine({
+      price: targetPrice,
+      color: "#f5c46a",
+      lineWidth: 2,
+      lineStyle: 2,
+      axisLabelVisible: true,
+      title: "TARGET"
+    });
+  }
+}
 const colors=["#f3c65c","#55aaff","#b994fa"];
 emaLines=colors.map(color=>chart.addSeries(
 LightweightCharts.LineSeries,{
@@ -1130,7 +1188,7 @@ latestRoundAt=Date.now();
 
 put("kalshiMarket","MARKET · "+marketTicker);
 
-updateTargetDisplay();
+updateTargetDisplay();updatePriceLevels();
 updateRoundClock();
 
 }catch(e){
