@@ -826,8 +826,10 @@ if(candle)candle.setData(bars);
 updateTechnicalChart();
 
 if(chart){
-chart.timeScale().fitContent();
-chart.timeScale().scrollToRealTime();
+chart.timeScale().setVisibleLogicalRange({
+  from: Math.max(0, bars.length - 30),
+  to: bars.length + 3
+});
 }
 }
 }catch(e){
