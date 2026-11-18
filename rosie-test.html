@@ -2143,6 +2143,188 @@ function updateTopTradeManagement(){
 }
 
  
+/* ROSIE CANDLE SIGNAL MARKERS — V1
+   Technical observations are not confirmed trades.
+   Locked calls require backend timestamps.
+*/
+
+let rosieChartMarkers = null;
+
+function markerAt(time, label, direction, type) {
+  const up = direction === "UP";
+  return {
+    time,
+    position: up ? "belowBar" : "aboveBar",
+    color: type === "profit" ? "#f5c46a" :
+      up ? "#35d39a" : "#ff7787",
+    shape: up ? "arrowUp" : "arrowDown",
+    text: label
+  };
+}
+
+function lockedCallMarker(name) {
+  if (!freshRosie() || !marketTicker) return null;
+
+  const stage = stageObject(rosie, name);
+  if (!stage) return null;
+
+  const direction = signalDirection(stage);
+  if (!direction) return null;
+
+  const timestamp = first(
+    stage.locked_at,
+    stage.timestamp,
+    stage.created_at,
+    stage.call_time
+  );
+
+  if (!timestamp) return null;
+
+  const raw = typeof timestamp === "number"
+    ? timestamp < 1e12 ? timestamp * 1000 : timestamp
+    : Date.parse(String(timestamp));
+
+  if (!Number.isFinite(raw)) return null;
+
+  const time = Math.floor(raw / 60000) * 60;
+
+  if (!bars.some(b => b.time === time)) return null;
+
+  return markerAt(
+    time,
+    "BUY " + direction + " LOCK",
+    direction,
+    "locked"
+  );
+}
+
+function updateRosieChartMarkers() {
+  if (!candle || !window.LightweightCharts ||
+      bars.length < 55) return;
+
+  try {
+    if (!rosieChartMarkers) {
+      rosieChartMarkers =
+        LightweightCharts.createSeriesMarkers(candle, []);
+    }
+
+    const closes = bars.map(b => b.close);
+    const e9 = ema(closes, 9);
+    const e21 = ema(closes, 21);
+    const e50 = ema(closes, 50);
+    const result = [];
+
+    let lastFlip = -100;
+    let lastScalp = -100;
+    let lastProfit = -100;
+
+    const start = Math.max(52, bars.length - 90);
+
+    for (let i = start; i < bars.length - 1; i++) {
+      const c = bars[i];
+      const previous = bars[i - 1];
+
+      const flipUp =
+        e9[i - 1] <= e21[i - 1] &&
+        e9[i] > e21[i] &&
+        c.close > c.open;
+
+      const flipDown =
+        e9[i - 1] >= e21[i - 1] &&
+        e9[i] < e21[i] &&
+        c.close < c.open;
+
+      if (i - lastFlip >= 3 && flipUp) {
+        result.push(markerAt(
+          c.time, "FLIP UP", "UP", "flip"
+        ));
+        lastFlip = i;
+      } else if (i - lastFlip >= 3 && flipDown) {
+        result.push(markerAt(
+          c.time, "FLIP DOWN", "DOWN", "flip"
+        ));
+        lastFlip = i;
+      }
+
+      const recent = bars.slice(i - 3, i);
+      const high = Math.max(...recent.map(x => x.high));
+      const low = Math.min(...recent.map(x => x.low));
+
+      const scalpUp =
+        c.close > high &&
+        c.close > e9[i] &&
+        e9[i] > e21[i] &&
+        e21[i] > e50[i];
+
+      const scalpDown =
+        c.close < low &&
+        c.close < e9[i] &&
+        e9[i] < e21[i] &&
+        e21[i] < e50[i];
+
+      if (i - lastScalp >= 8) {
+        if (scalpUp) {
+          result.push(markerAt(
+            c.time, "SCALP UP", "UP", "scalp"
+          ));
+          lastScalp = i;
+        } else if (scalpDown) {
+          result.push(markerAt(
+            c.time, "SCALP DOWN", "DOWN", "scalp"
+          ));
+          lastScalp = i;
+        }
+      }
+
+      const recentMove =
+        (c.close - bars[i - 5].close) /
+        bars[i - 5].close * 100;
+
+      const extended =
+        Math.abs(recentMove) >= 0.35;
+
+      const losingMomentum =
+        Math.abs(c.close - previous.close) <
+        Math.abs(previous.close - bars[i - 2].close);
+
+      if (extended && losingMomentum &&
+          i - lastProfit >= 12) {
+        result.push(markerAt(
+          c.time,
+          "TAKE PROFIT WATCH",
+          recentMove > 0 ? "DOWN" : "UP",
+          "profit"
+        ));
+        lastProfit = i;
+      }
+    }
+
+    for (const name of ["EARLY", "MID", "FINAL"]) {
+      const locked = lockedCallMarker(name);
+      if (locked) result.push(locked);
+    }
+
+    result.sort((a, b) => a.time - b.time);
+
+    // Keep one label per candle to avoid overlap.
+    const unique = new Map();
+    for (const m of result) {
+      if (!unique.has(m.time) ||
+          m.text.includes("LOCK")) {
+        unique.set(m.time, m);
+      }
+    }
+
+    rosieChartMarkers.setMarkers(
+      Array.from(unique.values())
+        .sort((a, b) => a.time - b.time)
+    );
+
+  } catch (error) {
+    console.warn("Rosie chart markers:", error);
+  }
+}
+
 /* PART 12 — STARTUP AND AUTOMATIC REFRESH */
 
 let rosieRefreshTimer=null;
