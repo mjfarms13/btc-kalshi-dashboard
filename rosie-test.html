@@ -2192,12 +2192,15 @@ function lockedCallMarker(name) {
   const direction = signalDirection(stage);
   if (!direction) return null;
 
-  const timestamp = first(
-    stage.locked_at,
-    stage.timestamp,
-    stage.created_at,
-    stage.call_time
-  );
+  
+const timestamp = first(
+  stage.recorded_at,
+  stage.locked_at,
+  stage.timestamp,
+  stage.created_at,
+  stage.call_time
+);
+
 
   if (!timestamp) return null;
 
