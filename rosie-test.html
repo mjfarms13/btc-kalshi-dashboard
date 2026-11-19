@@ -1240,14 +1240,14 @@ if (freshRosie()) {
 
   const previousDirection = [...rosieMarkerHistory]
     .reverse()
-    .find(m => m.text === "ROSIE UP" ||
-               m.text === "ROSIE DOWN");
+    .find(m => .find(m => m.text === "▲ UP" ||
+               m.text === "▼ DOWN");
 
   const previousText = previousDirection?.text || "";
 
   if (
     direction &&
-    previousText !== "ROSIE " + direction
+    previousText !== (direction === "UP" ? "▲ UP" : "▼ DOWN")
   ) {
     markers.push({
       time: last.time,
