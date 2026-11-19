@@ -1824,7 +1824,7 @@ async function loadKalshiMarket() {
       kalshiClose = close;
       latestRoundSeconds = null;
     } else {
-      const remaining = num(first(
+      const target = num(first(
         market.seconds_remaining,
         market.time_remaining_seconds,
         data.seconds_remaining,
