@@ -3297,26 +3297,131 @@ function updateLearningPanel() {
 
 /* PART 22 — REFRESH DASHBOARD */
 
-function refreshRosieDisplay() {
-  updateRoundClock();
-  updateRosieCalls();
-  updateRosieGuidance();
-  updateLiveIndicators();
-  updateLearningPanel();
-
-  if (price > 0) {
-    const target = num($("target")?.value);
-
-    if (target !== null && target > 0) {
-      put(
-        "gap",
-        "BTC " +
-        (price >= target ? "ABOVE " : "BELOW ") +
-        "TARGET BY " +
-        money(Math.abs(price - target))
-      );
-    }
+function updateLearningPanel() {
+  if (!freshRosie()) {
+    put("learningStatus", "WAITING FOR DATA");
+    return;
   }
+
+  const data = rosie;
+
+  const adaptive =
+    data.adaptive_brain ||
+    data.adaptive_learning ||
+    data.adaptive ||
+    {};
+
+  const learning = data.adaptive_learning || {};
+  const validation =
+    learning.validation ||
+    adaptive.validation ||
+    {};
+
+  const shadowDirection = dir(first(
+    data.adaptive_direction,
+    adaptive.adaptive_direction,
+    adaptive.direction
+  ));
+
+  const originalDirection = currentRosieDirection(data);
+
+  put("learningDirection", shadowDirection || "WAIT");
+  put(
+    "learningAgreement",
+    shadowDirection && originalDirection
+      ? shadowDirection === originalDirection ? "YES" : "NO"
+      : "—"
+  );
+
+  const adaptiveAccuracy = num(
+    validation.adaptive_accuracy
+  );
+  const originalAccuracy = num(
+    validation.original_accuracy
+  );
+
+  const explanation = [
+    first(learning.status, adaptive.status, "MONITORING"),
+    "Shadow only",
+    adaptiveAccuracy !== null
+      ? "Adaptive: " + adaptiveAccuracy.toFixed(1) + "%"
+      : "",
+    originalAccuracy !== null
+      ? "Original: " + originalAccuracy.toFixed(1) + "%"
+      : "",
+    first(data.reason, adaptive.reason, "")
+  ].filter(Boolean).join(" · ");
+
+  put("learningReason", explanation);
+
+  const record = data.performance_record || {};
+  const overall = record.overall || {};
+
+  const total = first(
+    overall.completed,
+    overall.calls,
+    overall.total,
+    record.total
+  );
+
+  put("learningResults", total ?? "—");
+
+  const accuracy = num(first(
+    overall.accuracy,
+    record.accuracy
+  ));
+
+  put(
+    "learningAccuracy",
+    accuracy === null ? "—" : accuracy.toFixed(1) + "%"
+  );
+
+  const stages = [
+    ["EARLY", "learningEarly"],
+    ["MID", "learningMid"],
+    ["FINAL", "learningFinal"],
+    ["LIVE", "learningEnding"]
+  ];
+
+  for (const [stage, id] of stages) {
+    const result =
+      record.by_phase?.[stage] ||
+      record[stage] ||
+      {};
+
+    const wins = num(result.wins);
+    const losses = num(result.losses);
+    const rate = num(result.accuracy);
+
+    const text =
+      wins !== null && losses !== null
+        ? wins + "W / " + losses + "L" +
+          (rate !== null ? " · " + rate.toFixed(1) + "%" : "")
+        : "—";
+
+    put(id, text);
+  }
+
+  put(
+    "learningStatus",
+    first(learning.status, adaptive.status) ||
+    (total !== undefined ? "DATA RECEIVED" : "AWAITING RESULTS")
+  );
+
+  put(
+    "learningOverall",
+    total !== undefined
+      ? "Recorded results: " + total +
+        (accuracy !== null
+          ? " · Accuracy: " + accuracy.toFixed(1) + "%"
+          : "")
+      : "Waiting for tracked outcomes."
+  );
+
+  put(
+    "learningNote",
+    "ROUND ENDING is tracked separately from EARLY, MID and FINAL."
+  );
 }
 
 /* PART 22 — STARTUP */
