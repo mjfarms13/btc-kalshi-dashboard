@@ -1821,7 +1821,8 @@ async function loadKalshiMarket() {
       data.expiration_time,
       data.end_time
     );
-Date.now();
+    
+    const close = parseMarketClose(closeValue);
 
     
     if (close > 0) {
