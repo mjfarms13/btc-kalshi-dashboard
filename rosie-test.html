@@ -158,6 +158,26 @@ outline-offset:3px;
 .command-head{
   margin-bottom:12px;
 }
+  /* ROSIE V5 — CHART DIRECTLY BELOW CALL BOXES */
+
+.rosie-layout > .panel:first-child {
+  display: contents;
+}
+
+.rosie-layout > .panel:first-child > .between,
+.rosie-layout > .panel:first-child > .calls,
+.rosie-layout > .panel:first-child > .muted,
+.rosie-layout > .panel:first-child > .big {
+  order: 0;
+}
+
+.rosie-layout > .panel:nth-child(2) {
+  order: 1;
+}
+
+.rosie-layout > .panel:first-child > .rosie-command {
+  order: 2;
+}
 /* ROSIE V5 - approved mobile design */
 :root{color-scheme:dark}body{background:radial-gradient(ellipse at top,#16253a 0%,#0a101c 48%,#080d16 100%);color:#f2f6ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .wrap{max-width:960px;padding:12px;margin:auto}header{padding:12px 3px 16px}header h1{font-size:20px;letter-spacing:.2px}header .muted{margin-top:4px;color:#8fa3bf}.status{background:#123e33;border:1px solid #23775a;padding:6px 9px;border-radius:999px;font-weight:800}
@@ -222,6 +242,7 @@ outline-offset:3px;
 <div class="detail" id="liveTime">—</div>
 </div>
 </div>
+<div class="chart" id="chart"></div>
 <div class="metrics legacy-hidden">
 <div class="metric">
 <span class="muted">ESTIMATED UP · NOT VERIFIED ODDS</span>
@@ -412,7 +433,7 @@ indicative; this dashboard does not submit orders.
 </div>
 </div>
 
-<div class="chart" id="chart"></div>
+<div class="metrics legacy-hidden">
 
 <div class="legend">
 <span>
@@ -1983,7 +2004,6 @@ function stageObject(data, name) {
 
 /* DISPLAY ESTIMATED DIRECTION PERCENTAGE */
 
-
 function stagePercent(data, direction) {
   if (!data || typeof data !== "object") {
     return null;
@@ -1993,13 +2013,15 @@ function stagePercent(data, direction) {
     ? first(
         data.up_probability,
         data.up_percent,
-        data.probability_up
+        data.probability_up,
+        data.up
       )
     : direction === "DOWN"
     ? first(
         data.down_probability,
         data.down_percent,
-        data.probability_down
+        data.probability_down,
+        data.down
       )
     : null;
 
