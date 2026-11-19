@@ -1257,7 +1257,7 @@ if (freshRosie()) {
         ? "#35d39a" : "#ff7787",
       shape: direction === "UP"
         ? "arrowUp" : "arrowDown",
-      text: "ROSIE " + direction
+      text: direction === "UP" ? "▲ UP" : "▼ DOWN"
     });
   }
 }
@@ -1412,7 +1412,7 @@ function initChart() {
       timeVisible: true,
       secondsVisible: false,
       rightOffset: 2,
-      barSpacing: 12
+      barSpacing: 8
     },
     crosshair: { mode: 0 }
   });
@@ -1505,7 +1505,7 @@ async function loadCoinbaseHistory() {
 
       if (chart) {
         chart.timeScale().setVisibleLogicalRange({
-          from: Math.max(0, bars.length - 30),
+          from: Math.max(0, bars.length - 45),
           to: bars.length + 3
         });
       }
