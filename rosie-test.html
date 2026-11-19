@@ -2039,19 +2039,21 @@ function verifiedStage(stage, data, name) {
 
   if (!direction) return false;
 
-  const ticker = first(
-    stage.market_ticker,
-    stage.ticker,
-    stage.market
-  );
+ const ticker = first(
+  stage.market_ticker,
+  stage.ticker,
+  stage.market,
+  data.ticker,
+  data.market_ticker
+);
 
-  if (
-    !marketTicker ||
-    !ticker ||
-    String(ticker) !== String(marketTicker)
-  ) {
-    return false;
-  }
+if (
+  !marketTicker ||
+  !ticker ||
+  String(ticker) !== String(marketTicker)
+) {
+  return false;
+}
 
   const status = String(
     first(stage.status, "")
@@ -2065,16 +2067,25 @@ function verifiedStage(stage, data, name) {
     return false;
   }
 
-  const confirmedLock =
-    stage.locked === true ||
-    stage.is_locked === true ||
-    status === "LOCKED";
+const confirmedLock =
+  stage.locked === true ||
+  stage.is_locked === true ||
+  status === "LOCKED" ||
+  (
+    data.locked_stages &&
+    Object.prototype.hasOwnProperty.call(
+      data.locked_stages,
+      name
+    ) &&
+    data.locked_stages[name] === stage
+  );
 
-  if (!confirmedLock) return false;
+if (!confirmedLock) return false;
 
   const lockedAt = first(
     stage.locked_at,
     stage.lock_time,
+    stage.recorded_at,
     stage.timestamp
   );
 
