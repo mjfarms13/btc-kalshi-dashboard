@@ -1997,36 +1997,44 @@ function stageTiming(name, left) {
 
 /* DISPLAY ESTIMATED DIRECTION PERCENTAGE */
 
+
 function stagePercent(stage, direction) {
   if (!stage || !direction) return null;
 
-  let value = direction === "UP"
+  const value = direction === "UP"
     ? first(
         stage.up_probability,
         stage.up_percent,
-        stage.probability_up
+        stage.probability_up,
+        stage.up
       )
     : first(
         stage.down_probability,
         stage.down_percent,
-        stage.probability_down
+        stage.probability_down,
+        stage.down
       );
 
-  value = first(
+  const fallback = first(
     value,
     stage.probability,
     stage.confidence_percent,
     stage.estimated_probability
   );
 
-  let n = num(value);
+  let n = num(fallback);
 
   if (n === null || n < 0 || n > 100) {
     return null;
   }
 
+  if (n > 0 && n < 1) {
+    n *= 100;
+  }
+
   return n;
 }
+
 
 /* VERIFY LOCK BELONGS TO CURRENT MARKET */
 
@@ -2118,8 +2126,19 @@ if (!confirmedLock) return false;
       return false;
     }
 
-    const remainingAtLock =
-      (kalshiClose - lockMs) / 1000;
+    
+const recordedSeconds = num(stage.seconds_left);
+
+const remainingAtLock =
+  recordedSeconds !== null &&
+  recordedSeconds >= 0 &&
+  recordedSeconds <= 900 &&
+  Math.abs(
+    recordedSeconds - (kalshiClose - lockMs) / 1000
+  ) <= 30
+    ? recordedSeconds
+    : (kalshiClose - lockMs) / 1000;
+
 
     const timing = stageTiming(
       name,
