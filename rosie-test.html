@@ -192,6 +192,45 @@ outline-offset:3px;
 .rosie-command{border-color:#38516e;background:linear-gradient(165deg,#18263c,#111b2d 45%)}.command-head{color:#e8f1ff}.command-main{font-size:clamp(33px,8vw,53px);letter-spacing:-.8px;margin:17px 0 4px}.command-sub{color:#d0def0}.command-grid{gap:8px}.command-cell{background:#202f46;border:1px solid #324862;border-radius:11px}.command-cell b{font-size:17px}.command-reason{margin-top:12px}.command-entry{background:#0e1828;border:1px solid #30445e}
 .holdpanel{margin:16px 0 10px;background:#172438;border-color:#38516b;border-radius:13px}.holdcards{gap:9px}.holdcard{background:#1d2d44;border-radius:11px}.holdcard strong{font-size:clamp(13px,3.5vw,18px)}.holdwhy{background:#101c2d;border:1px solid #2c415b}.flipbox{background:#17263a;border:1px solid #405d7d;border-radius:13px;margin:12px 0}.flipbar{height:12px;background:#304158}.rosie-trade{background:#17263a;border-color:#405c7a;border-radius:13px;margin:12px 0}.rosie-trade-side{border-radius:11px;padding:15px 5px;font-size:16px}.rosie-trade-side.trade-down{background:#b3455a}.rosie-trade-side:not(.trade-down){background:#168e68}.rosie-trade-review{border-radius:11px}.chart{height:clamp(350px,67vh,570px)!important}.price{font-size:28px}.clock{color:#f9cb70}.indicators-fold{order:3;background:#121e2f;border:1px solid #2e435e;border-radius:13px;padding:12px 14px}.indicators-fold summary{font-weight:800;color:#d6e5f8;cursor:pointer}.indicators-fold[open] summary{margin-bottom:12px}.tag{white-space:nowrap}
 @media(max-width:380px){.wrap{padding:8px}.panel,.rosie-command{padding:10px}.rosie-layout .call b{font-size:19px!important}.rosie-layout .call .muted{font-size:9px}.command-grid{grid-template-columns:repeat(3,1fr)}.command-cell small{font-size:9px}.command-cell b{font-size:13px}}
+/* ROSIE V5.3 — CORRECT DISPLAY ORDER */
+
+.rosie-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Keep signal boxes and chart first */
+.rosie-layout > .panel:first-child {
+  display: contents;
+}
+
+.rosie-layout > .panel:first-child > .between,
+.rosie-layout > .panel:first-child > .calls,
+.rosie-layout > .panel:first-child > .chart,
+.rosie-layout > .panel:first-child > .muted,
+.rosie-layout > .panel:first-child > .big {
+  order: 0;
+}
+
+/* Trade Command after chart */
+.rosie-layout > .panel:first-child > .rosie-command {
+  order: 1 !important;
+  width: 100%;
+}
+
+/* Indicators immediately below Trade Command */
+.rosie-layout .indicators-fold {
+  order: 2 !important;
+  width: 100%;
+  margin: 0;
+}
+
+/* Bitcoin Price below indicators */
+.rosie-layout > .panel:nth-child(2) {
+  order: 3 !important;
+  width: 100%;
+}
 </style>
 </head>
 <body>
