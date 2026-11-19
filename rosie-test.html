@@ -1247,7 +1247,7 @@ if (freshRosie()) {
 
   if (
     direction &&
-    previousText !==previousText !== "ROSIE " + direction
+    previousText !==previousText !== (direction === "UP" ? "▲ UP" : "▼ DOWN")
   ) {
     markers.push({
       time: last.time,
