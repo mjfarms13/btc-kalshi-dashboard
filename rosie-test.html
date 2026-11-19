@@ -3400,6 +3400,198 @@ startRosieDashboard().catch(error => {
   }
 })();
 
+/* ROSIE TEST V5.1 — PERFORMANCE & LEARNING FIX
+   Display-only. No trading or signal changes.
+*/
+
+function updateLearningPanelV51() {
+  if (!freshRosie()) {
+    put("learningStatus", "WAITING FOR DATA");
+    return;
+  }
+
+  const data = rosie;
+  const brain = data.adaptive_brain || {};
+  const learning = data.adaptive_learning ||
+                   brain.learning || {};
+  const validation = learning.validation || {};
+  const record = data.performance_record || {};
+  const overall = record.overall || {};
+  const phases = overall.by_phase ||
+                 record.by_phase || {};
+
+  const shadow = dir(
+    data.adaptive_direction ||
+    brain.adaptive_direction
+  );
+  const original = currentRosieDirection(data);
+
+  put("learningDirection", shadow || "WAIT");
+  put("learningAgreement",
+    shadow && original
+      ? (shadow === original ? "YES" : "NO")
+      : "—"
+  );
+
+  const status = learning.status ||
+                 "AWAITING RESULTS";
+  put("learningStatus", status);
+
+  const total = num(
+    overall.completed ?? overall.calls ??
+    record.completed ?? record.calls
+  );
+  const accuracy = num(overall.accuracy);
+
+  put("learningResults",
+    total === null ? "—" : total
+  );
+  put("learningAccuracy",
+    accuracy === null
+      ? "—"
+      : accuracy.toFixed(1) + "%"
+  );
+
+  const stageFields = [
+    ["EARLY", "learningEarly"],
+    ["MID", "learningMid"],
+    ["FINAL", "learningFinal"],
+    ["LIVE", "learningEnding"]
+  ];
+
+  for (const [phase, id] of stageFields) {
+    const stats = phases[phase] || {};
+    const wins = num(stats.wins);
+    const losses = num(stats.losses);
+    const rate = num(stats.accuracy);
+
+    put(id,
+      wins !== null && losses !== null
+        ? wins + "W / " + losses + "L" +
+          (rate === null
+            ? ""
+            : " · " + rate.toFixed(1) + "%")
+        : "—"
+    );
+  }
+
+  const adaptiveAccuracy =
+    num(validation.adaptive_accuracy);
+  const originalAccuracy =
+    num(validation.original_accuracy);
+
+  const reason = brain.reason || "";
+
+  put("learningReason", [
+    status,
+    "Shadow only",
+    adaptiveAccuracy === null
+      ? ""
+      : "Adaptive: " +
+        adaptiveAccuracy.toFixed(1) + "%",
+    originalAccuracy === null
+      ? ""
+      : "Original: " +
+        originalAccuracy.toFixed(1) + "%",
+    shadow
+      ? "Current shadow: " + shadow
+      : "Current shadow: WAIT",
+    reason
+  ].filter(Boolean).join(" · "));
+
+  // Remove duplicated explanatory text.
+  for (const id of [
+    "learningOverall",
+    "learningStages",
+    "learningNote"
+  ]) {
+    const element = $(id);
+    if (element) element.style.display = "none";
+  }
+
+  // Add held-out adaptive accuracy by stage.
+  const panel = $("adaptivePanel");
+  const box = panel?.querySelector(".box");
+
+  if (!box) return;
+
+  let comparison = $("rosieShadowBreakdown");
+
+  if (!comparison) {
+    comparison = document.createElement("div");
+    comparison.id = "rosieShadowBreakdown";
+    comparison.style.marginTop = "14px";
+    comparison.style.paddingTop = "12px";
+    comparison.style.borderTop =
+      "1px solid #42536c";
+    box.appendChild(comparison);
+  }
+
+  comparison.replaceChildren();
+
+  function addLine(text, heading = false) {
+    const line = document.createElement("div");
+    line.textContent = text;
+    line.style.fontSize = heading
+      ? "12px" : "11px";
+    line.style.fontWeight = heading
+      ? "800" : "500";
+    line.style.color = heading
+      ? "#edf3ff" : "#bdcbe0";
+    line.style.lineHeight = "1.7";
+    line.style.padding = "3px 0";
+    comparison.appendChild(line);
+  }
+
+  function rateText(value) {
+    const n = num(value);
+    return n === null ? "—" : n.toFixed(1) + "%";
+  }
+
+  addLine("SHADOW VALIDATION · HISTORICAL", true);
+
+  addLine(
+    "Training: " +
+    (learning.training_markets ?? "—") +
+    " markets · Testing: " +
+    (learning.testing_markets ?? "—") +
+    " markets"
+  );
+
+  addLine("Original / Adaptive", true);
+
+  const stageValidation =
+    validation.by_phase || {};
+
+  for (const [phase] of stageFields) {
+    const stats = stageValidation[phase] || {};
+    const label = phase === "LIVE"
+      ? "ROUND ENDING"
+      : phase;
+
+    addLine(
+      label + ": " +
+      rateText(stats.original_accuracy) +
+      " / " +
+      rateText(stats.adaptive_accuracy) +
+      " · " +
+      (stats.samples ?? 0) +
+      " samples"
+    );
+  }
+
+  addLine(
+    "Historical validation only. " +
+    "ROUND ENDING is reported separately. " +
+    "No automatic strategy changes."
+  );
+}
+
+// Replace only the dashboard display function.
+updateLearningPanel = updateLearningPanelV51;
+
+/* END ROSIE TEST V5.1 */
+
 </script>
 </body>
 </html>
