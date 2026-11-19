@@ -1838,14 +1838,17 @@ async function loadKalshiMarket() {
       }
     }
 
-    const target = num(first(
-      market.target_price,
-      market.strike_price,
-      market.price_to_beat,
-      data.target_price,
-      data.strike_price,
-      data.price_to_beat
-    ));
+  
+const target = num(first(
+  market.target_price,
+  market.strike_price,
+  market.price_to_beat,
+  market.target,
+  data.target_price,
+  data.strike_price,
+  data.price_to_beat,
+  data.target
+));
 
     if (target !== null && target > 0) {
       $("target").value = String(target);
