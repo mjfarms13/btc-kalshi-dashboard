@@ -135,7 +135,29 @@ outline-offset:3px;
 .rosie-layout .call .muted{font-size:10px}
 @media(min-width:760px){.rosie-layout .calls{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .rosie-layout .rosie-command{margin-top:2px}
+/* Rosie V5 — Trade View inside Live Signal Engine */
+.rosie-layout>.panel:first-child{
+  border:1px solid #304765;
+  border-radius:20px;
+  overflow:hidden;
+}
 
+.rosie-layout>.panel:first-child>.rosie-command{
+  display:block;
+  width:100%;
+  margin:16px 0 0;
+  padding:16px 0 0;
+  border:0;
+  border-top:1px solid #304765;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+.rosie-layout>.panel:first-child>.rosie-command
+.command-head{
+  margin-bottom:12px;
+}
 /* ROSIE V5 - approved mobile design */
 :root{color-scheme:dark}body{background:radial-gradient(ellipse at top,#16253a 0%,#0a101c 48%,#080d16 100%);color:#f2f6ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .wrap{max-width:960px;padding:12px;margin:auto}header{padding:12px 3px 16px}header h1{font-size:20px;letter-spacing:.2px}header .muted{margin-top:4px;color:#8fa3bf}.status{background:#123e33;border:1px solid #23775a;padding:6px 9px;border-radius:999px;font-weight:800}
@@ -229,7 +251,7 @@ Connecting to Rosie
 
 <!-- BUY / SELL PRESSURE -->
 
-</section>
+
 <section aria-live="polite" class="rosie-command" id="rosieCommand">
 <div class="command-head">
 <span>⚡ ROSIE · TRADE COMMAND</span>
@@ -377,7 +399,7 @@ indicative; this dashboard does not submit orders.
 </a>
 </div>
 </section>
-
+</section>
 <section class="panel">
 <div class="between">
 <div>
@@ -1927,64 +1949,43 @@ function stageObject(data, name) {
 
 /* LOCK WINDOWS */
 
+
 function stageTiming(name, left) {
-  if (left === null) {
+  if (left === null || !Number.isFinite(left)) {
     return {
       state: "UNKNOWN",
       seconds: null
     };
   }
 
-  if (name === "EARLY") {
-    // Early window: 12–13 minutes elapsed.
-    // Equivalent to 3–2 minutes remaining.
-    if (left > 180) {
-      return {
-        state: "COUNTDOWN",
-        seconds: left - 180
-      };
-    }
+  const lockAt = {
+    EARLY: 780,
+    MID: 600,
+    FINAL: 300
+  };
 
-    if (left >= 120) {
-      return {
-        state: "WINDOW",
-        seconds: 0
-      };
-    }
+  const target = lockAt[name];
+
+  if (target === undefined) {
+    return {
+      state: "UNKNOWN",
+      seconds: null
+    };
   }
 
-  if (name === "MID") {
-    // Mid window: 10–9 minutes remaining.
-    if (left > 600) {
-      return {
-        state: "COUNTDOWN",
-        seconds: left - 600
-      };
-    }
-
-    if (left >= 540) {
-      return {
-        state: "WINDOW",
-        seconds: 0
-      };
-    }
+  if (left > target) {
+    return {
+      state: "COUNTDOWN",
+      seconds: left - target
+    };
   }
 
-  if (name === "FINAL") {
-    // Final window: 5–4 minutes remaining.
-    if (left > 300) {
-      return {
-        state: "COUNTDOWN",
-        seconds: left - 300
-      };
-    }
-
-    if (left >= 240) {
-      return {
-        state: "WINDOW",
-        seconds: 0
-      };
-    }
+  // Ten-second window at the scheduled call time.
+  if (left > target - 10) {
+    return {
+      state: "WINDOW",
+      seconds: 0
+    };
   }
 
   return {
@@ -1992,6 +1993,7 @@ function stageTiming(name, left) {
     seconds: 0
   };
 }
+
 
 /* DISPLAY ESTIMATED DIRECTION PERCENTAGE */
 
