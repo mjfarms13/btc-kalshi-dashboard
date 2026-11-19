@@ -1953,38 +1953,37 @@ function stageObject(data, name) {
 /* LOCK WINDOWS */
 
 
+
 function stageTiming(name, left) {
   if (left === null || !Number.isFinite(left)) {
-    return {
-      state: "UNKNOWN",
-      seconds: null
-    };
+    return { state: "UNKNOWN", seconds: null };
   }
 
-  const lockAt = {
-    EARLY: 780,
-    MID: 600,
-    FINAL: 300
+  // Each round lasts 15 minutes (900 seconds).
+  // EARLY: 12–13 minutes elapsed = 3–2 minutes left.
+  // MID: 10–9 minutes left.
+  // FINAL: 5–4 minutes left.
+
+  const windows = {
+    EARLY: { start: 180, end: 120 },
+    MID:   { start: 600, end: 540 },
+    FINAL: { start: 300, end: 240 }
   };
 
-  const target = lockAt[name];
+  const window = windows[name];
 
-  if (target === undefined) {
-    return {
-      state: "UNKNOWN",
-      seconds: null
-    };
+  if (!window) {
+    return { state: "UNKNOWN", seconds: null };
   }
 
-  if (left > target) {
+  if (left > window.start) {
     return {
       state: "COUNTDOWN",
-      seconds: left - target
+      seconds: left - window.start
     };
   }
 
-  // Ten-second window at the scheduled call time.
-  if (left > target - 10) {
+  if (left >= window.end) {
     return {
       state: "WINDOW",
       seconds: 0
@@ -1997,6 +1996,7 @@ function stageTiming(name, left) {
   };
 }
 
+  
 
 /* DISPLAY ESTIMATED DIRECTION PERCENTAGE */
 
