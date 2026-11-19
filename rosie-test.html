@@ -1983,6 +1983,39 @@ function stageObject(data, name) {
 /* DISPLAY ESTIMATED DIRECTION PERCENTAGE */
 
 
+function stagePercent(data, direction) {
+  if (!data || typeof data !== "object") {
+    return null;
+  }
+
+  const value = direction === "UP"
+    ? first(
+        data.up_probability,
+        data.up_percent,
+        data.probability_up
+      )
+    : direction === "DOWN"
+    ? first(
+        data.down_probability,
+        data.down_percent,
+        data.probability_down
+      )
+    : null;
+
+  const result = num(value);
+
+  if (result === null) return null;
+
+  const percent =
+    result >= 0 && result <= 1
+      ? result * 100
+      : result;
+
+  return percent >= 0 && percent <= 100
+    ? percent
+    : null;
+}
+
 function stageTiming(name, left) {
   if (left === null || !Number.isFinite(left)) {
     return { state: "UNKNOWN", seconds: null };
