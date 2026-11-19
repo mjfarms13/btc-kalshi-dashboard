@@ -1,9 +1,10 @@
 
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>Rosie BTC Kalshi Dashboard</title>
 <script src="https://unpkg.com/lightweight-charts@5.0.8/dist/lightweight-charts.standalone.production.js"></script>
 <style>
@@ -91,17 +92,17 @@ outline-offset:3px;
 .rosie-trade{padding:12px}
 .rosie-trade-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .rosie-trade button,.rosie-trade a{font:inherit;cursor:pointer}
-.rosie-trade-side{border:2px solid transparent;border-radius:9px;padding:13px 5px;font-weight:850;font-size:15px;color:white;background:#286c51}
+.rosie-trade-side{border:2px solid transparent;border-radius:9px;padding:13px 5px;font-weight:850;font-size:15px;color:white;background:#12674f}
 .rosie-trade-side.trade-down{background:#873d49}
 .rosie-trade-side.selected-up,.rosie-trade-side.selected-down{border-color:#e6f1ff;box-shadow:0 0 0 1px #e6f1ff}
-.rosie-trade-input{width:100%;background:#0b1019;color:#edf3ff;border:1px solid #4b5c75;border-radius:8px;padding:12px;margin:7px 0;font-size:18px}
+.rosie-trade-input{width:100%;background:#0b1019;color:#edf3ff;border:1px solid #4b5c75;border-radius:8px;padding:12px;margin:7px 0}
 .rosie-trade-budgets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:9px}
 .rosie-trade-budgets button{background:#34455f;color:#fff;border:0;border-radius:8px;padding:10px 3px;font-weight:750}
-.rosie-trade-review{display:block;width:100%;border:0;border-radius:9px;padding:13px;background:#dfe8f7;color:#111b2a;font-weight:900;font-size:14px}
+.rosie-trade-review{display:block;width:100%;border:0;border-radius:9px;padding:13px;background:#dfe8f7;color:#111b2a;font-weight:850}
 .rosie-trade-review:disabled{opacity:.6}
-.rosie-trade-result{background:#121c2b;border:1px solid #34455f;border-radius:8px;padding:10px;margin-top:9px;line-height:1.6;font-size:12px;overflow-wrap:anywhere}
+.rosie-trade-result{background:#121c2b;border:1px solid #34455f;border-radius:8px;padding:10px;margin-top:9px;line-height:1.6;font-size:12px}
 .rosie-trade-result strong{color:#35d39a}
-.rosie-trade-sell{display:block;background:#2a3b53;border:1px solid #50637c;border-radius:8px;padding:12px 4px;text-align:center;text-decoration:none;color:#edf3ff;font-weight:800}
+.rosie-trade-sell{display:block;background:#2a3b53;border:1px solid #50637c;border-radius:8px;padding:12px 4px;text-align:center;text-decoration:none;color:#fff;font-weight:800}
 .rosie-trade-private{display:block;text-align:center;color:#bcd2ec;font-weight:700;margin-top:10px;text-decoration:underline}
 .rosie-trade button:focus-visible,.rosie-trade a:focus-visible{outline:2px solid #35d39a;outline-offset:2px}
 
@@ -120,223 +121,183 @@ outline-offset:3px;
 .command-reason{border-top:1px solid #3b4a61;padding-top:9px;color:#d8e2f0;font-size:12px;line-height:1.5}
 .command-entry{margin-top:9px;background:#121c2b;border-radius:8px;padding:10px;font-size:12px;line-height:1.6}
 @media(max-width:380px){.command-grid{grid-template-columns:1fr 1fr}.command-main{font-size:26px}}
+/* Rosie V5: signal first, candles second, trade command third */
+.rosie-layout{display:flex;flex-direction:column;gap:10px}
+.rosie-layout>.panel,.rosie-layout>.rosie-command{width:100%;min-width:0;margin:0}
+.rosie-layout>.panel:first-child{order:0}
+.rosie-layout>.panel:nth-child(2){order:1}
+.rosie-layout>.rosie-command{order:2}
+.rosie-layout .chart{height:clamp(340px,62vh,560px)}
+.rosie-layout .calls{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rosie-layout .call{padding:11px 6px}
+.rosie-layout .call b{font-size:clamp(16px,3.6vw,22px)}
+.rosie-layout .call .detail{font-size:11px}
+.rosie-layout .call .muted{font-size:10px}
+@media(min-width:760px){.rosie-layout .calls{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.rosie-layout .rosie-command{margin-top:2px}
+
+/* ROSIE V5 - approved mobile design */
+:root{color-scheme:dark}body{background:radial-gradient(ellipse at top,#16253a 0%,#0a101c 48%,#080d16 100%);color:#f2f6ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:960px;padding:12px;margin:auto}header{padding:12px 3px 16px}header h1{font-size:20px;letter-spacing:.2px}header .muted{margin-top:4px;color:#8fa3bf}.status{background:#123e33;border:1px solid #23775a;padding:6px 9px;border-radius:999px;font-weight:800}
+.rosie-layout{display:flex;flex-direction:column;gap:12px}.rosie-layout>.panel:first-child{order:0}.rosie-layout>.rosie-command{order:1}.rosie-layout>.panel:nth-child(2){order:2}
+.panel,.rosie-command{background:#111b2c;border:1px solid #2a3e59;border-radius:17px;padding:14px;box-shadow:0 10px 28px #0004}
+.panel>.between:first-child>b,.command-head{font-size:15px;letter-spacing:.6px}.calls{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:14px 0 2px!important}
+.rosie-layout .call{background:linear-gradient(145deg,#1c2b42,#162238);border:1px solid #38516c;border-radius:13px;padding:15px 6px 13px;min-height:105px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;overflow:hidden}
+.rosie-layout .call .muted{font-size:10px;font-weight:850;letter-spacing:.45px;color:#c1d1e8}.rosie-layout .call b{font-size:clamp(20px,5.2vw,31px)!important;line-height:1.2;margin:5px 0!important;white-space:nowrap}.rosie-layout .call .detail{font-size:10px;color:#b1c4dc;font-weight:750}.rosie-layout .call:has(.down){border-color:#8c4253;box-shadow:inset 0 0 15px #a42f3417}.rosie-layout .call:has(.up){border-color:#286d59;box-shadow:inset 0 0 15px #17a66e14}
+.up{color:#36e6a2}.down{color:#ff687f}.yellow{color:#f9cb70}.legacy-hidden{display:none!important}
+.rosie-command{border-color:#38516e;background:linear-gradient(165deg,#18263c,#111b2d 45%)}.command-head{color:#e8f1ff}.command-main{font-size:clamp(33px,8vw,53px);letter-spacing:-.8px;margin:17px 0 4px}.command-sub{color:#d0def0}.command-grid{gap:8px}.command-cell{background:#202f46;border:1px solid #324862;border-radius:11px}.command-cell b{font-size:17px}.command-reason{margin-top:12px}.command-entry{background:#0e1828;border:1px solid #30445e}
+.holdpanel{margin:16px 0 10px;background:#172438;border-color:#38516b;border-radius:13px}.holdcards{gap:9px}.holdcard{background:#1d2d44;border-radius:11px}.holdcard strong{font-size:clamp(13px,3.5vw,18px)}.holdwhy{background:#101c2d;border:1px solid #2c415b}.flipbox{background:#17263a;border:1px solid #405d7d;border-radius:13px;margin:12px 0}.flipbar{height:12px;background:#304158}.rosie-trade{background:#17263a;border-color:#405c7a;border-radius:13px;margin:12px 0}.rosie-trade-side{border-radius:11px;padding:15px 5px;font-size:16px}.rosie-trade-side.trade-down{background:#b3455a}.rosie-trade-side:not(.trade-down){background:#168e68}.rosie-trade-review{border-radius:11px}.chart{height:clamp(350px,67vh,570px)!important}.price{font-size:28px}.clock{color:#f9cb70}.indicators-fold{order:3;background:#121e2f;border:1px solid #2e435e;border-radius:13px;padding:12px 14px}.indicators-fold summary{font-weight:800;color:#d6e5f8;cursor:pointer}.indicators-fold[open] summary{margin-bottom:12px}.tag{white-space:nowrap}
+@media(max-width:380px){.wrap{padding:8px}.panel,.rosie-command{padding:10px}.rosie-layout .call b{font-size:19px!important}.rosie-layout .call .muted{font-size:9px}.command-grid{grid-template-columns:repeat(3,1fr)}.command-cell small{font-size:9px}.command-cell b{font-size:13px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-
 <header>
 <div>
 <h1>₿ BTC · KALSHI 15-MINUTE</h1>
-<div class="muted">Rosie · Live Coinbase · Manual Trading</div>
+<div class="muted">Rosie V5 · Live Coinbase · Manual Trading</div>
 </div>
-<div id="status" class="status">CONNECTING</div>
+<div class="status" id="status">CONNECTING</div>
 </header>
-
-<section class="rosie-command" id="rosieCommand" aria-live="polite">
-  <div class="command-head">
-    <span>⚡ ROSIE · TRADE COMMAND</span>
-    <span id="commandFresh" class="tag">WAITING</span>
-  </div>
-
-  <div id="commandMain" class="command-main yellow">WAIT · CHECKING</div>
-  <div id="commandSub" class="command-sub">Waiting for a fresh Rosie signal.</div>
-
-  <div class="command-grid">
-    <div class="command-cell">
-      <small>SIGNAL SCORE</small>
-      <b id="commandScore">—</b>
-    </div>
-    <div class="command-cell">
-      <small>ROUND LEFT</small>
-      <b id="commandTime">—</b>
-    </div>
-    <div class="command-cell">
-      <small>FLIP WATCH</small>
-      <b id="topFlipScore">— / 10</b>
-    </div>
-  </div>
-
-  <div id="commandReason" class="command-reason">Waiting for confirmation.</div>
-  <div id="commandEntry" class="command-entry">No entry suggested.</div>
-
-  <div class="box">
-    <b>🧭 TRADE MANAGEMENT</b>
-    <div class="row">
-      <span>IF HOLDING UP</span>
-      <b id="topHoldUp" class="neutral">WAITING</b>
-    </div>
-    <div class="row">
-      <span>IF HOLDING DOWN</span>
-      <b id="topHoldDown" class="neutral">WAITING</b>
-    </div>
-    <div class="small" id="topFlipStatus">Flip Watch: monitoring</div>
-  </div>
-
-  <div class="small">
-    Trading remains manual. Review your current Kalshi position and fees before acting.
-  </div>
-</section>
-
-<div class="layout">
-<section class="panel">
-<div class="between">
-<div>
-<div class="muted">BITCOIN PRICE</div>
-<div id="price" class="price">—</div>
-</div>
-<div style="text-align:right">
-<div class="muted">ROUND REMAINING</div>
-<div id="clock" class="clock">--:--</div>
-</div>
-</div>
-
-<div id="chart" class="chart"></div>
-
-<div class="legend">
-<span><i class="dot" style="background:#f3c65c"></i>EMA 9</span>
-<span><i class="dot" style="background:#55aaff"></i>EMA 21</span>
-<span><i class="dot" style="background:#b994fa"></i>EMA 50</span>
-<span class="up">Support</span>
-<span class="down">Resistance</span>
-<span class="yellow">Kalshi Target</span>
-</div>
-
-<div class="box">
-<div class="between">
-<b>LIVE CANDLE PATTERN · 1M</b>
-<span id="patternStatus" class="tag">SCANNING</span>
-</div>
-<h3 id="patternName" class="neutral">SCANNING</h3>
-<div id="patternMeaning" class="small">Monitoring candles</div>
-</div>
-
-<div class="box">
-<div class="target">
-<label>Kalshi target $
-<input id="target" readonly placeholder="Loading">
-</label>
-<span id="gap" class="small">—</span>
-</div>
-
-<div class="quote" style="display:none" aria-hidden="true">
-<div>
-<div class="muted">UP ASK</div>
-<b id="kalshiUp" class="up">—</b>
-</div>
-<div>
-<div class="muted">DOWN ASK</div>
-<b id="kalshiDown" class="down">—</b>
-</div>
-</div>
-
-<div id="kalshiMarket" class="small" style="margin-top:8px">
-Loading market
-</div>
-</div>
-
-<div class="small">
-Chart BUY / FLIP / SCALP and TRAP markers are technical observations, not Rosie's confirmed calls or executed trades.
-</div>
-</section>
-
+<div class="layout rosie-layout">
 <section class="panel">
 <div class="between">
 <b>ROSIE · LIVE SIGNAL ENGINE</b>
-<span id="rosieStatus" class="tag">CONNECTING</span>
+<span class="tag" id="rosieStatus">CONNECTING</span>
 </div>
-
 <div class="calls">
 <div class="call">
-<span class="muted">EARLY · 12–13M ELAPSED</span>
-<b id="early" class="yellow countdown">⏳ --:--</b>
-<div id="earlyScore" class="detail">—</div>
-<div id="earlyPressure" class="detail">—</div>
-<div id="earlyShift" class="detail">—</div>
-<div id="earlyTime" class="detail countdown-note">UNTIL EARLY CALL</div>
+<span class="muted">EARLY · 2 MIN LOCK</span>
+<b class="yellow countdown" id="early">⏳ --:--</b>
+<div class="detail legacy-hidden" id="earlyScore">—</div>
+<div class="detail legacy-hidden" id="earlyPressure">—</div>
+<div class="detail legacy-hidden" id="earlyShift">—</div>
+<div class="detail countdown-note" id="earlyTime">UNTIL EARLY CALL</div>
+</div>
+<div class="call">
+<span class="muted">MID · 10 MIN LOCK</span>
+<b class="yellow countdown" id="mid">⏳ --:--</b>
+<div class="detail legacy-hidden" id="midScore">—</div>
+<div class="detail legacy-hidden" id="midPressure">—</div>
+<div class="detail legacy-hidden" id="midShift">—</div>
+<div class="detail countdown-note" id="midTime">UNTIL MID CALL</div>
 </div>
 
 <div class="call">
-<span class="muted">MID · 9–10M LEFT</span>
-<b id="mid" class="yellow countdown">⏳ --:--</b>
-<div id="midScore" class="detail">—</div>
-<div id="midPressure" class="detail">—</div>
-<div id="midShift" class="detail">—</div>
-<div id="midTime" class="detail countdown-note">UNTIL MID CALL</div>
+<span class="muted">FINAL · 5 MIN LOCK</span>
+<b class="yellow countdown" id="final">⏳ --:--</b>
+<div class="detail legacy-hidden" id="finalScore">—</div>
+<div class="detail legacy-hidden" id="finalPressure">—</div>
+<div class="detail legacy-hidden" id="finalShift">—</div>
+<div class="detail countdown-note" id="finalTime">UNTIL FINAL CALL</div>
 </div>
-
 <div class="call">
-<span class="muted">FINAL · 4–5M LEFT</span>
-<b id="final" class="yellow countdown">⏳ --:--</b>
-<div id="finalScore" class="detail">—</div>
-<div id="finalPressure" class="detail">—</div>
-<div id="finalShift" class="detail">—</div>
-<div id="finalTime" class="detail countdown-note">UNTIL FINAL CALL</div>
-</div>
-
-<div class="call">
-<span class="muted">ROUND ENDING · UPDATING</span>
-<b id="live" class="neutral">CONNECTING</b>
-<div id="liveScore" class="detail">—</div>
-<div id="livePressure" class="detail">—</div>
-<div id="liveShift" class="detail">—</div>
-<div id="liveTime" class="detail">—</div>
+<span class="muted">ROUND ENDING</span>
+<b class="neutral" id="live">CONNECTING</b>
+<div class="detail legacy-hidden" id="liveScore">—</div>
+<div class="detail legacy-hidden" id="livePressure">—</div>
+<div class="detail legacy-hidden" id="liveShift">—</div>
+<div class="detail" id="liveTime">—</div>
 </div>
 </div>
-
-<div class="metrics">
+<div class="metrics legacy-hidden">
 <div class="metric">
-<span class="muted">ESTIMATED UP · UNCALIBRATED</span>
-<b id="rosieUp" class="up">—</b>
+<span class="muted">ESTIMATED UP · NOT VERIFIED ODDS</span>
+<b class="up" id="rosieUp">—</b>
 </div>
 <div class="metric">
-<span class="muted">ESTIMATED DOWN · UNCALIBRATED</span>
-<b id="rosieDown" class="down">—</b>
+<span class="muted">ESTIMATED DOWN · NOT VERIFIED ODDS</span>
+<b class="down" id="rosieDown">—</b>
 </div>
 </div>
-
 <div class="muted" style="text-align:center">
 ROUND ENDING · PROJECTED RESULT
 </div>
-<div id="main" class="big neutral">CONNECTING</div>
-<div id="reason" class="small" style="text-align:center">
+<div class="big neutral legacy-hidden" id="main">CONNECTING</div>
+<div class="small legacy-hidden" id="reason" style="text-align:center">
 Connecting to Rosie
 </div>
-
 <!-- HOLD / EXIT ENGINE -->
-<div class="holdpanel" id="holdPanel" aria-live="polite">
-<div class="between">
-<b>🧭 ROSIE · HOLD / EXIT</b>
-<span id="holdFresh" class="tag">WAITING</span>
+
+<!-- FLIP WATCH -->
+
+<!-- MANUAL TRADING PREVIEW -->
+
+<!-- END MANUAL TRADING PREVIEW -->
+<!-- CONFIRMED SIGNAL -->
+
+
+<!-- BUY / SELL PRESSURE -->
+
+</section>
+<section aria-live="polite" class="rosie-command" id="rosieCommand">
+<div class="command-head">
+<span>⚡ ROSIE · TRADE COMMAND</span>
+<span class="tag" id="commandFresh">WAITING</span>
+</div>
+<div class="command-main yellow" id="commandMain">WAIT · CHECKING</div>
+<div class="command-sub" id="commandSub">Waiting for a fresh Rosie signal.</div>
+<div class="command-grid">
+<div class="command-cell">
+<small>SIGNAL SCORE</small>
+<b id="commandScore">—</b>
+</div>
+<div class="command-cell">
+<small>ROUND LEFT</small>
+<b id="commandTime">—</b>
+</div>
+<div class="command-cell">
+<small>FLIP WATCH</small>
+<b id="topFlipScore">— / 10</b>
+</div>
+</div>
+<div class="command-reason" id="commandReason">Waiting for confirmation.</div>
+<div class="command-entry" id="commandEntry">No entry suggested.</div>
+<div class="legacy-hidden">
+<b>🧭 TRADE MANAGEMENT</b>
+<div class="row">
+<span>IF HOLDING UP</span>
+<b class="neutral" id="topHoldUp">WAITING</b>
+</div>
+<div class="row">
+<span>IF HOLDING DOWN</span>
+<b class="neutral" id="topHoldDown">WAITING</b>
+</div>
+<div class="small" id="topFlipStatus">Flip Watch: monitoring</div>
+</div>
+<div class="small">
+Trading remains manual. Review your current Kalshi position and fees before acting.
 </div>
 
+<div aria-live="polite" class="holdpanel" id="holdPanel">
+<div class="between">
+<b>🧭 ROSIE · HOLD / EXIT</b>
+<span class="tag" id="holdFresh">WAITING</span>
+</div>
 <div class="holdcards">
 <div class="holdcard">
 <div class="muted">IF HOLDING UP</div>
-<strong id="holdUp" class="neutral">WAITING</strong>
-<div id="holdUpChecks" class="holdchecks">—</div>
-<div id="holdUpReason" class="holdreason">
+<strong class="neutral" id="holdUp">WAITING</strong>
+<div class="holdchecks" id="holdUpChecks">—</div>
+<div class="holdreason" id="holdUpReason">
 Waiting for fresh signals.
 </div>
 </div>
-
 <div class="holdcard">
 <div class="muted">IF HOLDING DOWN</div>
-<strong id="holdDown" class="neutral">WAITING</strong>
-<div id="holdDownChecks" class="holdchecks">—</div>
-<div id="holdDownReason" class="holdreason">
+<strong class="neutral" id="holdDown">WAITING</strong>
+<div class="holdchecks" id="holdDownChecks">—</div>
+<div class="holdreason" id="holdDownReason">
 Waiting for fresh signals.
 </div>
 </div>
 </div>
-
 <div class="holdwhy">
 <b>WHY / MARKET CONTEXT</b>
-<div id="holdContext" class="holdreason">
+<div class="holdreason" id="holdContext">
 Collecting pressure, momentum, RSI and live direction.
 </div>
 </div>
-
 <div class="small" style="margin-top:7px">
 Advisory only, not an instruction to sell.
 This HTML estimate uses 5 available checks;
@@ -346,56 +307,36 @@ It cannot see your entry price, fees or live exit bid.
 </div>
 </div>
 
-<!-- FLIP WATCH -->
 <div class="flipbox">
 <div class="between">
 <span class="fliptitle">⚡ ROSIE FLIP WATCH</span>
-<b id="flipChecks" class="yellow">— / 10</b>
+<b class="yellow" id="flipChecks">— / 10</b>
 </div>
-
 <div class="flipbar">
 <div id="flipFill"></div>
 </div>
-
 <div class="between">
-<b id="flipStatus" class="neutral">MONITORING</b>
-<span id="flipDirection" class="small">—</span>
+<b class="neutral" id="flipStatus">MONITORING</b>
+<span class="small" id="flipDirection">—</span>
 </div>
-
-<div id="flipExplanation"
-class="small"
-style="margin-top:7px">
+<div class="small" id="flipExplanation" style="margin-top:7px">
 Waiting for Rosie's next scalp flip alert.
 </div>
 </div>
 
-<!-- MANUAL TRADING PREVIEW -->
 <div class="box rosie-trade" id="rosieTradePanel">
-
 <div class="between">
 <b>💰 ROSIE · TRADING</b>
 <span class="tag">PREVIEW ONLY</span>
 </div>
-
 <div class="small" style="margin:6px 0 10px">
 BTC 15-minute · Rosie finds the current market
 and estimates contracts.
 </div>
-
 <div class="rosie-trade-actions">
-<button
-type="button"
-id="tradeBuyUp"
-class="rosie-trade-side selected-up"
-aria-pressed="true">BUY UP</button>
-
-<button
-type="button"
-id="tradeBuyDown"
-class="rosie-trade-side trade-down"
-aria-pressed="false">BUY DOWN</button>
+<button aria-pressed="true" class="rosie-trade-side selected-up" id="tradeBuyUp" type="button">BUY UP</button>
+<button aria-pressed="false" class="rosie-trade-side trade-down" id="tradeBuyDown" type="button">BUY DOWN</button>
 </div>
-
 <div class="between" style="margin-top:11px">
 <label for="tradeBudget">
 <b>Your amount ($)</b>
@@ -404,73 +345,117 @@ aria-pressed="false">BUY DOWN</button>
 BUY UP
 </span>
 </div>
-
-<input
-id="tradeBudget"
-class="rosie-trade-input"
-type="number"
-inputmode="decimal"
-min="0.01"
-max="100000"
-step="0.01"
-value="5"
-aria-label="Buy budget in dollars">
-
+<input aria-label="Buy budget in dollars" class="rosie-trade-input" id="tradeBudget" inputmode="decimal" max="100000" min="0.01" step="0.01" type="number" value="5"/>
 <div class="rosie-trade-budgets">
-<button type="button" data-trade-budget="5">$5</button>
-<button type="button" data-trade-budget="10">$10</button>
-<button type="button" data-trade-budget="20">$20</button>
-<button type="button" data-trade-budget="50">$50</button>
+<button data-trade-budget="5" type="button">$5</button>
+<button data-trade-budget="10" type="button">$10</button>
+<button data-trade-budget="20" type="button">$20</button>
+<button data-trade-budget="50" type="button">$50</button>
 </div>
-
-<button
-type="button"
-id="tradeReview"
-class="rosie-trade-review">
+<button class="rosie-trade-review" id="tradeReview" type="button">
 REVIEW BUY · NO TRADE
 </button>
-
-<div
-id="tradeResult"
-class="rosie-trade-result"
-role="status"
-aria-live="polite">
+<div aria-live="polite" class="rosie-trade-result" id="tradeResult" role="status">
 Choose UP or DOWN, then review your amount.
 No order will be placed.
 </div>
-
 <div class="rosie-trade-actions" style="margin-top:10px">
-
-<a
-class="rosie-trade-sell"
-href="https://btc-kalshi-api.onrender.com/rosie/account">
+<a class="rosie-trade-sell" href="https://btc-kalshi-api.onrender.com/rosie/account">
 SELL NOW
 </a>
-
-<a
-class="rosie-trade-sell"
-href="https://btc-kalshi-api.onrender.com/rosie/account">
+<a class="rosie-trade-sell" href="https://btc-kalshi-api.onrender.com/rosie/account">
 LIMIT SELL
 </a>
-
 </div>
-
 <div class="small" style="margin-top:8px">
 SELL buttons open your private Trading Center
 to verify owned positions. All estimates are
 indicative; this dashboard does not submit orders.
 </div>
-
-<a
-class="rosie-trade-private"
-href="https://btc-kalshi-api.onrender.com/rosie/account">
+<a class="rosie-trade-private" href="https://btc-kalshi-api.onrender.com/rosie/account">
 🔒 PRIVATE TRADING CENTER
 </a>
-
 </div>
-<!-- END MANUAL TRADING PREVIEW -->
+</section>
 
-<!-- CONFIRMED SIGNAL -->
+<section class="panel">
+<div class="between">
+<div>
+<div class="muted">BITCOIN PRICE</div>
+<div class="price" id="price">—</div>
+</div>
+<div style="text-align:right">
+<div class="muted">ROUND REMAINING</div>
+<div class="clock" id="clock">--:--</div>
+</div>
+</div>
+
+<div class="chart" id="chart"></div>
+
+<div class="legend">
+<span>
+<i class="dot" style="background:#f3c65c"></i>
+EMA 9
+</span>
+<span>
+<i class="dot" style="background:#55aaff"></i>
+EMA 21
+</span>
+<span>
+<i class="dot" style="background:#b994fa"></i>
+EMA 50
+</span>
+<span class="up">Support</span>
+<span class="down">Resistance</span>
+<span class="yellow">Kalshi Target</span>
+</div>
+
+<div class="box">
+<div class="between">
+<b>LIVE CANDLE PATTERN · 1M</b>
+<span class="tag" id="patternStatus">SCANNING</span>
+</div>
+<h3 class="neutral" id="patternName">SCANNING</h3>
+<div class="small" id="patternMeaning">
+Monitoring candles
+</div>
+</div>
+
+<div class="box">
+<div class="target">
+<label>
+Kalshi target $
+<input id="target" placeholder="Loading" readonly=""/>
+</label>
+<span class="small" id="gap">—</span>
+</div>
+
+<div aria-hidden="true" class="quote" style="display:none">
+<div>
+<div class="muted">UP ASK</div>
+<b class="up" id="kalshiUp">—</b>
+</div>
+<div>
+<div class="muted">DOWN ASK</div>
+<b class="down" id="kalshiDown">—</b>
+</div>
+</div>
+
+<div class="small" id="kalshiMarket" style="margin-top:8px">
+Loading market
+</div>
+</div>
+
+<div class="small">
+Chart BUY / FLIP / SCALP and TRAP markers are
+technical observations, not Rosie's confirmed
+calls or executed trades.
+</div>
+</section>
+
+<details class="indicators-fold">
+<summary>Market indicators · pressure, RSI, whales &amp; more</summary>
+
 <div class="row">
 <span>Confirmed signal</span>
 <b id="confirmed">NO CONFIRMED CALL</b>
@@ -481,105 +466,52 @@ href="https://btc-kalshi-api.onrender.com/rosie/account">
 <span class="muted">1M TREND</span>
 <b id="trend">—</b>
 </div>
-
 <div class="metric">
 <span class="muted">ROSIE SIGNAL SCORE</span>
 <b id="strength">—</b>
 </div>
 </div>
 
-<!-- BUY / SELL PRESSURE -->
 <div class="between">
 <b>BUY / SELL PRESSURE</b>
-<span id="pressureSource" class="tag">ROSIE</span>
+<span class="tag" id="pressureSource">ROSIE</span>
 </div>
-
-<div class="bar">
-<div id="buybar"></div>
-</div>
-
+<div class="bar"><div id="buybar"></div></div>
 <div class="between muted">
 <span id="buyers">Buy —</span>
 <span id="sellers">Sell —</span>
 </div>
 
-<div class="row">
-<span>Pressure shift</span>
-<b id="shift">—</b>
-</div>
-
-<div class="row">
-<span>Whales $100K+</span>
-<b id="whale100">—</b>
-</div>
-
-<div class="row">
-<span>Whales $500K+</span>
-<b id="whale500">—</b>
-</div>
-
-<div class="row">
-<span>RSI · 15M</span>
-<b id="rsi">—</b>
-</div>
-
-<div class="row">
-<span>MACD · 15M</span>
-<b id="macd">—</b>
-</div>
-
-<div class="row">
-<span>Momentum</span>
-<b id="momentum">—</b>
-</div>
-
-<div class="row">
-<span>Support / Resistance</span>
-<b id="sr">—</b>
-</div>
-
-<div class="row">
-<span>Take Profit · Chart</span>
-<b id="tp">—</b>
-</div>
+<div class="row"><span>Pressure shift</span><b id="shift">—</b></div>
+<div class="row"><span>Whales $100K+</span><b id="whale100">—</b></div>
+<div class="row"><span>Whales $500K+</span><b id="whale500">—</b></div>
+<div class="row"><span>RSI · 15M</span><b id="rsi">—</b></div>
+<div class="row"><span>MACD · 15M</span><b id="macd">—</b></div>
+<div class="row"><span>Momentum</span><b id="momentum">—</b></div>
+<div class="row"><span>Support / Resistance</span><b id="sr">—</b></div>
+<div class="row"><span>Take Profit · Chart</span><b id="tp">—</b></div>
 
 <div class="small" style="margin-top:12px">
-EARLY, MID and FINAL are locked independently
-for each round.
-
-ROUND ENDING updates throughout the round.
-
-Countdowns follow the 12–13m elapsed,
-9–10m left and 4–5m left windows.
+EARLY, MID and FINAL lock independently for each round.
+ROUND ENDING updates continuously.
+Countdowns follow the 12–13 minute elapsed,
+9–10 minute remaining and 4–5 minute remaining windows.
 Calls require matching backend snapshots.
+Flip Watch is scored out of 10, not a probability.
+Estimates are uncalibrated. Manual trading only.
+</div>
+</details>
 
-Scalp flip evidence is scored out of 10,
-not a probability.
-
-Estimates are uncalibrated.
-Manual trading only.
 </div>
 
-</section>
-</div>
-
-<!-- ADAPTIVE LEARNING -->
-<section
-class="panel"
-id="adaptivePanel"
-style="margin-top:10px"
-aria-live="polite">
-
+<section aria-live="polite" class="panel" id="adaptivePanel" style="margin-top:10px">
 <div class="between">
 <b>🧠 ROSIE · ADAPTIVE LEARNING</b>
-<span id="learningStatus" class="tag">
-WAITING FOR DATA
-</span>
+<span class="tag" id="learningStatus">WAITING FOR DATA</span>
 </div>
 
 <div class="small" style="margin-top:7px">
-Shadow analysis only.
-It does not change locked calls or place trades.
+Shadow analysis only. It does not change locked calls or place trades.
 </div>
 
 <div class="metrics">
@@ -587,16 +519,13 @@ It does not change locked calls or place trades.
 <span class="muted">SHADOW DIRECTION</span>
 <b id="learningDirection">—</b>
 </div>
-
 <div class="metric">
 <span class="muted">AGREES WITH ROSIE</span>
 <b id="learningAgreement">—</b>
 </div>
 </div>
 
-<div class="small" id="learningReason">
-Waiting for adaptive engine.
-</div>
+<div class="small" id="learningReason">Waiting for adaptive engine.</div>
 
 <div class="box">
 <b>RECORDED PERFORMANCE</b>
@@ -607,30 +536,20 @@ Waiting for adaptive engine.
 <div class="small">FINAL: <b id="learningFinal">—</b></div>
 <div class="small">ROUND ENDING: <b id="learningEnding">—</b></div>
 <div class="small" id="learningNote"></div>
-<div
-id="learningOverall"
-class="small"
-style="margin-top:7px">
+<div class="small" id="learningOverall" style="margin-top:7px">
 Waiting for tracked outcomes.
 </div>
-
-<div
-id="learningStages"
-class="small"
-style="margin-top:7px">
+<div class="small" id="learningStages" style="margin-top:7px">
 EARLY · MID · FINAL · ROUND ENDING
 </div>
-
 <div class="small" style="margin-top:7px">
-ROUND ENDING is shown separately and is
-not included in the three-stage summary.
+ROUND ENDING is tracked separately from the three locked stages.
 </div>
 </div>
 </section>
-
 </div>
 
-<!-- DASHBOARD JAVASCRIPT -->
+<!-- ROSIE V5 LIVE DASHBOARD JAVASCRIPT -->
 <script>
 "use strict";
 
@@ -777,6 +696,7 @@ return a.map(x=>(v=x*k+v*(1-k)));
 
 function rsi(a,n=14){
 if(a.length<n+2)return null;
+
 let g=0,l=0;
 
 for(let i=1;i<=n;i++){
@@ -1070,6 +990,7 @@ let lastRosieBuyWatch = {
   ticker: "",
   direction: ""
 };
+
 function updateRosieChartMarkers() {
   if (!candle || !bars.length || !window.LightweightCharts) {
     return;
@@ -1137,13 +1058,14 @@ function updateRosieChartMarkers() {
       text: "TRAP DOWN?"
     });
   }
+
 /* Confirmed flip alerts from Rosie */
 if (freshRosie()) {
   const flip = first(
-  rosie.flip,
-  rosie.scalp_flip,
-  rosie.flip_watch
-);
+    rosie.flip,
+    rosie.scalp_flip,
+    rosie.flip_watch
+  );
 
   if (flip && typeof flip === "object") {
     const flipDirection = signalDirection(flip);
@@ -1156,15 +1078,13 @@ if (freshRosie()) {
       flipStage === "CONFIRMED";
 
     if (
-  flipConfirmed &&
-  flipDirection &&
-  (
-    lastRosieFlipKey !== marketTicker + ":" + flipDirection ||
-    Date.now() - lastRosieFlipTime > 900000
-  )
-) {
-  lastRosieFlipKey = marketTicker + ":" + flipDirection;
-  lastRosieFlipTime = Date.now();
+      flipConfirmed &&
+      flipDirection &&
+      lastRosieFlipKey !== marketTicker + ":" + flipDirection
+    ) {
+      lastRosieFlipKey = marketTicker + ":" + flipDirection;
+      lastRosieFlipTime = Date.now();
+
       markers.push({
         time: last.time,
         position: flipDirection === "UP"
@@ -1178,7 +1098,8 @@ if (freshRosie()) {
     }
   }
 }
-  /* Qualified BUY WATCH chart markers */
+
+/* Qualified BUY WATCH chart markers */
 if (freshRosie() && marketTicker && remainingSeconds() > 0) {
   const direction = currentRosieDirection(rosie);
   const score = directionalScore(rosie, direction);
@@ -1207,47 +1128,46 @@ if (freshRosie() && marketTicker && remainingSeconds() > 0) {
     quote > 0 &&
     quote < 100
   ) {
-   const newBuyWatch =
-  lastRosieBuyWatch.ticker !== marketTicker ||
-  lastRosieBuyWatch.direction !== direction;
+    const newBuyWatch =
+      lastRosieBuyWatch.ticker !== marketTicker ||
+      lastRosieBuyWatch.direction !== direction;
 
-if (newBuyWatch) {
-  lastRosieBuyWatch = {
-    ticker: marketTicker,
-    direction: direction
-  };
+    if (newBuyWatch) {
+      lastRosieBuyWatch = {
+        ticker: marketTicker,
+        direction: direction
+      };
 
-    markers.push({
-      time: last.time,
-      position: direction === "UP"
-        ? "belowBar" : "aboveBar",
-      color: direction === "UP"
-        ? "#35d39a" : "#ff7787",
-      shape: direction === "UP"
-        ? "arrowUp" : "arrowDown",
-      text: "BUY " + direction + " WATCH"
-    });
+      markers.push({
+        time: last.time,
+        position: direction === "UP"
+          ? "belowBar" : "aboveBar",
+        color: direction === "UP"
+          ? "#35d39a" : "#ff7787",
+        shape: direction === "UP"
+          ? "arrowUp" : "arrowDown",
+        text: "BUY " + direction + " WATCH"
+      });
+    }
   }
 }
-}
-  /* Display confirmed Rosie direction only */
 
+/* Direction change markers are observations, not orders. */
 
 /* Display Rosie direction when it changes */
-
 if (freshRosie()) {
   const direction = currentRosieDirection(rosie);
 
   const previousDirection = [...rosieMarkerHistory]
     .reverse()
     .find(m => m.text === "▲ UP" ||
-           m.text === "▼ DOWN");
+               m.text === "▼ DOWN");
 
   const previousText = previousDirection?.text || "";
 
   if (
     direction &&
-    previousText !==previousText !== (direction === "UP" ? "▲ UP" : "▼ DOWN")
+    previousText !== (direction === "UP" ? "▲ UP" : "▼ DOWN")
   ) {
     markers.push({
       time: last.time,
@@ -1261,6 +1181,7 @@ if (freshRosie()) {
     });
   }
 }
+
 for (const marker of markers) {
   const exists = rosieMarkerHistory.some(
     m => m.time === marker.time &&
@@ -1271,7 +1192,9 @@ for (const marker of markers) {
     rosieMarkerHistory.push(marker);
   }
 }
+
 const validTimes = new Set(bars.map(b => b.time));
+
 rosieMarkerHistory = rosieMarkerHistory.filter(
   m => validTimes.has(m.time)
 );
@@ -1308,17 +1231,16 @@ function updatePriceLevels() {
     candle.removePriceLine(resistanceLine);
     resistanceLine = null;
   }
-  
-if (supportLine2) {
-  candle.removePriceLine(supportLine2);
-  supportLine2 = null;
-}
 
-if (resistanceLine2) {
-  candle.removePriceLine(resistanceLine2);
-  resistanceLine2 = null;
-}
+  if (supportLine2) {
+    candle.removePriceLine(supportLine2);
+    supportLine2 = null;
+  }
 
+  if (resistanceLine2) {
+    candle.removePriceLine(resistanceLine2);
+    resistanceLine2 = null;
+  }
 
   if (kalshiTargetLine) {
     candle.removePriceLine(kalshiTargetLine);
@@ -1343,7 +1265,7 @@ if (resistanceLine2) {
       axisLabelVisible: true,
       title: "R1"
     });
-    
+
     const recent = bars.slice(-60);
     const older = recent.slice(0, -30);
 
@@ -1373,7 +1295,6 @@ if (resistanceLine2) {
         });
       }
     }
-
   }
 
   if (targetPrice !== null && targetPrice > 0) {
@@ -1388,48 +1309,102 @@ if (resistanceLine2) {
   }
 }
 
-function initChart() {
-  const el = $("chart");
-  if (!el || !window.LightweightCharts) return;
+/* PART 14 — CREATE ROSIE CANDLESTICK CHART */
 
-  chart = LightweightCharts.createChart(el, {
-    width: el.clientWidth,
-    height: el.clientHeight || 350,
+function initializeChart() {
+  const container = $("chart");
+
+  if (!container) {
+    console.error("Rosie chart container missing.");
+    return;
+  }
+
+  if (!window.LightweightCharts) {
+    put("status", "CHART LIBRARY ERROR");
+    console.error("Lightweight Charts did not load.");
+    return;
+  }
+
+  chart = LightweightCharts.createChart(container, {
+    width: container.clientWidth,
+    height: container.clientHeight || 420,
+
     layout: {
-      background: { type: "solid", color: "#151e2b" },
-      textColor: "#a7b4c8"
+      background: {
+        type: LightweightCharts.ColorType.Solid,
+        color: "#101a2a"
+      },
+      textColor: "#aebfd6",
+      fontSize: 11
     },
+
     grid: {
-      vertLines: { color: "#202b3b" },
-      horzLines: { color: "#202b3b" }
+      vertLines: { color: "#1d2d42" },
+      horzLines: { color: "#1d2d42" }
     },
+
     rightPriceScale: {
-      borderColor: "#35445b",
-      scaleMargins: { top: 0.12, bottom: 0.12 }
+      borderColor: "#344862",
+      scaleMargins: {
+        top: 0.12,
+        bottom: 0.12
+      }
     },
+
     timeScale: {
-      borderColor: "#35445b",
+      borderColor: "#344862",
       timeVisible: true,
       secondsVisible: false,
-      rightOffset: 2,
-      barSpacing: 8
+      rightOffset: 5,
+      barSpacing: 11,
+      minBarSpacing: 5
     },
-    crosshair: { mode: 0 }
+
+    crosshair: {
+      mode: LightweightCharts.CrosshairMode.Normal
+    },
+
+    localization: {
+      priceFormatter: value =>
+        "$" + Number(value).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })
+    },
+
+    handleScroll: {
+      mouseWheel: true,
+      pressedMouseMove: true,
+      horzTouchDrag: true,
+      vertTouchDrag: false
+    },
+
+    handleScale: {
+      mouseWheel: true,
+      pinch: true,
+      axisPressedMouseMove: true
+    }
   });
 
   candle = chart.addSeries(
     LightweightCharts.CandlestickSeries,
     {
       upColor: "#35d39a",
-      downColor: "#ff7787",
+      downColor: "#ff647c",
       borderUpColor: "#35d39a",
-      borderDownColor: "#ff7787",
+      borderDownColor: "#ff647c",
       wickUpColor: "#35d39a",
-      wickDownColor: "#ff7787"
+      wickDownColor: "#ff647c",
+      priceLineVisible: true,
+      lastValueVisible: true
     }
   );
 
-  const colors = ["#f3c65c", "#55aaff", "#b994fa"];
+  const colors = [
+    "#f3c65c",
+    "#55aaff",
+    "#b994fa"
+  ];
 
   emaLines = colors.map(color =>
     chart.addSeries(
@@ -1444,33 +1419,50 @@ function initChart() {
     )
   );
 
-  const observer = new ResizeObserver(() => {
-    if (chart && el.clientWidth) {
-      chart.applyOptions({
-        width: el.clientWidth,
-        height: el.clientHeight || 350
-      });
-    }
-  });
+  const resizeChart = () => {
+    if (!chart || !container.isConnected) return;
 
-  observer.observe(el);
+    chart.applyOptions({
+      width: container.clientWidth,
+      height: container.clientHeight || 420
+    });
+  };
+
+  window.addEventListener("resize", resizeChart);
+
+  if (typeof ResizeObserver !== "undefined") {
+    const observer = new ResizeObserver(resizeChart);
+    observer.observe(container);
+  }
+
+  console.log("Rosie V5 chart initialized.");
 }
+
+/* PART 15 — LOAD LIVE COINBASE CANDLE HISTORY */
 
 async function loadCoinbaseHistory() {
   if (historyLoading) return;
+
   historyLoading = true;
 
   try {
-    const url = CB + "/products/BTC-USD/candles?granularity=60";
-    const response = await fetch(url, { cache: "no-store" });
+    const url =
+      CB + "/products/BTC-USD/candles?granularity=60";
+
+    const response = await fetch(url, {
+      cache: "no-store"
+    });
 
     if (!response.ok) {
-      throw Error("Coinbase history unavailable");
+      throw new Error(
+        "Coinbase candle history unavailable"
+      );
     }
 
     const raw = await response.json();
+
     if (!Array.isArray(raw)) {
-      throw Error("Invalid candle data");
+      throw new Error("Invalid Coinbase candle data");
     }
 
     const parsed = raw.map(x => ({
@@ -1481,97 +1473,144 @@ async function loadCoinbaseHistory() {
       close: Number(x[4]),
       volume: Number(x[5])
     }))
-    .filter(x =>
-      Number.isFinite(x.time) &&
-      Number.isFinite(x.open) &&
-      Number.isFinite(x.high) &&
-      Number.isFinite(x.low) &&
-      Number.isFinite(x.close)
+    .filter(c =>
+      Number.isFinite(c.time) &&
+      Number.isFinite(c.open) &&
+      Number.isFinite(c.high) &&
+      Number.isFinite(c.low) &&
+      Number.isFinite(c.close) &&
+      c.high >= c.low
     )
     .sort((a, b) => a.time - b.time);
 
     const unique = new Map();
-    parsed.forEach(c => unique.set(c.time, c));
+
+    for (const bar of parsed) {
+      unique.set(bar.time, bar);
+    }
 
     bars = Array.from(unique.values())
       .sort((a, b) => a.time - b.time);
 
-    if (bars.length) {
-      price = bars[bars.length - 1].close;
-      put("price", money(price));
-
-      if (candle) candle.setData(bars);
-      updateTechnicalChart();
-
-      if (chart) {
-        chart.timeScale().setVisibleLogicalRange({
-          from: Math.max(0, bars.length - 45),
-          to: bars.length + 3
-        });
-      }
+    if (!bars.length) {
+      throw new Error("No candles returned");
     }
 
-  } catch (e) {
-    console.warn("Coinbase history:", e.message);
+    price = bars[bars.length - 1].close;
+
+    put("price", money(price));
+
+    if (candle) {
+      candle.setData(bars);
+    }
+
+    updateTechnicalChart();
+
+    if (chart) {
+      chart.timeScale().setVisibleLogicalRange({
+        from: Math.max(0, bars.length - 30),
+        to: bars.length + 3
+      });
+    }
+
+    console.log(
+      "Rosie loaded",
+      bars.length,
+      "Coinbase candles"
+    );
+
+  } catch (error) {
+    console.warn(
+      "Rosie Coinbase history:",
+      error.message
+    );
+
+    if (!bars.length) {
+      put("price", "CONNECTING");
+    }
+
   } finally {
     historyLoading = false;
   }
 }
 
-function updateCoinbaseTrade(t) {
-  const p = num(t.price);
-  if (p === null || p <= 0) return;
+/* PART 16 — LIVE COINBASE PRICE FEED */
 
-  const timestamp = Date.parse(t.time || "");
-  const ms = Number.isFinite(timestamp)
-    ? timestamp
-    : Date.now();
+function updateLiveCandle(tradePrice, timestamp) {
+  const value = num(tradePrice);
+  const seconds = Math.floor(
+    new Date(timestamp).getTime() / 1000
+  );
 
-  const bucket = Math.floor(ms / 60000) * 60;
+  if (
+    value === null ||
+    value <= 0 ||
+    !Number.isFinite(seconds)
+  ) return;
 
-  price = p;
-  lastCoinbaseTickAt = Date.now();
-  put("price", money(p));
+  const minute = Math.floor(seconds / 60) * 60;
 
-  const last = bars[bars.length - 1];
+  if (bars.length) {
+    const last = bars[bars.length - 1];
 
-  if (last && bucket < last.time) return;
+    // Ignore trades older than our newest candle.
+    if (minute < last.time) return;
 
-  if (last && last.time === bucket) {
-    last.high = Math.max(last.high, p);
-    last.low = Math.min(last.low, p);
-    last.close = p;
-  } else {
-    bars.push({
-      time: bucket,
-      open: p,
-      high: p,
-      low: p,
-      close: p,
-      volume: 0
-    });
+    if (minute === last.time) {
+      last.high = Math.max(last.high, value);
+      last.low = Math.min(last.low, value);
+      last.close = value;
 
-    if (bars.length > 350) bars.shift();
-  }
+      if (candle) candle.update(last);
+    } else {
+      const next = {
+        time: minute,
+        open: last.close,
+        high: value,
+        low: value,
+        close: value,
+        volume: 0
+      };
 
-  const current = bars[bars.length - 1];
+      bars.push(next);
 
-  if (candle) {
-    try {
-      candle.update(current);
-    } catch (e) {
-      console.warn("Candle update:", e.message);
+      if (bars.length > 350) {
+        bars.shift();
+
+        if (candle) candle.setData(bars);
+      } else if (candle) {
+        candle.update(next);
+      }
     }
+  } else {
+    const next = {
+      time: minute,
+      open: value,
+      high: value,
+      low: value,
+      close: value,
+      volume: 0
+    };
+
+    bars.push(next);
+
+    if (candle) candle.setData(bars);
   }
 
-  updateTechnicalChart();
+  price = value;
+  lastCoinbaseTickAt = Date.now();
+
+  put("price", money(value));
 }
 
 function connectCoinbase() {
-  if (socket) {
-    try { socket.close(); } catch (e) {}
-    socket = null;
-  }
+  if (
+    socket &&
+    (
+      socket.readyState === WebSocket.OPEN ||
+      socket.readyState === WebSocket.CONNECTING
+    )
+  ) return;
 
   try {
     socket = new WebSocket(
@@ -1584,76 +1623,81 @@ function connectCoinbase() {
         product_ids: ["BTC-USD"],
         channels: ["matches"]
       }));
-
-      put("status", "COINBASE CONNECTED");
     };
 
     socket.onmessage = event => {
-      let d;
       try {
-        d = JSON.parse(event.data);
-      } catch (e) {
-        return;
-      }
+        const message = JSON.parse(event.data);
 
-      if (
-        d.type === "match" ||
-        d.type === "last_match"
-      ) {
-        updateCoinbaseTrade(d);
+        if (
+          message.type !== "match" &&
+          message.type !== "last_match"
+        ) return;
+
+        if (message.product_id !== "BTC-USD") return;
+
+        updateLiveCandle(
+          message.price,
+          message.time
+        );
+      } catch (error) {
+        console.warn("Coinbase message:", error);
       }
     };
 
     socket.onerror = () => {
-      put("status", "COINBASE RECONNECTING");
+      console.warn("Coinbase live connection error");
     };
 
     socket.onclose = () => {
-      put("status", "COINBASE DISCONNECTED");
-      setTimeout(connectCoinbase, 5000);
+      socket = null;
+      put("status", "RECONNECTING");
+
+      // Reconnection is handled by the dashboard
+      // refresh loop added later.
     };
 
-  } catch (e) {
-    put("status", "COINBASE UNAVAILABLE");
-    setTimeout(connectCoinbase, 5000);
+  } catch (error) {
+    console.warn(
+      "Coinbase connection:",
+      error.message
+    );
   }
 }
 
-/* END PART 6 */
+/* PART 17 — KALSHI MARKET & ROUND CLOCK */
 
-/* PART 7 — KALSHI MARKET AND COUNTDOWN */
-
-let kalshiUpdatedAt = 0;
-let kalshiQuoteFresh = false;
-let kalshiUpAsk = null;
-let kalshiDownAsk = null;
-
-function parseMarketTime(value) {
-  if (!value) return 0;
-
-  if (typeof value === "number") {
-    return value < 1e12 ? value * 1000 : value;
+function parseMarketClose(value) {
+  if (value === null || value === undefined) {
+    return 0;
   }
 
-  const ms = Date.parse(String(value));
-  return Number.isFinite(ms) ? ms : 0;
+  if (typeof value === "number") {
+    return value > 1e12 ? value : value * 1000;
+  }
+
+  const parsed = Date.parse(String(value));
+
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function remainingSeconds() {
   if (kalshiClose > 0) {
-    return Math.max(0, Math.ceil(
-      (kalshiClose - Date.now()) / 1000
-    ));
+    return Math.max(
+      0,
+      Math.ceil((kalshiClose - Date.now()) / 1000)
+    );
   }
 
   if (
     latestRoundSeconds !== null &&
     latestRoundAt > 0
   ) {
-    return Math.max(0, Math.ceil(
+    return Math.max(
+      0,
       latestRoundSeconds -
       (Date.now() - latestRoundAt) / 1000
-    ));
+    );
   }
 
   return null;
@@ -1662,68 +1706,48 @@ function remainingSeconds() {
 function updateRoundClock() {
   const left = remainingSeconds();
 
-  if (left === null) {
-    put("clock", "--:--");
-    put("commandTime", "—");
-    return;
-  }
-
-  put("clock", fmtSeconds(left));
-  put("commandTime", fmtSeconds(left));
-
-  if (left === 0) {
-    put("clock", "00:00");
-  }
-}
-
-function normalizeAsk(value) {
-  const n = num(value);
-
-  if (n === null || n < 0 || n > 100) {
-    return null;
-  }
-
-  return n;
-}
-
-function updateTargetDisplay() {
-  const target = num($("target")?.value);
-
-  if (target === null || price <= 0) {
-    put("gap", "WAITING FOR TARGET");
-    return;
-  }
-
-  const difference = price - target;
-
-  const direction =
-    difference > 0 ? "ABOVE" :
-    difference < 0 ? "BELOW" : "AT";
+  put(
+    "clock",
+    left === null ? "--:--" : fmtSeconds(left)
+  );
 
   put(
-    "gap",
-    direction + " TARGET · " +
-    money(Math.abs(difference))
+    "commandTime",
+    left === null ? "—" : fmtSeconds(left)
   );
 }
 
-function clearKalshiMarket() {
-  kalshiQuoteFresh = false;
-  kalshiUpAsk = null;
-  kalshiDownAsk = null;
-  kalshiUpdatedAt = 0;
-  marketTicker = "";
-  kalshiClose = 0;
+function resetMarketCache(ticker) {
+  if (!ticker || ticker === marketTicker) {
+    return;
+  }
 
-  $("target").value = "";
-  put("gap", "WAITING FOR MARKET");
-  put("kalshiUp", "—");
-  put("kalshiDown", "—");
-  put("kalshiMarket", "Market unavailable");
+  marketTicker = ticker;
+
+  lockedCache = {
+    ticker,
+    EARLY: null,
+    MID: null,
+    FINAL: null
+  };
+
+  lastRosieFlipKey = "";
+
+  lastRosieBuyWatch = {
+    ticker: "",
+    direction: ""
+  };
+
+  rosieMarkerHistory = [];
+
+  if (rosieMarkerPlugin) {
+    rosieMarkerPlugin.setMarkers([]);
+  }
 }
 
 async function loadKalshiMarket() {
   if (loadingKalshi) return;
+
   loadingKalshi = true;
 
   try {
@@ -1735,224 +1759,137 @@ async function loadKalshiMarket() {
     });
 
     if (!response.ok) {
-      throw Error(
+      throw new Error(
         "Kalshi API returned " + response.status
       );
     }
 
-    const payload = await response.json();
+    const data = await response.json();
 
-    if (!payload || typeof payload !== "object") {
-      throw Error("Invalid Kalshi response");
+    if (!data || typeof data !== "object") {
+      throw new Error("Invalid Kalshi response");
     }
 
-    const d =
-      payload.market &&
-      typeof payload.market === "object"
-      ? { ...payload, ...payload.market }
-      : payload;
+    const market =
+      data.market &&
+      typeof data.market === "object"
+        ? data.market
+        : data;
 
     const ticker = first(
-      d.ticker,
-      d.market_ticker,
-      d.marketTicker
+      market.ticker,
+      market.market_ticker,
+      data.market_ticker,
+      data.ticker
     );
 
-    const target = first(
-      d.target,
-      d.target_price,
-      d.strike_price,
-      d.strike
+    if (ticker) {
+      resetMarketCache(String(ticker));
+    }
+
+    const closeValue = first(
+      market.close_time,
+      market.expiration_time,
+      market.end_time,
+      data.close_time,
+      data.expiration_time,
+      data.end_time
     );
 
-    const upAsk = first(
-      d.up_ask_cents,
-      d.yes_ask_cents
-    );
+    const close = parseMarketClose(closeValue);
 
-    const downAsk = first(
-      d.down_ask_cents,
-      d.no_ask_cents
-    );
+    if (close > 0) {
+      kalshiClose = close;
+      latestRoundSeconds = null;
+    } else {
+      const remaining = num(first(
+        market.seconds_remaining,
+        market.time_remaining_seconds,
+        data.seconds_remaining,
+        data.time_remaining_seconds
+      ));
 
-    const closeTime = first(
-      d.close_time,
-      d.expiration_time,
-      d.market_close_time
-    );
+      if (remaining !== null) {
+        kalshiClose = 0;
+        latestRoundSeconds = remaining;
+        latestRoundAt = Date.now();
+      }
+    }
 
-    const secondsLeft = num(first(
-      d.seconds_left,
-      d.remaining_seconds
+    const target = num(first(
+      market.target_price,
+      market.strike_price,
+      market.price_to_beat,
+      data.target_price,
+      data.strike_price,
+      data.price_to_beat
     ));
 
-    if (!ticker) {
-      throw Error("No current market ticker");
-    }
+    if (target !== null && target > 0) {
+      $("target").value = String(target);
 
-    const newTicker = String(ticker);
+      if (price > 0) {
+        put(
+          "gap",
+          "BTC " +
+          (price >= target ? "ABOVE " : "BELOW ") +
+          "TARGET BY " +
+          money(Math.abs(price - target))
+        );
+      }
 
-    if (
-      marketTicker &&
-      marketTicker !== newTicker
-    ) {
-      lockedCache = {
-        ticker: newTicker,
-        EARLY: null,
-        MID: null,
-        FINAL: null
-      };
-
-      rosie = null;
-      rosieAt = 0;
-
-      put("rosieStatus", "NEW ROUND");
-    }
-
-    marketTicker = newTicker;
-
-    const targetNumber = num(target);
-
-    if (targetNumber !== null) {
-      $("target").value = String(targetNumber);
+      updatePriceLevels();
     } else {
       $("target").value = "";
-    }
-
-    kalshiUpAsk = normalizeAsk(upAsk);
-    kalshiDownAsk = normalizeAsk(downAsk);
-
-    put(
-      "kalshiUp",
-      kalshiUpAsk === null
-        ? "—"
-        : kalshiUpAsk + "¢"
-    );
-
-    put(
-      "kalshiDown",
-      kalshiDownAsk === null
-        ? "—"
-        : kalshiDownAsk + "¢"
-    );
-
-    kalshiUpdatedAt = Date.now();
-
-    kalshiQuoteFresh =
-      kalshiUpAsk !== null &&
-      kalshiDownAsk !== null;
-
-    const parsedClose = parseMarketTime(closeTime);
-
-    if (parsedClose > 0) {
-      kalshiClose = parsedClose;
-    } else if (secondsLeft !== null) {
-      kalshiClose =
-        Date.now() + secondsLeft * 1000;
-    }
-
-    if (secondsLeft !== null) {
-      latestRoundSeconds = secondsLeft;
-      latestRoundAt = Date.now();
+      put("gap", "TARGET UNAVAILABLE");
     }
 
     put(
       "kalshiMarket",
-      "MARKET · " + marketTicker
+      ticker
+        ? "CURRENT MARKET · " + ticker
+        : "MARKET NOT IDENTIFIED"
     );
 
-    updateTargetDisplay();
-    updatePriceLevels();
     updateRoundClock();
 
-  } catch (e) {
+  } catch (error) {
     console.warn(
-      "Kalshi market:",
-      e.message
+      "Rosie Kalshi market:",
+      error.message
     );
 
-    kalshiQuoteFresh = false;
-
-    put(
-      "kalshiMarket",
-      "MARKET DATA UNAVAILABLE"
-    );
+    put("kalshiMarket", "MARKET CONNECTION ERROR");
 
   } finally {
     loadingKalshi = false;
   }
 }
 
-function currentQuoteAge() {
-  if (!kalshiUpdatedAt) return Infinity;
-
-  return Date.now() - kalshiUpdatedAt;
-}
-
-function hasFreshKalshiQuote() {
-  return Boolean(
-    marketTicker &&
-    kalshiQuoteFresh &&
-    currentQuoteAge() < 30000 &&
-    remainingSeconds() !== null &&
-    remainingSeconds() > 0
-  );
-}
-
-function currentEntryQuote(side) {
-  if (!hasFreshKalshiQuote()) {
-    return null;
-  }
-
-  if (side === "UP") {
-    return kalshiUpAsk;
-  }
-
-  if (side === "DOWN") {
-    return kalshiDownAsk;
-  }
-
-  return null;
-}
-
-/*
-Quotes are indicative and can change
-before review.
-
-No order is submitted by this dashboard.
-*/
-
-/* END PART 7 */
-
-/* PART 8 — ROSIE LIVE SIGNAL ENGINE */
-
-const ROSIE_MAX_AGE_MS = 90000;
-
-function signalAge() {
-  return rosieAt ? Date.now() - rosieAt : Infinity;
-}
+/* PART 18 — ROSIE STAGE CALLS */
 
 function freshRosie() {
-  return Boolean(
-    rosie &&
-    signalAge() < ROSIE_MAX_AGE_MS &&
-    (!marketTicker ||
-     !rosie.ticker ||
-     String(rosie.ticker) === marketTicker)
-  );
+  return !!rosie &&
+    rosieAt > 0 &&
+    Date.now() - rosieAt < 90000;
 }
 
 function signalDirection(value) {
-  if (value && typeof value === "object") {
-    return dir(first(
-      value.direction,
-      value.call,
-      value.prediction,
-      value.side
-    ));
+  if (!value) return "";
+
+  if (typeof value === "string") {
+    return dir(value);
   }
 
-  return dir(value);
+  if (typeof value !== "object") return "";
+
+  return dir(first(
+    value.direction,
+    value.signal,
+    value.prediction,
+    value.side,
+    value.call
+  ));
 }
 
 function signalScore(value) {
@@ -1960,27 +1897,21 @@ function signalScore(value) {
     return null;
   }
 
-  const direct = num(first(
+  return num(first(
     value.score,
+    value.signal_score,
     value.strength
   ));
-
-  if (direct !== null) return direct;
-
-  const direction = signalDirection(value);
-  const up = num(value.up_score);
-  const down = num(value.down_score);
-
-  if (direction === "UP") return up;
-  if (direction === "DOWN") return down;
-
-  return null;
 }
 
 function stageObject(data, name) {
+  if (!data || typeof data !== "object") {
+    return null;
+  }
+
   const key = name.toLowerCase();
 
-  const locked = first(
+  const stage = first(
     data.locked_stages?.[name],
     data.locked_stages?.[key],
     data.stage_calls?.[name],
@@ -1988,239 +1919,385 @@ function stageObject(data, name) {
     data[key + "_call"]
   );
 
-  if (locked && typeof locked === "object") {
-    return locked;
-  }
-
-  if (typeof locked === "string") {
-    return { direction: locked };
-  }
-
-  return null;
+  return stage &&
+    typeof stage === "object"
+      ? stage
+      : null;
 }
+
+/* LOCK WINDOWS */
 
 function stageTiming(name, left) {
   if (left === null) {
-    return "WAITING FOR CLOCK";
+    return {
+      state: "UNKNOWN",
+      seconds: null
+    };
   }
 
-  const elapsed = 900 - left;
-
   if (name === "EARLY") {
-    if (elapsed < 720) {
-      return "IN " + fmtSeconds(720 - elapsed);
+    // Early window: 12–13 minutes elapsed.
+    // Equivalent to 3–2 minutes remaining.
+    if (left > 180) {
+      return {
+        state: "COUNTDOWN",
+        seconds: left - 180
+      };
     }
 
-    if (elapsed <= 780) {
-      return "CALL WINDOW";
+    if (left >= 120) {
+      return {
+        state: "WINDOW",
+        seconds: 0
+      };
     }
-
-    return "WINDOW PASSED";
   }
 
   if (name === "MID") {
+    // Mid window: 10–9 minutes remaining.
     if (left > 600) {
-      return "IN " + fmtSeconds(left - 600);
+      return {
+        state: "COUNTDOWN",
+        seconds: left - 600
+      };
     }
 
     if (left >= 540) {
-      return "CALL WINDOW";
+      return {
+        state: "WINDOW",
+        seconds: 0
+      };
     }
-
-    return "WINDOW PASSED";
   }
 
   if (name === "FINAL") {
+    // Final window: 5–4 minutes remaining.
     if (left > 300) {
-      return "IN " + fmtSeconds(left - 300);
+      return {
+        state: "COUNTDOWN",
+        seconds: left - 300
+      };
     }
 
     if (left >= 240) {
-      return "CALL WINDOW";
+      return {
+        state: "WINDOW",
+        seconds: 0
+      };
     }
-
-    return "WINDOW PASSED";
   }
 
-  return "—";
+  return {
+    state: "PASSED",
+    seconds: 0
+  };
 }
+
+/* DISPLAY ESTIMATED DIRECTION PERCENTAGE */
+
+function stagePercent(stage, direction) {
+  if (!stage || !direction) return null;
+
+  let value = direction === "UP"
+    ? first(
+        stage.up_probability,
+        stage.up_percent,
+        stage.probability_up
+      )
+    : first(
+        stage.down_probability,
+        stage.down_percent,
+        stage.probability_down
+      );
+
+  value = first(
+    value,
+    stage.probability,
+    stage.confidence_percent,
+    stage.estimated_probability
+  );
+
+  let n = num(value);
+
+  if (n === null || n < 0 || n > 100) {
+    return null;
+  }
+
+  return n;
+}
+
+/* VERIFY LOCK BELONGS TO CURRENT MARKET */
+
+function verifiedStage(stage, data, name) {
+  if (!stage || typeof stage !== "object") {
+    return false;
+  }
+
+  const direction = signalDirection(stage);
+
+  if (!direction) return false;
+
+  const ticker = first(
+    stage.market_ticker,
+    stage.ticker,
+    stage.market
+  );
+
+  if (
+    !marketTicker ||
+    !ticker ||
+    String(ticker) !== String(marketTicker)
+  ) {
+    return false;
+  }
+
+  const status = String(
+    first(stage.status, "")
+  ).toUpperCase();
+
+  if (
+    stage.locked === false ||
+    stage.is_locked === false ||
+    ["PENDING", "UNLOCKED", "PREVIEW"].includes(status)
+  ) {
+    return false;
+  }
+
+  const confirmedLock =
+    stage.locked === true ||
+    stage.is_locked === true ||
+    status === "LOCKED";
+
+  if (!confirmedLock) return false;
+
+  const lockedAt = first(
+    stage.locked_at,
+    stage.lock_time,
+    stage.timestamp
+  );
+
+  // A valid lock must include a timestamp.
+  if (!lockedAt) return false;
+
+  let lockMs;
+
+  if (typeof lockedAt === "number") {
+    lockMs = lockedAt > 1e12
+      ? lockedAt
+      : lockedAt * 1000;
+  } else {
+    lockMs = Date.parse(String(lockedAt));
+  }
+
+  if (!Number.isFinite(lockMs)) return false;
+
+  // Reject locks from future timestamps.
+  if (lockMs > Date.now() + 10000) return false;
+
+  // Reject old-round locks.
+  if (kalshiClose > 0) {
+    const roundStart = kalshiClose - 900000;
+
+    if (
+      lockMs < roundStart - 10000 ||
+      lockMs > kalshiClose + 10000
+    ) {
+      return false;
+    }
+
+    const remainingAtLock =
+      (kalshiClose - lockMs) / 1000;
+
+    const timing = stageTiming(
+      name,
+      remainingAtLock
+    );
+
+    if (timing.state !== "WINDOW") {
+      return false;
+    }
+  } else {
+    // Without a verified round clock, do not
+    // claim a lock has been authenticated.
+    return false;
+  }
+
+  return true;
+}
+
+/* RENDER EARLY / MID / FINAL */
 
 function showStage(name, data) {
   const key = name.toLowerCase();
   const left = remainingSeconds();
-  const stage = stageObject(data, name);
+  const timing = stageTiming(name, left);
 
-  put(key + "Time", stageTiming(name, left));
+  const stage = freshRosie()
+    ? stageObject(data, name)
+    : null;
 
-  if (!stage) {
-    put(
-      key,
-      "⏳ " + (
-        left === null ? "--:--" :
-        stageTiming(name, left).startsWith("IN ")
-          ? stageTiming(name, left).slice(3)
-          : "WAIT"
-      )
-    );
+  const valid = verifiedStage(
+    stage,
+    data,
+    name
+  );
 
-    put(key + "Score", "NO LOCKED CALL");
-    put(key + "Pressure", "—");
-    put(key + "Shift", "—");
+  if (!valid) {
+    if (timing.state === "COUNTDOWN") {
+      put(key, fmtSeconds(timing.seconds));
+      put(key + "Time", "UNTIL CALL");
+    } else if (timing.state === "WINDOW") {
+      put(key, "00:00");
+      put(key + "Time", "AWAITING LOCK");
+    } else if (timing.state === "PASSED") {
+      put(key, "—");
+      put(key + "Time", "NO VERIFIED LOCK");
+    } else {
+      put(key, "--:--");
+      put(key + "Time", "CONNECTING");
+    }
 
     $(key).className = "yellow countdown";
     return;
   }
 
   const direction = signalDirection(stage);
-  const score = signalScore(stage);
+  const percent = stagePercent(
+    stage,
+    direction
+  );
 
-  const pressure = num(first(
-    stage.buy_pressure,
-    stage.pressure
-  ));
+  const arrow = direction === "UP"
+    ? "▲ "
+    : "▼ ";
 
-  put(key, direction || "WAIT");
+  const display =
+    arrow +
+    direction +
+    (percent === null
+      ? ""
+      : " " + percent.toFixed(0) + "%");
+
+  put(key, display);
+  put(key + "Time", "🔒 LOCKED");
 
   $(key).className =
-    (direction ? cls(direction) : "yellow") +
-    " countdown";
+    cls(direction) + " countdown";
+}
 
-  put(
-    key + "Score",
-    score === null
-      ? "SCORE —"
-      : "SCORE " + score.toFixed(0) + "/100"
+/* PART 19 — ROUND ENDING LIVE PROJECTION */
+
+function currentRosieDirection(data) {
+  if (!data || typeof data !== "object") {
+    return "";
+  }
+
+  const projection = first(
+    data.round_ending,
+    data.live_projection,
+    data.live,
+    data.projection
   );
 
-  put(
-    key + "Pressure",
-    pressure === null
-      ? "PRESSURE —"
-      : "BUY " + pressure.toFixed(0) + "%"
-  );
+  const projectedDirection =
+    signalDirection(projection);
 
-  put(
-    key + "Shift",
-    first(
-      stage.pressure_shift,
-      stage.momentum,
-      "LOCKED"
-    )
-  );
+  return projectedDirection ||
+    signalDirection(data);
+}
+
+function directionalScore(data, direction) {
+  if (!data || !direction) return null;
+
+  const directional = direction === "UP"
+    ? first(
+        data.up_score,
+        data.bull_score
+      )
+    : first(
+        data.down_score,
+        data.bear_score
+      );
+
+  return num(first(
+    directional,
+    data.signal_score,
+    data.score
+  ));
 }
 
 function showRoundEnding(data) {
-  const projection = first(
-    data.live_projection,
-    data.round_ending,
-    data.live_call,
-    data.live_direction
-  );
+  if (!freshRosie()) {
+    put("live", "CONNECTING");
+    put("liveTime", "WAITING FOR SIGNAL");
 
-  const direction = signalDirection(projection);
-
-  const directionScores = {
-    direction,
-    up_score: first(
-      projection?.up_score,
-      data.up_score
-    ),
-    down_score: first(
-      projection?.down_score,
-      data.down_score
-    )
-  };
-
-  const score =
-    signalScore(projection) ??
-    signalScore(directionScores) ??
-    num(data.live_score);
-
-  put("live", direction || "WAIT");
-  $("live").className = cls(direction);
-
-  put(
-    "liveScore",
-    score === null
-      ? "SCORE —"
-      : "SCORE " + score.toFixed(0) + "/100"
-  );
-
-  put(
-    "livePressure",
-    "BUY " + pct(first(
-      projection?.buy_pressure,
-      data.buy_pressure
-    ))
-  );
-
-  put(
-    "liveShift",
-    first(
-      projection?.momentum,
-      data.momentum,
-      "—"
-    )
-  );
-
-  put("liveTime", "CONTINUOUS PROJECTION");
-
-  put("main", direction || "WAIT");
-  $("main").className = "big " + cls(direction);
-
-  put(
-    "reason",
-    first(
-      projection?.reason,
-      data.reason,
-      "Projection updates throughout the round."
-    )
-  );
-}
-
-function showRosieIndicators(data) {
-  const buy = num(first(
-    data.buy_pressure,
-    data.buyers
-  ));
-
-  const sell = num(first(
-    data.sell_pressure,
-    data.sellers
-  ));
-
-  if (buy !== null) {
-    $("buybar").style.width =
-      Math.max(0, Math.min(100, buy)) + "%";
+    $("live").className = "neutral";
+    return;
   }
 
-  put(
-    "buyers",
-    buy === null
-      ? "Buy —"
-      : "Buy " + buy.toFixed(1) + "%"
+  const projection = first(
+    data.round_ending,
+    data.live_projection,
+    data.live,
+    data.projection
   );
 
-  put(
-    "sellers",
-    sell === null
-      ? "Sell —"
-      : "Sell " + sell.toFixed(1) + "%"
+  const source =
+    projection &&
+    typeof projection === "object"
+      ? projection
+      : data;
+
+  const direction =
+    signalDirection(source) ||
+    currentRosieDirection(data);
+
+  if (!direction) {
+    put("live", "—");
+    put("liveTime", "LIVE · MONITORING");
+    $("live").className = "neutral";
+    return;
+  }
+
+  let probability = stagePercent(
+    source,
+    direction
   );
 
-  put("shift", first(data.pressure_shift, "—"));
-  put("whale100", first(data.whales_100k, data.whale100, "—"));
-  put("whale500", first(data.whales_500k, data.whale500, "—"));
-  put("rsi", first(data.rsi_15m, "—"));
-  put("macd", first(data.macd_15m, "—"));
-  put("momentum", first(data.momentum, "—"));
+  if (probability === null) {
+    probability = stagePercent(
+      data,
+      direction
+    );
+  }
+
+  const arrow = direction === "UP"
+    ? "▲ "
+    : "▼ ";
+
+  put(
+    "live",
+    arrow +
+    direction +
+    (probability === null
+      ? ""
+      : " " + probability.toFixed(0) + "%")
+  );
+
+  $("live").className = cls(direction);
+
+  put("liveTime", "LIVE · UPDATING");
 
   const up = num(first(
+    source.up_probability,
+    source.up_percent,
     data.up_probability,
     data.up_percent
   ));
 
   const down = num(first(
+    source.down_probability,
+    source.down_percent,
     data.down_probability,
     data.down_percent
   ));
@@ -2228,103 +2305,103 @@ function showRosieIndicators(data) {
   put("rosieUp", pct(up));
   put("rosieDown", pct(down));
 
-  const confirmed = signalDirection(first(
-    data.confirmed_direction,
-    data.confirmed_call
-  ));
-
-  put(
-    "confirmed",
-    confirmed || "NO CONFIRMED CALL"
-  );
-
-  $("confirmed").className = cls(confirmed);
-
-  const score = num(first(
-    data.signal_score,
-    data.score,
-    data.strength,
-    signalScore(data.live_projection),
-    signalScore(data)
-  ));
-
-  put(
-    "strength",
-    score === null
-      ? "—"
-      : score.toFixed(0) + "/100"
-  );
+  put("main", direction);
+  $("main").className =
+    "big " + cls(direction);
 }
 
-function showRosie(data) {
+/* DISPLAY ALL FOUR CALL BOXES */
+
+function updateRosieCalls() {
+  const data = rosie || {};
+
   showStage("EARLY", data);
   showStage("MID", data);
   showStage("FINAL", data);
   showRoundEnding(data);
-  showRosieIndicators(data);
-
-  put("rosieStatus", "LIVE · CONNECTED");
 }
+
+/* LOAD LIVE ROSIE SIGNALS */
 
 async function loadRosieSignals() {
   if (loadingRosie) return;
+
   loadingRosie = true;
 
   try {
-    const response = await fetch(SIGNAL_API, {
-      cache: "no-store",
-      headers: {
-        "Accept": "application/json"
+    const response = await fetch(
+      SIGNAL_API,
+      {
+        cache: "no-store",
+        headers: {
+          "Accept": "application/json"
+        }
       }
-    });
-
-    if (!response.ok) {
-      throw Error(
-        "Signal API returned " + response.status
-      );
-    }
-
-    const payload = await response.json();
-
-    const data =
-      payload.signal &&
-      typeof payload.signal === "object"
-        ? payload.signal
-        : payload;
-
-    if (!data || typeof data !== "object") {
-      throw Error("Invalid Rosie signal");
-    }
-
-    const incomingTicker = first(
-      data.ticker,
-      data.market_ticker
     );
 
-    if (
-      marketTicker &&
-      incomingTicker &&
-      String(incomingTicker) !== marketTicker
-    ) {
-      throw Error(
-        "Signal belongs to another market"
+    if (!response.ok) {
+      throw new Error(
+        "Rosie signals returned " +
+        response.status
       );
+    }
+
+    const responseData =
+      await response.json();
+
+    if (
+      !responseData ||
+      typeof responseData !== "object"
+    ) {
+      throw new Error(
+        "Invalid Rosie signal response"
+      );
+    }
+
+    const data =
+      responseData.signals &&
+      typeof responseData.signals === "object"
+        ? responseData.signals
+        : responseData;
+
+    const signalTicker = first(
+      data.market_ticker,
+      data.ticker,
+      responseData.market_ticker,
+      responseData.ticker
+    );
+
+    // Do not reset the current market from
+    // an unverified signal response.
+    if (
+      signalTicker &&
+      marketTicker &&
+      String(signalTicker) !==
+      String(marketTicker)
+    ) {
+      put(
+        "rosieStatus",
+        "MARKET MISMATCH"
+      );
+      return;
     }
 
     rosie = data;
     rosieAt = Date.now();
 
-    showRosie(data);
+    put("rosieStatus", "CONNECTED");
 
-  } catch (e) {
+    updateRosieCalls();
+
+  } catch (error) {
     console.warn(
-      "Rosie signals:",
-      e.message
+      "Rosie signal connection:",
+      error.message
     );
 
     put(
       "rosieStatus",
-      "WAITING FOR FRESH SIGNAL"
+      "RECONNECTING"
     );
 
   } finally {
@@ -2332,460 +2409,321 @@ async function loadRosieSignals() {
   }
 }
 
-/* END PART 8 */
+/* PART 20 — ROSIE TRADE COMMAND */
 
-/* PART 9 — ROSIE TRADE COMMAND */
+function tradeCommandDirection(data) {
+  if (!data || !freshRosie()) return "";
 
-function currentRosieDirection(data) {
-  return signalDirection(first(
-    data.confirmed_direction,
-    data.confirmed_call,
-    data.direction
-  ));
+  return currentRosieDirection(data);
 }
 
-function directionalScore(data, direction) {
-  if (!direction) return null;
+function tradeCommandScore(data, direction) {
+  if (!data || !direction) return null;
 
-  const direct = direction === "UP"
-    ? first(data.up_score, data.buy_up_score)
-    : first(data.down_score, data.buy_down_score);
-
-  return num(first(
-    direct,
-    data.signal_score,
-    data.score
-  ));
+  return directionalScore(data, direction);
 }
 
-function commandWait(message, reason) {
-  put("commandMain", "WAIT");
-  $("commandMain").className = "command-main yellow";
-
-  put("commandSub", message);
+function setCommand(text, direction, reason, detail) {
+  put("commandMain", text);
   put("commandReason", reason);
-  put("commandScore", "—");
-  put("commandEntry", "No entry suggested.");
+  put("commandEntry", detail);
+
+  const element = $("commandMain");
+
+  if (element) {
+    element.className =
+      "command-main " +
+      (direction ? cls(direction) : "yellow");
+  }
 }
 
 function updateTradeCommand() {
   const left = remainingSeconds();
 
-  updateRoundClock();
-  updateTrapWatch();
+  put(
+    "commandTime",
+    left === null ? "—" : fmtSeconds(left)
+  );
 
-  if (!marketTicker) {
-    commandWait(
-      "Waiting for current Kalshi market.",
-      "Rosie needs the correct market before evaluating a trade."
-    );
-    put("commandFresh", "NO MARKET");
-    return;
-  }
+  if (!freshRosie() || !marketTicker) {
+    put("commandFresh", "WAITING");
+    put("commandScore", "—");
 
-  if (left === null || left <= 0) {
-    commandWait(
-      "Waiting for the next round.",
-      "Current market has ended or its countdown is unavailable."
+    setCommand(
+      "CHECKING SIGNAL",
+      "",
+      "Waiting for fresh Rosie data and the current Kalshi market.",
+      "No entry suggested."
     );
-    put("commandFresh", "ROUND ENDED");
-    return;
-  }
 
-  if (!freshRosie()) {
-    commandWait(
-      "Waiting for a fresh Rosie signal.",
-      "Old or mismatched signals cannot authorize a new entry."
-    );
-    put("commandFresh", "SIGNAL STALE");
     return;
   }
 
   const data = rosie;
-  const direction = currentRosieDirection(data);
-  const score = directionalScore(data, direction);
-  const trap = candleTrapWatch();
+  const direction = tradeCommandDirection(data);
+  const score = tradeCommandScore(data, direction);
 
-  if (!direction) {
-    commandWait(
-      "No confirmed UP or DOWN direction.",
-      "Rosie is still evaluating this round."
+  put("commandFresh", "LIVE");
+  put(
+    "commandScore",
+    score === null ? "—" : score.toFixed(0) + "/100"
+  );
+
+  if (!direction || score === null) {
+    setCommand(
+      "MONITORING",
+      "",
+      "Rosie has not supplied a complete directional signal.",
+      "No entry suggested."
     );
-    put("commandFresh", "MONITORING");
+
     return;
   }
 
-  if (score === null) {
-    commandWait(
-      "Signal score unavailable.",
-      "Rosie must provide a valid score before suggesting an entry."
+  const buy = num(first(
+    data.buy_pressure,
+    data.pressure?.buy
+  ));
+
+  const sell = num(first(
+    data.sell_pressure,
+    data.pressure?.sell
+  ));
+
+  const pressure =
+    direction === "UP" ? buy : sell;
+
+  const pressureOK =
+    pressure !== null && pressure >= 55;
+
+  const timeOK =
+    left !== null && left > 60;
+
+  const scoreOK = score >= 75;
+
+  const reasons = [];
+
+  reasons.push(
+    "Signal score " + score.toFixed(0) + "/100"
+  );
+
+  if (pressure !== null) {
+    reasons.push(
+      direction + " pressure " +
+      pressure.toFixed(0) + "%"
     );
-    put("commandFresh", "NO SCORE");
+  }
+
+  if (!timeOK) {
+    setCommand(
+      "ROUND ENDING",
+      "",
+      "Not enough verified time remains for a new entry suggestion.",
+      "Monitor the next round."
+    );
+
     return;
   }
 
-  put("commandScore", score.toFixed(0) + "/100");
-
-  if (score < 75) {
-    put("commandMain", "WAIT · " + direction);
-    $("commandMain").className = "command-main yellow";
-
-    put(
-      "commandSub",
-      "Signal below the 75/100 watch threshold."
+  if (!scoreOK || !pressureOK) {
+    setCommand(
+      "WATCH " + direction,
+      direction,
+      reasons.join(" · ") +
+      ". Entry conditions are not fully met.",
+      "No qualified new entry."
     );
 
-    put(
-      "commandReason",
-      "Current score: " + score.toFixed(0) +
-      "/100. This is not a qualified paper-trade signal."
-    );
-
-    put("commandEntry", "No entry suggested.");
-    put("commandFresh", "LOW SCORE");
     return;
   }
 
-  const buyPressure = num(data.buy_pressure);
-  const sellPressure = num(data.sell_pressure);
-
-  const pressureAgrees =
-    direction === "UP"
-      ? buyPressure !== null && buyPressure >= 55
-      : sellPressure !== null && sellPressure >= 55;
-
-  if (!pressureAgrees) {
-    put("commandMain", "WAIT · PRESSURE");
-    $("commandMain").className = "command-main yellow";
-
-    put(
-      "commandSub",
-      "Rosie's direction and trade pressure are not aligned."
-    );
-
-    put(
-      "commandReason",
-      "Waiting for supporting buy/sell pressure."
-    );
-
-    put("commandEntry", "No entry suggested.");
-    put("commandFresh", "CHECKING");
-    return;
-  }
-
-  if (
-    (direction === "UP" && trap === "FAKE UP WATCH") ||
-    (direction === "DOWN" && trap === "FAKE DOWN WATCH")
-  ) {
-    put("commandMain", "WAIT · POSSIBLE TRAP");
-    $("commandMain").className = "command-main yellow";
-
-    put("commandSub", trap);
-
-    put(
-      "commandReason",
-      "Price briefly broke a recent level but moved back inside it. " +
-      "Wait for confirmation rather than chasing the move."
-    );
-
-    put("commandEntry", "No entry suggested.");
-    put("commandFresh", "TRAP WATCH");
-    return;
-  }
-
-  if (!hasFreshKalshiQuote()) {
-    put("commandMain", "WAIT · NO FRESH QUOTE");
-    $("commandMain").className = "command-main yellow";
-
-    put(
-      "commandSub",
-      "Kalshi quote is missing or outdated."
-    );
-
-    put(
-      "commandReason",
-      "A current market quote is required before considering entry."
-    );
-
-    put("commandEntry", "No entry suggested.");
-    put("commandFresh", "QUOTE STALE");
-    return;
-  }
-
-  const quote = currentEntryQuote(direction);
-
-  if (quote === null || quote <= 0 || quote >= 100) {
-    put("commandMain", "WAIT · PRICE");
-    $("commandMain").className = "command-main yellow";
-
-    put(
-      "commandSub",
-      "The current contract price is not suitable for review."
-    );
-
-    put(
-      "commandReason",
-      "Check the current Kalshi ask and available liquidity."
-    );
-
-    put("commandEntry", "No entry suggested.");
-    put("commandFresh", "PRICE CHECK");
-    return;
-  }
-
-  put("commandMain", "BUY " + direction + " · WATCH");
-  $("commandMain").className =
-    "command-main " + cls(direction);
+  setCommand(
+    "BUY " + direction + " WATCH",
+    direction,
+    reasons.join(" · ") +
+    ". Check the live Kalshi quote and market before acting.",
+    "Qualified signal watch only. Review the actual price, fees and risk before any manual order."
+  );
 
   put(
     "commandSub",
-    "Rosie has a qualifying directional signal."
+    "Rosie signal · " + direction +
+    " · " + score.toFixed(0) + "/100"
   );
-
-  put(
-    "commandReason",
-    "Signal " + score.toFixed(0) +
-    "/100 · Supporting pressure · " +
-    "Kalshi ask " + quote + "¢. " +
-    "This is an advisory signal, not a trade execution."
-  );
-
-  put(
-    "commandEntry",
-    "Review BUY " + direction +
-    " at approximately " + quote +
-    "¢ per contract. Check fees, spread, " +
-    "remaining time, and your risk before deciding."
-  );
-
-  put("commandFresh", "SIGNAL READY");
 }
 
-/* END PART 9 */
+/* PART 20 — HOLD / EXIT GUIDANCE */
 
-/* PART 10 — HOLD / EXIT + FLIP WATCH */
+function setHoldCard(side, action, reason, checks) {
+  const key = side === "UP" ? "Up" : "Down";
+  const id = "hold" + key;
 
-function holdDecision(side, data) {
-  if (!freshRosie()) {
-    return {
-      status: "WAITING",
-      color: "neutral",
-      checks: "—",
-      reason: "Waiting for fresh Rosie signals."
-    };
+  put(id, action);
+  put(id + "Reason", reason);
+  put(id + "Checks", checks);
+
+  const element = $(id);
+
+  if (element) {
+    element.className =
+      action.includes("HOLD") ? "up" :
+      action.includes("EXIT") ? "down" :
+      "yellow";
   }
 
-  const direction = currentRosieDirection(data);
-
-  const buy = num(data.buy_pressure);
-  const sell = num(data.sell_pressure);
-  const rsiValue = num(first(
-    data.rsi_15m,
-    data.rsi
-  ));
-
-  const macdValue = num(first(
-    data.macd_histogram,
-    data.macd_hist,
-    data.macd_15m_hist
-  ));
-
-  const momentum = String(
-    first(data.momentum, "UNKNOWN")
-  ).toUpperCase();
-
-  const tests = [
-    direction === side,
-
-    side === "UP"
-      ? buy !== null && buy >= 55
-      : sell !== null && sell >= 55,
-
-    side === "UP"
-      ? rsiValue !== null && rsiValue >= 53
-      : rsiValue !== null && rsiValue <= 47,
-
-    side === "UP"
-      ? momentum === "RISING"
-      : momentum === "FALLING",
-
-    side === "UP"
-      ? macdValue !== null && macdValue > 0
-      : macdValue !== null && macdValue < 0
-  ];
-
-  const passed = tests.filter(Boolean).length;
-
-  const checks =
-    passed + " / 5 SUPPORTING CHECKS";
-
-  if (passed >= 4) {
-    return {
-      status: "HOLD WATCH",
-      color: "up",
-      checks,
-      reason:
-        "Most available checks support this position. " +
-        "Monitor price, time remaining, and your exit quote."
-    };
-  }
-
-  if (passed >= 3) {
-    return {
-      status: "CAUTION",
-      color: "yellow",
-      checks,
-      reason:
-        "Signals are mixed. Watch for weakening " +
-        "pressure or a confirmed directional flip."
-    };
-  }
-
-  return {
-    status: "EXIT WATCH",
-    color: "down",
-    checks,
-    reason:
-      "Fewer than three checks support this position. " +
-      "Review your actual Kalshi position and exit price."
-  };
+  put(
+    side === "UP" ? "topHoldUp" : "topHoldDown",
+    action
+  );
 }
 
 function updateHoldExit() {
-  const valid = freshRosie();
+  if (!freshRosie()) {
+    put("holdFresh", "WAITING");
 
-  put(
-    "holdFresh",
-    valid ? "LIVE · ADVISORY" : "SIGNAL STALE"
-  );
+    for (const side of ["UP", "DOWN"]) {
+      setHoldCard(
+        side,
+        "CHECKING",
+        "Waiting for fresh market data.",
+        "—"
+      );
+    }
 
-  const up = holdDecision("UP", rosie || {});
-  const down = holdDecision("DOWN", rosie || {});
-
-  put("holdUp", up.status);
-  put("holdUpChecks", up.checks);
-  put("holdUpReason", up.reason);
-
-  put("holdDown", down.status);
-  put("holdDownChecks", down.checks);
-  put("holdDownReason", down.reason);
-
-  if ($("holdUp")) {
-    $("holdUp").className = up.color;
-  }
-
-  if ($("holdDown")) {
-    $("holdDown").className = down.color;
-  }
-
-  // Top panel uses the SAME decisions.
-  put("topHoldUp", up.status);
-  put("topHoldDown", down.status);
-
-  if ($("topHoldUp")) {
-    $("topHoldUp").className = up.color;
-  }
-
-  if ($("topHoldDown")) {
-    $("topHoldDown").className = down.color;
-  }
-
-  if (!valid) {
-    put(
-      "holdContext",
-      "Fresh market signals are required. " +
-      "No HOLD or EXIT conclusion is available."
-    );
+    put("holdContext", "Waiting for Rosie.");
     return;
   }
 
-  const data = rosie;
+  const direction = currentRosieDirection(rosie);
+  const score = directionalScore(rosie, direction);
+
+  const buy = num(first(
+    rosie.buy_pressure,
+    rosie.pressure?.buy
+  ));
+
+  const sell = num(first(
+    rosie.sell_pressure,
+    rosie.pressure?.sell
+  ));
+
+  put("holdFresh", "LIVE");
+
+  if (!direction) {
+    for (const side of ["UP", "DOWN"]) {
+      setHoldCard(
+        side,
+        "MONITOR",
+        "No confirmed current direction.",
+        "Direction unavailable"
+      );
+    }
+
+    return;
+  }
+
+  for (const side of ["UP", "DOWN"]) {
+    const aligned = side === direction;
+
+    const sidePressure =
+      side === "UP" ? buy : sell;
+
+    const pressureText =
+      sidePressure === null
+        ? "Pressure unavailable"
+        : sidePressure.toFixed(0) +
+          "% " + side + " pressure";
+
+    if (aligned) {
+      setHoldCard(
+        side,
+        "HOLD WATCH",
+        "Rosie's current direction supports this side. Monitor for weakening momentum or a flip.",
+        pressureText
+      );
+    } else {
+      setHoldCard(
+        side,
+        "EXIT WATCH",
+        "Rosie's current direction opposes this side. Review your actual position and exit quote.",
+        pressureText
+      );
+    }
+  }
 
   put(
     "holdContext",
-    "Direction: " +
-    (currentRosieDirection(data) || "WAIT") +
-    " · Buy pressure: " +
-    pct(data.buy_pressure) +
-    " · RSI: " +
-    (first(data.rsi_15m, "—")) +
-    " · Momentum: " +
-    (first(data.momentum, "—")) +
-    ". Technical guidance only."
+    "Current Rosie direction: " + direction +
+    (score === null
+      ? ""
+      : " · Signal score " + score.toFixed(0) + "/100") +
+    ". Guidance is based on current signals, not your personal entry price or unrealized profit."
   );
 }
 
-function updateTopTradeManagement() {
-  updateHoldExit();
-}
+/* PART 20 — FLIP WATCH */
 
 function updateFlipWatch() {
-  const valid = freshRosie();
-
-  if (!valid) {
+  if (!freshRosie()) {
     put("flipChecks", "— / 10");
     put("topFlipScore", "— / 10");
-    put("flipStatus", "WAITING");
+    put("flipStatus", "MONITORING");
     put("flipDirection", "—");
-    put(
-      "flipExplanation",
-      "Waiting for a fresh flip signal."
-    );
-    put("topFlipStatus", "Flip Watch: waiting");
 
     if ($("flipFill")) {
       $("flipFill").style.width = "0%";
     }
+
     return;
   }
 
-  const data = rosie;
-
   const flip = first(
-    data.scalp_flip,
-    data.flip_watch,
-    data.flip
+    rosie.flip_watch,
+    rosie.flip,
+    rosie.scalp_flip
   );
 
-  const flipObject =
+  const source =
     flip && typeof flip === "object"
       ? flip
-      : {};
+      : null;
 
-  const score = num(first(
-    flipObject.watch_score,
-    flipObject.flip_score,
-    flipObject.score_10
-  ));
+  const rawScore = source
+    ? num(first(
+        source.watch_score,
+        source.flip_score,
+        source.score_10
+      ))
+    : null;
 
-  const boundedScore =
-    score === null
-      ? null
-      : Math.max(0, Math.min(10, score));
+  const score = rawScore === null
+    ? null
+    : Math.max(0, Math.min(10, rawScore));
 
-  const direction = signalDirection(flipObject);
-
-  const stage = String(first(
-    flipObject.stage,
-    flipObject.status,
-    "MONITORING"
-  )).toUpperCase();
+  const direction = source
+    ? signalDirection(source)
+    : "";
 
   const confirmed =
-    flipObject.confirmed === true ||
-    stage === "CONFIRMED";
+    source?.confirmed === true ||
+    String(source?.status || "").toUpperCase() ===
+      "CONFIRMED";
 
   const scoreText =
-    boundedScore === null
+    score === null
       ? "— / 10"
-      : boundedScore.toFixed(0) + " / 10";
+      : score.toFixed(0) + " / 10";
 
   put("flipChecks", scoreText);
   put("topFlipScore", scoreText);
 
   put(
     "flipStatus",
-    confirmed ? "CONFIRMED FLIP" : stage
+    confirmed ? "FLIP CONFIRMED" :
+    score === null ? "MONITORING" :
+    score >= 7 ? "HIGH FLIP WATCH" :
+    score >= 4 ? "FLIP DEVELOPING" :
+    "LOW FLIP WATCH"
   );
 
   put(
@@ -2796,570 +2734,585 @@ function updateFlipWatch() {
   put(
     "flipExplanation",
     first(
-      flipObject.reason,
-      flipObject.explanation,
-      confirmed
-        ? "Worker reports a confirmed flip. Review before acting."
-        : "Monitoring for a confirmed directional change."
+      source?.reason,
+      source?.explanation,
+      "Monitoring momentum, pressure and directional changes."
     )
   );
 
   put(
     "topFlipStatus",
-    "Flip Watch: " +
-    (confirmed ? "CONFIRMED" : stage) +
-    (direction ? " · " + direction : "")
+    confirmed
+      ? "Confirmed flip alert"
+      : "Monitoring for a confirmed flip"
   );
 
   if ($("flipFill")) {
     $("flipFill").style.width =
-      boundedScore === null
-        ? "0%"
-        : (boundedScore * 10) + "%";
+      (score === null ? 0 : score * 10) + "%";
   }
 }
 
-/*
-HOLD / EXIT is technical guidance only.
+/* REFRESH TRADE GUIDANCE */
 
-It does not read actual positions,
-entry prices, fees, or live exit bids.
-
-A flip is not confirmed merely because
-its watch score is high.
-
-No orders are submitted here.
-*/
-
-/* END PART 10 */
-
-/* PART 11 — ROSIE ADAPTIVE LEARNING */
-
-/*
-Shadow learning only.
-
-Displays recorded performance and learning
-observations from Rosie's backend.
-
-Does not modify signals or place trades.
-*/
-
-function learningObject(value) {
-  return value &&
-    typeof value === "object" &&
-    !Array.isArray(value)
-      ? value
-      : null;
+function updateRosieGuidance() {
+  updateTradeCommand();
+  updateHoldExit();
+  updateFlipWatch();
 }
 
-function learningNumber(value) {
-  const n = num(value);
-  return n === null || n < 0 ? null : n;
-}
+/* PART 21 — MANUAL TRADING PREVIEW */
 
-function learningAccuracy(wins, losses, reported) {
-  const w = learningNumber(wins);
-  const l = learningNumber(losses);
+let selectedTradeSide = "UP";
 
-  if (w !== null && l !== null) {
-    const total = w + l;
+function selectTradeSide(side) {
+  if (side !== "UP" && side !== "DOWN") return;
 
-    return total > 0
-      ? (100 * w / total).toFixed(1) + "%"
-      : "—";
-  }
+  selectedTradeSide = side;
 
-  const a = learningNumber(reported);
+  const up = $("tradeBuyUp");
+  const down = $("tradeBuyDown");
 
-  return a !== null && a <= 100
-    ? a.toFixed(1) + "%"
-    : "—";
-}
-
-function learningPhase(stats, name) {
-  const sources = [
-    stats?.overall?.by_phase,
-    stats?.totals?.by_phase,
-    stats?.by_phase,
-    stats?.phases,
-    stats?.stages,
-    stats?.phase_stats,
-    stats
-  ];
-  
-
-  const aliases = name === "ROUND_ENDING"
-    ? ["ROUND_ENDING", "round_ending", "LIVE", "live"]
-    : [name, name.toLowerCase()];
-
-  let phase = null;
-
-  for (const source of sources) {
-    if (!learningObject(source)) continue;
-
-    for (const key of aliases) {
-      const candidate = learningObject(source[key]);
-
-      if (candidate) {
-        phase = candidate;
-        break;
-      }
-    }
-
-    if (phase) break;
-  }
-
-  if (!phase) return "—";
-
-  const wins = learningNumber(first(
-    phase.wins,
-    phase.correct
-  ));
-
-  const losses = learningNumber(first(
-    phase.losses,
-    phase.incorrect
-  ));
-
-  const accuracy = learningAccuracy(
-    wins,
-    losses,
-    first(
-      phase.accuracy,
-      phase.accuracy_pct,
-      phase.win_rate
-    )
-  );
-
-  const count =
-    wins !== null && losses !== null
-      ? wins + "W / " + losses + "L"
-      : "RESULTS —";
-
-  return count + " · " + accuracy;
-}
-
-function updateAdaptiveLearning() {
-  const valid = freshRosie();
-
-  if (!valid) {
-    put("learningStatus", "SIGNAL STALE");
-    put("learningResults", "—");
-    put("learningAccuracy", "—");
-    put("learningEarly", "—");
-    put("learningMid", "—");
-    put("learningFinal", "—");
-    put("learningEnding", "—");
-
-    put(
-      "learningNote",
-      "Waiting for a fresh Rosie signal. " +
-      "Historical performance is not verified."
+  if (up && down) {
+    up.classList.toggle(
+      "selected-up",
+      side === "UP"
     );
 
+    down.classList.toggle(
+      "selected-down",
+      side === "DOWN"
+    );
+
+    up.setAttribute(
+      "aria-pressed",
+      String(side === "UP")
+    );
+
+    down.setAttribute(
+      "aria-pressed",
+      String(side === "DOWN")
+    );
+  }
+
+  put("tradeSideLabel", "BUY " + side);
+
+  put(
+    "tradeResult",
+    "BUY " + side +
+    " selected. Review your amount. No order placed."
+  );
+}
+
+function currentEntryQuote(side) {
+  const source = rosie || {};
+
+  const raw = side === "UP"
+    ? first(
+        source.up_ask,
+        source.yes_ask,
+        source.market?.yes_ask
+      )
+    : first(
+        source.down_ask,
+        source.no_ask,
+        source.market?.no_ask
+      );
+
+  const quote = num(raw);
+
+  if (quote === null) return null;
+
+  // Kalshi quote in cents.
+  return quote > 0 && quote < 100
+    ? quote
+    : null;
+}
+
+function estimateTrade(budget, quoteCents) {
+  if (
+    !Number.isFinite(budget) ||
+    budget <= 0 ||
+    !Number.isFinite(quoteCents) ||
+    quoteCents <= 0 ||
+    quoteCents >= 100
+  ) {
+    return null;
+  }
+
+  const pricePerContract = quoteCents / 100;
+
+  // Estimate only; official fees are not included.
+  const contracts = Math.floor(
+    budget / pricePerContract
+  );
+
+  if (contracts < 1) return null;
+
+  const estimatedCost =
+    contracts * pricePerContract;
+
+  return {
+    contracts,
+    estimatedCost,
+    maximumPayout: contracts,
+    maximumLoss: estimatedCost
+  };
+}
+
+function reviewTrade() {
+  const budget = num($("tradeBudget")?.value);
+
+  if (
+    budget === null ||
+    budget < 0.01 ||
+    budget > 100000
+  ) {
+    put(
+      "tradeResult",
+      "Enter a valid dollar amount."
+    );
+    return;
+  }
+
+  if (!marketTicker || remainingSeconds() <= 0) {
+    put(
+      "tradeResult",
+      "Current Kalshi market is unavailable. No trade placed."
+    );
+    return;
+  }
+
+  const quote = currentEntryQuote(
+    selectedTradeSide
+  );
+
+  if (quote === null) {
+    put(
+      "tradeResult",
+      "A current Kalshi ask quote is unavailable. No order preview can be calculated."
+    );
+    return;
+  }
+
+  const estimate = estimateTrade(
+    budget,
+    quote
+  );
+
+  if (!estimate) {
+    put(
+      "tradeResult",
+      "Your amount is below the estimated cost of one contract. No trade placed."
+    );
+    return;
+  }
+
+  const output = [
+    "PREVIEW ONLY — NO ORDER PLACED",
+    "",
+    "Market: " + marketTicker,
+    "Side: BUY " + selectedTradeSide,
+    "Ask: " + quote.toFixed(1) + "¢",
+    "Your budget: " + money(budget),
+    "Estimated contracts: " +
+      estimate.contracts,
+    "Estimated cost before fees: " +
+      money(estimate.estimatedCost),
+    "Maximum payout if successful: " +
+      money(estimate.maximumPayout),
+    "Estimated maximum loss before fees: " +
+      money(estimate.maximumLoss),
+    "",
+    "Fees, liquidity and actual execution price may differ.",
+    "Use your private Trading Center for authenticated order review."
+  ];
+
+  put("tradeResult", output.join("\n"));
+
+  const result = $("tradeResult");
+
+  if (result) {
+    result.style.whiteSpace = "pre-line";
+  }
+}
+
+function initializeTradingControls() {
+  $("tradeBuyUp")?.addEventListener(
+    "click",
+    () => selectTradeSide("UP")
+  );
+
+  $("tradeBuyDown")?.addEventListener(
+    "click",
+    () => selectTradeSide("DOWN")
+  );
+
+  $("tradeReview")?.addEventListener(
+    "click",
+    reviewTrade
+  );
+
+  document.querySelectorAll(
+    "[data-trade-budget]"
+  ).forEach(button => {
+    button.addEventListener("click", () => {
+      const amount = button.getAttribute(
+        "data-trade-budget"
+      );
+
+      if ($("tradeBudget")) {
+        $("tradeBudget").value = amount;
+      }
+
+      put(
+        "tradeResult",
+        "Budget set to $" + amount +
+        ". Tap REVIEW BUY to see an estimate."
+      );
+    });
+  });
+
+  selectTradeSide("UP");
+}
+
+/* PART 22 — LIVE INDICATORS */
+
+function updateLiveIndicators() {
+  if (!freshRosie()) {
+    put("confirmed", "WAITING FOR ROSIE");
+    put("pressureSource", "CONNECTING");
     return;
   }
 
   const data = rosie;
-const shadow = learningObject(data.adaptive_brain);
-const shadowDirection = signalDirection(
-  shadow?.adaptive_direction
-);
-
-const rosieDirection = currentRosieDirection(data);
-
-put(
-  "learningDirection",
-  shadowDirection || "WAIT"
-);
-
-put(
-  "learningAgreement",
-  shadowDirection && rosieDirection
-    ? (shadowDirection === rosieDirection ? "YES" : "NO")
-    : "NOT EVALUATED"
-);
-
-put(
-  "learningReason",
-  first(
-    shadow?.reason,
-    shadow?.learning?.note,
-    "Shadow model is monitoring."
-  )
-);
-  const performance = learningObject(first(
-    data.performance_record,
-    data.performance,
-    data.statistics
-  ));
-
-  const learning = learningObject(first(
-    data.adaptive_learning,
-    data.adaptive_brain
-  ));
-
-  const stats = performance
-    ? learningObject(first(
-        performance.overall,
-        performance.totals,
-        performance
-      ))
-    : null;
-
-  if (!stats) {
-    put("learningStatus", "NO TRACKER DATA");
-    put("learningResults", "—");
-    put("learningAccuracy", "—");
-    put("learningEarly", "—");
-    put("learningMid", "—");
-    put("learningFinal", "—");
-    put("learningEnding", "—");
-
-    put(
-      "learningNote",
-      "The API is connected, but no usable " +
-      "performance totals were supplied."
-    );
-
-    return;
-  }
-
-  const wins = learningNumber(first(
-    stats.wins,
-    stats.correct
-  ));
-
-  const losses = learningNumber(first(
-    stats.losses,
-    stats.incorrect
-  ));
-
-  const resultText =
-    wins !== null && losses !== null
-      ? wins + "W / " + losses + "L"
-      : "—";
-
-  put("learningResults", resultText);
+  const direction = currentRosieDirection(data);
+  const score = directionalScore(data, direction);
 
   put(
-    "learningAccuracy",
-    learningAccuracy(
-      wins,
-      losses,
-      first(
-        stats.accuracy,
-        stats.accuracy_pct,
-        stats.win_rate
-      )
+    "confirmed",
+    direction || "NO CONFIRMED CALL"
+  );
+
+  put(
+    "strength",
+    score === null
+      ? "—"
+      : score.toFixed(0) + "/100"
+  );
+
+  const buy = num(first(
+    data.buy_pressure,
+    data.pressure?.buy
+  ));
+
+  const sell = num(first(
+    data.sell_pressure,
+    data.pressure?.sell
+  ));
+
+  if (buy !== null && buy >= 0 && buy <= 100) {
+    put("buyers", "Buy " + buy.toFixed(1) + "%");
+
+    if ($("buybar")) {
+      $("buybar").style.width = buy + "%";
+    }
+  } else {
+    put("buyers", "Buy —");
+  }
+
+  put(
+    "sellers",
+    sell === null
+      ? "Sell —"
+      : "Sell " + sell.toFixed(1) + "%"
+  );
+
+  put(
+    "shift",
+    first(
+      data.pressure_shift,
+      data.flow_shift,
+      "—"
     )
   );
 
-  put("learningEarly", learningPhase(performance, "EARLY"));
-  put("learningMid", learningPhase(performance, "MID"));
-  put("learningFinal", learningPhase(performance, "FINAL"));
+  put(
+    "whale100",
+    first(
+      data.whales_100k,
+      data.whale_count_100k,
+      data.whales?.tier_100k,
+      "—"
+    )
+  );
 
   put(
-    "learningEnding",
-learningPhase(data.performance_record, "ROUND_ENDING")
+    "whale500",
+    first(
+      data.whales_500k,
+      data.whale_count_500k,
+      data.whales?.tier_500k,
+      "—"
+    )
   );
 
-  const mode = first(
-    learning?.status,
-    learning?.mode,
-    learning?.learning_status,
-    "SHADOW OBSERVATION"
-  );
-
-  put("learningStatus", String(mode).toUpperCase());
-
-  const sampleCount = learningNumber(first(
-    learning?.samples,
-    learning?.sample_count,
-    learning?.observations
+  const rsiValue = num(first(
+    data.rsi_15m,
+    data.indicators?.rsi,
+    data.rsi
   ));
 
-  const sampleText = sampleCount === null
-    ? "Sample count unavailable."
-    : "Learning observations: " + sampleCount + ".";
+  put(
+    "rsi",
+    rsiValue === null
+      ? "—"
+      : rsiValue.toFixed(1)
+  );
+
+  const macdValue = num(first(
+    data.macd_histogram,
+    data.indicators?.macd_histogram,
+    data.macd_hist
+  ));
+
+  put(
+    "macd",
+    macdValue === null
+      ? "—"
+      : macdValue.toFixed(3)
+  );
+
+  put(
+    "momentum",
+    first(
+      data.momentum,
+      data.momentum_60s,
+      chartMomentum()
+    )
+  );
+
+  put(
+    "tp",
+    first(
+      data.take_profit_watch,
+      data.take_profit,
+      "MONITORING"
+    )
+  );
+
+  put("pressureSource", "ROSIE LIVE");
+}
+
+/* PART 22 — ADAPTIVE LEARNING */
+
+function updateLearningPanel() {
+  if (!freshRosie()) {
+    put("learningStatus", "WAITING FOR DATA");
+    return;
+  }
+
+  const data = rosie;
+
+  const adaptive = first(
+    data.adaptive,
+    data.adaptive_engine,
+    data.shadow_analysis
+  );
+
+  const source =
+    adaptive && typeof adaptive === "object"
+      ? adaptive
+      : {};
+
+  const shadowDirection = signalDirection(source);
+  const rosieDirection = currentRosieDirection(data);
+
+  put(
+    "learningDirection",
+    shadowDirection || "—"
+  );
+
+  put(
+    "learningAgreement",
+    shadowDirection && rosieDirection
+      ? shadowDirection === rosieDirection
+        ? "YES"
+        : "NO"
+      : "—"
+  );
+
+  put(
+    "learningReason",
+    first(
+      source.reason,
+      source.explanation,
+      "No adaptive analysis available."
+    )
+  );
+
+  const stats = first(
+    data.statistics,
+    data.stats,
+    data.performance
+  );
+
+  const results =
+    stats && typeof stats === "object"
+      ? stats
+      : {};
+
+  put(
+    "learningResults",
+    first(
+      results.total,
+      results.total_results,
+      results.settled,
+      "—"
+    )
+  );
+
+  const accuracy = num(first(
+    results.accuracy,
+    results.win_rate
+  ));
+
+  put(
+    "learningAccuracy",
+    accuracy === null
+      ? "—"
+      : accuracy.toFixed(1) + "%"
+  );
+
+  for (const [stage, id] of [
+    ["early", "learningEarly"],
+    ["mid", "learningMid"],
+    ["final", "learningFinal"],
+    ["round_ending", "learningEnding"]
+  ]) {
+    const value = first(
+      results[stage],
+      results.stages?.[stage]
+    );
+
+    if (value && typeof value === "object") {
+      const wins = num(value.wins);
+      const losses = num(value.losses);
+
+      put(
+        id,
+        wins !== null && losses !== null
+          ? wins + "W / " + losses + "L"
+          : "—"
+      );
+    } else {
+      put(id, "—");
+    }
+  }
+
+  put(
+    "learningStatus",
+    Object.keys(results).length
+      ? "DATA RECEIVED"
+      : "AWAITING RESULTS"
+  );
 
   put(
     "learningNote",
-    sampleText +
-    " Adaptive learning is observational. " +
-    "Recorded accuracy does not guarantee future results. " +
-    "ROUND ENDING is tracked separately."
+    "ROUND ENDING remains separate from locked-stage totals."
   );
-  put(
-  "learningOverall",
-  resultText !== "—"
-    ? "Recorded outcomes: " + resultText +
-      ". ROUND ENDING is tracked separately."
-    : "Waiting for tracked outcomes."
-);
 }
 
-/* END PART 11 */
+/* PART 22 — REFRESH DASHBOARD */
 
-/* PART 12 — STARTUP AND AUTOMATIC REFRESH */
+function refreshRosieDisplay() {
+  updateRoundClock();
+  updateRosieCalls();
+  updateRosieGuidance();
+  updateLiveIndicators();
+  updateLearningPanel();
 
-let rosieRefreshTimer = null;
-let kalshiRefreshTimer = null;
-let dashboardTimer = null;
-let coinbaseHistoryTimer = null;
+  if (price > 0) {
+    const target = num($("target")?.value);
 
-/* CREATE ADAPTIVE LEARNING PANEL */
-
-function createLearningPanel() {
-  if ($("learningPanel")) return;
-
-  const panel = document.createElement("section");
-  panel.id = "learningPanel";
-
-  panel.style.cssText = `
-    background:#151e2b;
-    color:#edf3ff;
-    border:1px solid #35445b;
-    border-radius:12px;
-    padding:14px;
-    margin:12px auto;
-    max-width:1100px;
-    font-family:-apple-system,BlinkMacSystemFont,
-      "Segoe UI",sans-serif;
-  `;
-
-  panel.innerHTML = `
-    <div style="display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:8px;
-      margin-bottom:12px;">
-      <strong style="font-size:15px;">
-        ROSIE ADAPTIVE LEARNING
-      </strong>
-      <span id="learningStatus"
-        style="color:#f3c65c;font-size:11px;">
-        CONNECTING
-      </span>
-    </div>
-
-    <div style="display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:8px;">
-
-      <div class="box">
-        <small>RECORDED RESULTS</small>
-        <div id="learningResults">—</div>
-      </div>
-
-      <div class="box">
-        <small>RECORDED ACCURACY</small>
-        <div id="learningAccuracy">—</div>
-      </div>
-
-      <div class="box">
-        <small>EARLY</small>
-        <div id="learningEarly">—</div>
-      </div>
-
-      <div class="box">
-        <small>MID</small>
-        <div id="learningMid">—</div>
-      </div>
-
-      <div class="box">
-        <small>FINAL</small>
-        <div id="learningFinal">—</div>
-      </div>
-
-      <div class="box">
-        <small>ROUND ENDING</small>
-        <div id="learningEnding">—</div>
-      </div>
-
-    </div>
-
-    <div id="learningNote"
-      style="color:#9baac0;
-      font-size:11px;
-      line-height:1.5;
-      margin-top:12px;">
-      Waiting for recorded performance data.
-    </div>
-  `;
-
-  const style = document.createElement("style");
-
-  style.textContent = `
-    #learningPanel .box {
-      background:#0b1019;
-      border:1px solid #27364b;
-      border-radius:8px;
-      padding:12px;
-      min-width:0;
-      font-size:14px;
-      font-weight:700;
+    if (target !== null && target > 0) {
+      put(
+        "gap",
+        "BTC " +
+        (price >= target ? "ABOVE " : "BELOW ") +
+        "TARGET BY " +
+        money(Math.abs(price - target))
+      );
     }
-
-    #learningPanel small {
-      display:block;
-      color:#9baac0;
-      font-size:10px;
-      font-weight:500;
-      margin-bottom:7px;
-    }
-
-    #learningPanel .box div {
-      overflow-wrap:anywhere;
-    }
-  `;
-
-  document.head.appendChild(style);
-
-  const wrap = document.querySelector(".wrap");
-
-  if (wrap) {
-    wrap.appendChild(panel);
-  } else {
-    document.body.appendChild(panel);
   }
 }
 
-/* REFRESH DASHBOARD */
-
-function updateDashboard() {
-  try {
-    updateRoundClock();
-    updateTargetDisplay();
-    updateTradeCommand();
-    updateHoldExit();
-    updateFlipWatch();
-    updateTopTradeManagement();
-    updateAdaptiveLearning();
-    updateRosieChartMarkers();
-
-    if (
-      rosieAt &&
-      signalAge() > ROSIE_MAX_AGE_MS
-    ) {
-      put("rosieStatus", "SIGNAL STALE");
-    }
-
-    if (
-      lastCoinbaseTickAt &&
-      Date.now() - lastCoinbaseTickAt > 30000
-    ) {
-      put("status", "COINBASE DATA STALE");
-    }
-
-  } catch (error) {
-    console.warn(
-      "Dashboard refresh:",
-      error
-    );
-  }
-}
-
-/* REFRESH KALSHI */
-
-async function refreshMarketData() {
-  await loadKalshiMarket();
-  updateDashboard();
-}
-
-/* REFRESH ROSIE */
-
-async function refreshRosieData() {
-  await loadRosieSignals();
-  updateDashboard();
-}
-
-/* START DASHBOARD */
+/* PART 22 — STARTUP */
 
 async function startRosieDashboard() {
-  try {
+  put("status", "CONNECTING");
 
-    initChart();
-    if (typeof setupTradeControls === "function") {
-  setupTradeControls();
+  initializeChart();
+  initializeTradingControls();
+
+  await Promise.allSettled([
+    loadCoinbaseHistory(),
+    loadKalshiMarket()
+  ]);
+
+  await loadRosieSignals();
+
+  connectCoinbase();
+  refreshRosieDisplay();
+
+  // Update the visible countdown every second.
+  setInterval(() => {
+    updateRoundClock();
+    updateRosieCalls();
+    updateTradeCommand();
+  }, 1000);
+
+  // Refresh Rosie signals every five seconds.
+  setInterval(async () => {
+    await loadRosieSignals();
+    refreshRosieDisplay();
+  }, 5000);
+
+  // Refresh Kalshi market details.
+  setInterval(async () => {
+    await loadKalshiMarket();
+    refreshRosieDisplay();
+  }, 15000);
+
+  // Keep technical chart observations updated.
+  setInterval(() => {
+    if (bars.length) {
+      updateTechnicalChart();
+    }
+  }, 10000);
+
+  // Reconnect Coinbase if needed.
+  setInterval(() => {
+    if (
+      !socket ||
+      socket.readyState === WebSocket.CLOSED
+    ) {
+      connectCoinbase();
+    }
+  }, 10000);
+
+  // Refresh candle history periodically.
+  setInterval(() => {
+    loadCoinbaseHistory();
+  }, 120000);
+
+  put("status", "RUNNING");
 }
 
-    put("status", "CONNECTING TO COINBASE");
-    put("rosieStatus", "CONNECTING TO ROSIE");
-    put("commandFresh", "STARTING");
-
-    await loadCoinbaseHistory();
-
-    connectCoinbase();
-
-    await Promise.allSettled([
-      refreshMarketData(),
-      refreshRosieData()
-    ]);
-
-    updateDashboard();
-
-    /* ROSIE SIGNALS EVERY 5 SECONDS */
-
-    rosieRefreshTimer = setInterval(
-      refreshRosieData,
-      5000
-    );
-
-    /* KALSHI EVERY 10 SECONDS */
-
-    kalshiRefreshTimer = setInterval(
-      refreshMarketData,
-      10000
-    );
-
-    /* DASHBOARD EVERY SECOND */
-
-    dashboardTimer = setInterval(
-      updateDashboard,
-      1000
-    );
-
-    /* COINBASE HISTORY RECOVERY */
-
-    coinbaseHistoryTimer = setInterval(
-      () => {
-        if (
-          !lastCoinbaseTickAt ||
-          Date.now() - lastCoinbaseTickAt > 60000
-        ) {
-          loadCoinbaseHistory();
-        }
-      },
-      60000
-    );
-
-  } catch (error) {
-    console.error(
-      "Rosie startup:",
-      error
-    );
-
-alert("ROSIE STARTUP ERROR: " + (error?.stack || error));
-
-    put("status", "CONNECTION ERROR");
-    put("rosieStatus", "RETRY REQUIRED");
-  }
-}
-
-/* INITIALIZE WHEN PAGE IS READY */
-
-if (document.readyState === "loading") {
-  document.addEventListener(
-    "DOMContentLoaded",
-    startRosieDashboard,
-    { once: true }
-  );
-} else {
-  startRosieDashboard();
-}
-
-/* END PART 12 */
+startRosieDashboard().catch(error => {
+  console.error("Rosie startup error:", error);
+  put("status", "STARTUP ERROR");
+});
 
 </script>
 </body>
