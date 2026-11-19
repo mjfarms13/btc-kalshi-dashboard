@@ -3381,6 +3381,25 @@ startRosieDashboard().catch(error => {
   put("status", "STARTUP ERROR");
 });
 
+/* ROSIE V5 — LAYOUT CORRECTION */
+(function fixRosieLayout() {
+  const command = document.getElementById("rosieCommand");
+  const indicators = document.querySelector(".indicators-fold");
+  const adaptive = document.getElementById("adaptivePanel");
+  const layout = document.querySelector(".rosie-layout");
+  const wrapper = document.querySelector(".wrap");
+
+  // Indicators remain expandable, directly below Trade Command.
+  if (command && indicators) {
+    command.insertAdjacentElement("afterend", indicators);
+  }
+
+  // Adaptive Learning remains at the bottom.
+  if (adaptive && wrapper && layout) {
+    wrapper.appendChild(adaptive);
+  }
+})();
+
 </script>
 </body>
 </html>
