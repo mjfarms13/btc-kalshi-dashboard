@@ -1976,18 +1976,18 @@ function stageObject(data, name) {
 
 
 
+  
+
+/* DISPLAY ESTIMATED DIRECTION PERCENTAGE */
+
+
 function stageTiming(name, left) {
   if (left === null || !Number.isFinite(left)) {
     return { state: "UNKNOWN", seconds: null };
   }
 
-  // Each round lasts 15 minutes (900 seconds).
-  // EARLY: 12–13 minutes elapsed = 3–2 minutes left.
-  // MID: 10–9 minutes left.
-  // FINAL: 5–4 minutes left.
-
   const windows = {
-    EARLY: { start: 180, end: 120 },
+    EARLY: { start: 780, end: 720 },
     MID:   { start: 600, end: 540 },
     FINAL: { start: 300, end: 240 }
   };
@@ -2016,48 +2016,6 @@ function stageTiming(name, left) {
     state: "PASSED",
     seconds: 0
   };
-}
-
-  
-
-/* DISPLAY ESTIMATED DIRECTION PERCENTAGE */
-
-
-function stagePercent(stage, direction) {
-  if (!stage || !direction) return null;
-
-  const value = direction === "UP"
-    ? first(
-        stage.up_probability,
-        stage.up_percent,
-        stage.probability_up,
-        stage.up
-      )
-    : first(
-        stage.down_probability,
-        stage.down_percent,
-        stage.probability_down,
-        stage.down
-      );
-
-  const fallback = first(
-    value,
-    stage.probability,
-    stage.confidence_percent,
-    stage.estimated_probability
-  );
-
-  let n = num(fallback);
-
-  if (n === null || n < 0 || n > 100) {
-    return null;
-  }
-
-  if (n > 0 && n < 1) {
-    n *= 100;
-  }
-
-  return n;
 }
 
 
