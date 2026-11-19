@@ -8,24 +8,6 @@
 <title>Rosie BTC Kalshi Dashboard</title>
 <script src="https://unpkg.com/lightweight-charts@5.0.8/dist/lightweight-charts.standalone.production.js"></script>
 
-/* ROSIE TEST V5.2 — CORRECT PANEL ORDER */
-
-/* Trade Command first, after the signal/chart */
-.rosie-layout > .panel:first-child > .rosie-command {
-  order: 1 !important;
-}
-
-/* Indicators directly below Trade Command */
-.rosie-layout .indicators-fold {
-  order: 2 !important;
-  width: 100%;
-  margin: 0 0 10px;
-}
-
-/* Bitcoin Price below indicators */
-.rosie-layout > .panel:nth-child(2) {
-  order: 3 !important;
-}
 
 <style>
 *{box-sizing:border-box}
