@@ -1821,16 +1821,18 @@ async function loadKalshiMarket() {
       data.expiration_time,
       data.end_time
     );
+Date.now();
 
-    const close = parseMarketClose(closeValue);
-
+    
     if (close > 0) {
       kalshiClose = close;
       latestRoundSeconds = null;
     } else {
-      const target = num(first(
+      const remaining = num(first(
+        market.seconds_left,
         market.seconds_remaining,
         market.time_remaining_seconds,
+        data.seconds_left,
         data.seconds_remaining,
         data.time_remaining_seconds
       ));
@@ -1842,7 +1844,7 @@ async function loadKalshiMarket() {
       }
     }
 
-  
+    
     // Store current Kalshi ask quotes.
     kalshiUpAsk = num(first(
       market.up_ask_cents,
