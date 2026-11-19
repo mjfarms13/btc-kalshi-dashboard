@@ -2074,8 +2074,8 @@ if (
   ) {
     return false;
   }
-
 const confirmedLock =
+  stage.ok === true ||
   stage.locked === true ||
   stage.is_locked === true ||
   status === "LOCKED" ||
