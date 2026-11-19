@@ -691,6 +691,10 @@ let socket = null;
 let marketTicker = "";
 let kalshiClose = 0;
 
+let kalshiUpAsk = null;
+let kalshiDownAsk = null;
+let kalshiQuoteTicker = "";
+
 let loadingRosie = false;
 let loadingKalshi = false;
 
@@ -1839,6 +1843,24 @@ async function loadKalshiMarket() {
     }
 
   
+    // Store current Kalshi ask quotes.
+    kalshiUpAsk = num(first(
+      market.up_ask_cents,
+      data.up_ask_cents
+    ));
+
+    kalshiDownAsk = num(first(
+      market.down_ask_cents,
+      data.down_ask_cents
+    ));
+
+    kalshiQuoteTicker =
+      kalshiUpAsk !== null &&
+      kalshiDownAsk !== null &&
+      ticker
+        ? String(ticker)
+        : "";
+
 const target = num(first(
   market.target_price,
   market.strike_price,
@@ -2839,30 +2861,29 @@ function selectTradeSide(side) {
   );
 }
 
+
 function currentEntryQuote(side) {
-  const source = rosie || {};
+  if (
+    !marketTicker ||
+    kalshiQuoteTicker !== marketTicker
+  ) {
+    return null;
+  }
 
-  const raw = side === "UP"
-    ? first(
-        source.up_ask,
-        source.yes_ask,
-        source.market?.yes_ask
-      )
-    : first(
-        source.down_ask,
-        source.no_ask,
-        source.market?.no_ask
-      );
-
-  const quote = num(raw);
-
-  if (quote === null) return null;
-
-  // Kalshi quote in cents.
-  return quote > 0 && quote < 100
-    ? quote
+  const quote = side === "UP"
+    ? kalshiUpAsk
+    : side === "DOWN"
+    ? kalshiDownAsk
     : null;
+
+  return quote !== null &&
+    Number.isFinite(quote) &&
+    quote > 0 &&
+    quote < 100
+      ? quote
+      : null;
 }
+
 
 function estimateTrade(budget, quoteCents) {
   if (
