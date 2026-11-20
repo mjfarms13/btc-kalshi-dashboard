@@ -4199,6 +4199,39 @@ updateLearningPanel = updateLearningPanelV51;
   );
 })();
 
+  
+/* ROSIE TEST V5.9 — FINAL INDICATOR POSITION */
+
+(function () {
+  const indicators = document.querySelector(
+    ".indicators-fold"
+  );
+  const hold = document.getElementById("holdPanel");
+
+  if (!indicators || !hold) return;
+
+  hold.before(indicators);
+
+  indicators.style.setProperty(
+    "order", "0", "important"
+  );
+
+  indicators.style.setProperty(
+    "display", "block", "important"
+  );
+
+  indicators.style.setProperty(
+    "width", "100%", "important"
+  );
+
+  indicators.style.setProperty(
+    "margin", "14px 0", "important"
+  );
+
+  console.log("ROSIE V5.9 indicators positioned");
+})();
+
+  
 </script>
 </body>
 </html>
