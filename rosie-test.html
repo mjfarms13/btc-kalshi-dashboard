@@ -3960,162 +3960,207 @@ updateLearningPanel = updateLearningPanelV51;
   );
 })();
 
-/* ROSIE V5.6 — LIVE CANDLE ANALYSIS
-   Restores visible candle descriptions.
-   Chart and worker scoring unchanged.
+
+/* ROSIE V5.7 — LIVE CANDLE ANALYSIS
+   Display-only repair.
+   Keeps existing chart and layout.
+   Does not change Rosie signals or trading.
 */
 
-(function restoreCandleAnalysis() {
-  const chartElement = document.getElementById("chart");
+(function restoreCandleAnalysisV57() {
+  const chartBox = document.getElementById("chart");
+  if (!chartBox) return;
 
-  if (!chartElement) return;
+  let panel = document.getElementById("rosieCandleAnalysis");
 
-  const panel = document.createElement("div");
-  panel.id = "rosieCandleAnalysis";
-  panel.className = "box";
+  if (!panel) {
+    panel = document.createElement("div");
+    panel.id = "rosieCandleAnalysis";
+    panel.className = "box";
+    chartBox.insertAdjacentElement("afterend", panel);
+  }
 
-  panel.style.cssText = [
-    "background:#172438",
-    "border:1px solid #38516b",
-    "border-radius:13px",
-    "padding:13px",
-    "margin:10px 0 14px",
-    "color:#edf3ff"
-  ].join(";");
+  panel.style.cssText =
+    "background:#172438;" +
+    "border:1px solid #38516b;" +
+    "border-radius:13px;" +
+    "padding:13px;" +
+    "margin:10px 0 14px;" +
+    "width:100%;";
 
   panel.innerHTML = `
-    <div style="font-size:15px;font-weight:800;margin-bottom:10px">
+    <div style="font-size:15px;font-weight:800">
       🕯️ ROSIE · LIVE CANDLE ANALYSIS
     </div>
+
     <div id="candleLiveDirection"
-         style="font-size:20px;font-weight:850">
+      style="font-size:21px;font-weight:900;margin-top:12px">
       SCANNING
     </div>
+
     <div id="candleLivePattern"
-         style="font-size:13px;margin-top:8px">
+      style="font-size:13px;margin-top:9px">
       Pattern: Scanning
     </div>
+
     <div id="candleConfirmedPattern"
-         style="font-size:12px;margin-top:7px;color:#bcd2ec">
+      style="font-size:12px;color:#bcd2ec;margin-top:9px">
       Last closed candle: Scanning
     </div>
+
     <div id="candleLiveMomentum"
-         style="font-size:12px;margin-top:8px">
+      style="font-size:13px;margin-top:9px">
       Momentum: —
     </div>
+
     <div id="candleLiveMeaning"
-         style="font-size:12px;line-height:1.6;margin-top:10px;color:#cbd8e9">
-      Waiting for candle data.
+      style="font-size:12px;line-height:1.6;margin-top:12px;color:#cbd8e9">
+      Waiting for Coinbase candles.
     </div>
-    <div style="font-size:10px;color:#9baac0;margin-top:9px">
-      One-minute candle observations.
-      Not confirmed Kalshi predictions or trade signals.
+
+    <div id="candleDataFreshness"
+      style="font-size:10px;color:#9baac0;margin-top:10px">
+      Checking candle feed
     </div>
   `;
 
-  chartElement.insertAdjacentElement("afterend", panel);
-
-  function updateCandleAnalysis() {
+  function updateAnalysis() {
     if (!Array.isArray(bars) || bars.length < 2) {
+      put("candleLiveDirection", "🟡 WAITING FOR CANDLES");
+      put("candleDataFreshness", "No candle history available");
       return;
     }
 
+    const now = Math.floor(Date.now() / 1000);
+    const minute = Math.floor(now / 60) * 60;
+
     const latest = bars[bars.length - 1];
-    const currentMinute =
-      Math.floor(Date.now() / 60000) * 60;
 
-    const currentIsOpen = latest.time >= currentMinute;
+    const age = now - latest.time;
+    const stale = age >= 120 || age < -60;
 
-    const direction = candleDirection(latest);
-
-    const forming = candlePattern(bars);
-
-    const closedBars = bars.filter(
-      b => b.time < currentMinute
-    );
-
-    const confirmed = closedBars.length >= 2
-      ? candlePattern(closedBars)
-      : null;
-
-    const momentum = chartMomentum();
-
-    const body = Math.abs(latest.close - latest.open);
-    const range = Math.max(
-      latest.high - latest.low,
-      0.000001
-    );
-
-    const bodyPercent = body / range * 100;
-
-    let description = "";
-
-    if (direction === "UP") {
-      description =
-        "Buyers currently have the candle above its opening price.";
-    } else if (direction === "DOWN") {
-      description =
-        "Sellers currently have the candle below its opening price.";
-    } else {
-      description =
-        "The candle is showing little net movement.";
+    if (stale) {
+      put("candleLiveDirection", "🟡 CANDLE DATA DELAYED");
+      put("candleLivePattern", "Pattern: Waiting for fresh data");
+      put("candleLiveMomentum", "Momentum: Unavailable");
+      put("candleLiveMeaning",
+        "Coinbase candles are delayed. Current candle direction cannot be verified."
+      );
+      put("candleDataFreshness", "STALE DATA · RECONNECTING");
+      return;
     }
 
-    if (bodyPercent < 20) {
-      description +=
-        " The small body suggests indecision.";
-    } else if (bodyPercent >= 65) {
-      description +=
-        " The large body suggests stronger directional movement.";
+    const isForming = latest.time === minute;
+
+    const closed = bars.filter(b => b.time < minute);
+    const closedPattern = closed.length >= 2
+      ? candlePattern(closed)
+      : null;
+
+    const current = isForming
+      ? latest
+      : closed[closed.length - 1];
+
+    if (!current) return;
+
+    const relevantBars = isForming ? bars : closed;
+    const pattern = candlePattern(relevantBars);
+
+    const direction = candleDirection(current);
+    const body = Math.abs(current.close - current.open);
+    const range = Math.max(current.high - current.low, 0.000001);
+    const bodyStrength = body / range * 100;
+
+    const upperWick =
+      current.high - Math.max(current.open, current.close);
+
+    const lowerWick =
+      Math.min(current.open, current.close) - current.low;
+
+    let momentum = "FLAT";
+
+    if (relevantBars.length >= 2) {
+      const prior = relevantBars[relevantBars.length - 2];
+      const delta = current.close - prior.close;
+      const threshold = Math.max(prior.close * 0.0001, 1);
+
+      momentum = delta > threshold ? "RISING"
+        : delta < -threshold ? "FALLING"
+        : "FLAT";
+    }
+
+    const label =
+      direction === "UP" ? "🟢 BULLISH" :
+      direction === "DOWN" ? "🔴 BEARISH" :
+      "🟡 NEUTRAL";
+
+    put("candleLiveDirection",
+      label + (isForming ? " · FORMING" : " · LAST CLOSED")
+    );
+
+    put("candleLivePattern",
+      "Pattern: " + pattern.name +
+      (isForming ? " · FORMING" : " · CLOSED")
+    );
+
+    put("candleConfirmedPattern",
+      "Last closed candle: " +
+      (closedPattern ? closedPattern.name : "UNAVAILABLE") +
+      " · CLOSED"
+    );
+
+    put("candleLiveMomentum", "Momentum: " + momentum);
+
+    let explanation =
+      direction === "UP"
+        ? "Price is above the candle open. Buyers currently lead."
+        : direction === "DOWN"
+        ? "Price is below the candle open. Sellers currently lead."
+        : "Price is close to the candle open.";
+
+    if (bodyStrength >= 65) {
+      explanation += " The candle has a strong directional body.";
+    } else if (bodyStrength < 20) {
+      explanation += " The small candle body suggests indecision.";
+    } else {
+      explanation += " The candle body shows moderate movement.";
+    }
+
+    if (lowerWick > body * 2 && lowerWick > upperWick) {
+      explanation += " A long lower wick suggests rejection of lower prices.";
+    }
+
+    if (upperWick > body * 2 && upperWick > lowerWick) {
+      explanation += " A long upper wick suggests rejection of higher prices.";
     }
 
     if (momentum === "RISING") {
-      description +=
-        " Short-term price movement is rising.";
+      explanation += " Short-term price movement is rising.";
     } else if (momentum === "FALLING") {
-      description +=
-        " Short-term price movement is falling.";
+      explanation += " Short-term price movement is falling.";
     } else {
-      description +=
-        " Short-term momentum is relatively flat.";
+      explanation += " Short-term movement is relatively flat.";
     }
 
-    const liveElement = $("candleLiveDirection");
-
-    if (liveElement) {
-      liveElement.textContent =
-        (direction === "UP" ? "🟢 BULLISH" :
-         direction === "DOWN" ? "🔴 BEARISH" :
-         "🟡 NEUTRAL") +
-        (currentIsOpen ? " · FORMING" : " · CLOSED");
+    if (isForming) {
+      explanation += " The candle can still change before closing.";
     }
 
-    put(
-      "candleLivePattern",
-      "Pattern: " + forming.name +
-      (currentIsOpen ? " · FORMING" : " · CLOSED")
-    );
+    put("candleLiveMeaning", explanation);
 
-    put(
-      "candleConfirmedPattern",
-      "Last closed candle: " +
-      (confirmed ? confirmed.name : "UNAVAILABLE") +
-      " · CONFIRMED CLOSED CANDLE"
+    put("candleDataFreshness",
+      isForming
+        ? "LIVE · 1-MINUTE CANDLE · NOT YET CLOSED"
+        : "LATEST CLOSED CANDLE · WAITING FOR NEXT UPDATE"
     );
-
-    put(
-      "candleLiveMomentum",
-      "Momentum: " + momentum
-    );
-
-    put("candleLiveMeaning", description);
   }
 
-  updateCandleAnalysis();
-  setInterval(updateCandleAnalysis, 3000);
+  updateAnalysis();
+  setInterval(updateAnalysis, 2000);
 
-  console.log("ROSIE V5.6 candle analysis active");
+  console.log("ROSIE V5.7 candle analysis active");
 })();
+
 
 </script>
 </body>
