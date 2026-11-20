@@ -3960,6 +3960,163 @@ updateLearningPanel = updateLearningPanelV51;
   );
 })();
 
+/* ROSIE V5.6 — LIVE CANDLE ANALYSIS
+   Restores visible candle descriptions.
+   Chart and worker scoring unchanged.
+*/
+
+(function restoreCandleAnalysis() {
+  const chartElement = document.getElementById("chart");
+
+  if (!chartElement) return;
+
+  const panel = document.createElement("div");
+  panel.id = "rosieCandleAnalysis";
+  panel.className = "box";
+
+  panel.style.cssText = [
+    "background:#172438",
+    "border:1px solid #38516b",
+    "border-radius:13px",
+    "padding:13px",
+    "margin:10px 0 14px",
+    "color:#edf3ff"
+  ].join(";");
+
+  panel.innerHTML = `
+    <div style="font-size:15px;font-weight:800;margin-bottom:10px">
+      🕯️ ROSIE · LIVE CANDLE ANALYSIS
+    </div>
+    <div id="candleLiveDirection"
+         style="font-size:20px;font-weight:850">
+      SCANNING
+    </div>
+    <div id="candleLivePattern"
+         style="font-size:13px;margin-top:8px">
+      Pattern: Scanning
+    </div>
+    <div id="candleConfirmedPattern"
+         style="font-size:12px;margin-top:7px;color:#bcd2ec">
+      Last closed candle: Scanning
+    </div>
+    <div id="candleLiveMomentum"
+         style="font-size:12px;margin-top:8px">
+      Momentum: —
+    </div>
+    <div id="candleLiveMeaning"
+         style="font-size:12px;line-height:1.6;margin-top:10px;color:#cbd8e9">
+      Waiting for candle data.
+    </div>
+    <div style="font-size:10px;color:#9baac0;margin-top:9px">
+      One-minute candle observations.
+      Not confirmed Kalshi predictions or trade signals.
+    </div>
+  `;
+
+  chartElement.insertAdjacentElement("afterend", panel);
+
+  function updateCandleAnalysis() {
+    if (!Array.isArray(bars) || bars.length < 2) {
+      return;
+    }
+
+    const latest = bars[bars.length - 1];
+    const currentMinute =
+      Math.floor(Date.now() / 60000) * 60;
+
+    const currentIsOpen = latest.time >= currentMinute;
+
+    const direction = candleDirection(latest);
+
+    const forming = candlePattern(bars);
+
+    const closedBars = bars.filter(
+      b => b.time < currentMinute
+    );
+
+    const confirmed = closedBars.length >= 2
+      ? candlePattern(closedBars)
+      : null;
+
+    const momentum = chartMomentum();
+
+    const body = Math.abs(latest.close - latest.open);
+    const range = Math.max(
+      latest.high - latest.low,
+      0.000001
+    );
+
+    const bodyPercent = body / range * 100;
+
+    let description = "";
+
+    if (direction === "UP") {
+      description =
+        "Buyers currently have the candle above its opening price.";
+    } else if (direction === "DOWN") {
+      description =
+        "Sellers currently have the candle below its opening price.";
+    } else {
+      description =
+        "The candle is showing little net movement.";
+    }
+
+    if (bodyPercent < 20) {
+      description +=
+        " The small body suggests indecision.";
+    } else if (bodyPercent >= 65) {
+      description +=
+        " The large body suggests stronger directional movement.";
+    }
+
+    if (momentum === "RISING") {
+      description +=
+        " Short-term price movement is rising.";
+    } else if (momentum === "FALLING") {
+      description +=
+        " Short-term price movement is falling.";
+    } else {
+      description +=
+        " Short-term momentum is relatively flat.";
+    }
+
+    const liveElement = $("candleLiveDirection");
+
+    if (liveElement) {
+      liveElement.textContent =
+        (direction === "UP" ? "🟢 BULLISH" :
+         direction === "DOWN" ? "🔴 BEARISH" :
+         "🟡 NEUTRAL") +
+        (currentIsOpen ? " · FORMING" : " · CLOSED");
+    }
+
+    put(
+      "candleLivePattern",
+      "Pattern: " + forming.name +
+      (currentIsOpen ? " · FORMING" : " · CLOSED")
+    );
+
+    put(
+      "candleConfirmedPattern",
+      "Last closed candle: " +
+      (confirmed ? confirmed.name : "UNAVAILABLE") +
+      " · CONFIRMED CLOSED CANDLE"
+    );
+
+    put(
+      "candleLiveMomentum",
+      "Momentum: " + momentum
+    );
+
+    put("candleLiveMeaning", description);
+  }
+
+  updateCandleAnalysis();
+  setInterval(updateCandleAnalysis, 3000);
+
+  console.log("ROSIE V5.6 candle analysis active");
+})();
+
 </script>
 </body>
 </html>
