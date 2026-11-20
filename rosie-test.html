@@ -3633,6 +3633,333 @@ updateLearningPanel = updateLearningPanelV51;
 
 /* END ROSIE TEST V5.1 */
 
+/* ROSIE TEST V5.4
+   2 / 5 / 10 MINUTE DISPLAY FIX
+   Stage verification and countdown repair.
+   No changes to trading or prediction logic.
+*/
+
+(function () {
+  "use strict";
+
+  const timing = {
+    EARLY: [720, 780],
+    MID: [540, 600],
+    FINAL: [240, 300]
+  };
+
+  // Correct the labels.
+  const labels = {
+    EARLY: "EARLY · 2 MIN IN",
+    MID: "MID · 5 MIN IN",
+    FINAL: "FINAL · 10 MIN IN"
+  };
+
+  for (const [name, label] of Object.entries(labels)) {
+    const element = $(name.toLowerCase());
+    const card = element?.closest(".call");
+    const heading = card?.querySelector(".muted");
+
+    if (heading) heading.textContent = label;
+  }
+
+  // Update the explanation in the indicator panel.
+  const details = document.querySelector(
+    ".indicators-fold .small:last-child"
+  );
+
+  if (details && details.textContent.includes("Countdowns follow")) {
+    details.textContent =
+      "EARLY locks 2 minutes into the round. " +
+      "MID locks 5 minutes in. " +
+      "FINAL locks 10 minutes in. " +
+      "ROUND ENDING updates continuously and " +
+      "is graded separately. " +
+      "All predictions are estimates, not " +
+      "calibrated probabilities. Manual trading only.";
+  }
+
+  // Accept the actual stage objects supplied by
+  // signal_worker.py V4.5.0.
+  stageObject = function (data, name) {
+    if (!data || typeof data !== "object") return null;
+
+    const key = name.toLowerCase();
+
+    const candidates = [
+      data.locked_stages?.[name],
+      data.locked_stages?.[key],
+      data.stage_calls?.[name],
+      data.stage_calls?.[key],
+      data[key],
+      data[key + "_snapshot"]
+    ];
+
+    for (const candidate of candidates) {
+      if (
+        candidate &&
+        typeof candidate === "object" &&
+        signalDirection(candidate)
+      ) {
+        return candidate;
+      }
+    }
+
+    return null;
+  };
+
+  // Use the verified clock when available.
+  // A valid current signal countdown can also
+  // provide the round-end estimate.
+  function estimatedClose() {
+    if (kalshiClose > 0) return kalshiClose;
+
+    if (
+      latestRoundSeconds !== null &&
+      latestRoundAt > 0 &&
+      Date.now() - latestRoundAt < 30000
+    ) {
+      return latestRoundAt +
+        latestRoundSeconds * 1000;
+    }
+
+    return 0;
+  }
+
+  verifiedStage = function (stage, data, name) {
+    if (!stage || typeof stage !== "object") {
+      return false;
+    }
+
+    if (!signalDirection(stage)) return false;
+
+    const ticker = first(
+      stage.market_ticker,
+      stage.ticker,
+      data.market_ticker,
+      data.ticker
+    );
+
+    if (
+      !ticker ||
+      !marketTicker ||
+      String(ticker) !== String(marketTicker)
+    ) {
+      return false;
+    }
+
+    const status = String(
+      stage.status || ""
+    ).toUpperCase();
+
+    if (
+      stage.locked === false ||
+      stage.is_locked === false ||
+      ["PENDING", "UNLOCKED", "PREVIEW"].includes(status)
+    ) {
+      return false;
+    }
+
+    const hasLockProof =
+      stage.locked === true ||
+      stage.is_locked === true ||
+      status === "LOCKED" ||
+      (
+        data.locked_stages &&
+        Object.values(data.locked_stages)
+          .includes(stage)
+      );
+
+    if (!hasLockProof) return false;
+
+    const timestamp = first(
+      stage.recorded_at,
+      stage.locked_at,
+      stage.lock_time,
+      stage.timestamp
+    );
+
+    if (!timestamp) return false;
+
+    const lockMs =
+      typeof timestamp === "number"
+        ? timestamp < 1e12
+          ? timestamp * 1000
+          : timestamp
+        : Date.parse(String(timestamp));
+
+    if (
+      !Number.isFinite(lockMs) ||
+      lockMs > Date.now() + 10000
+    ) {
+      return false;
+    }
+
+    const window = timing[name];
+    if (!window) return false;
+
+    const recordedLeft = num(stage.seconds_left);
+
+    if (
+      recordedLeft === null ||
+      !(recordedLeft > window[0] &&
+        recordedLeft <= window[1])
+    ) {
+      return false;
+    }
+
+    const closeMs = estimatedClose();
+
+    if (!closeMs) return false;
+
+    // The record must belong to the current round.
+    const roundStart = closeMs - 900000;
+
+    if (
+      lockMs < roundStart - 15000 ||
+      lockMs > closeMs + 10000
+    ) {
+      return false;
+    }
+
+    // Verify reported seconds against the clock.
+    const calculatedLeft =
+      (closeMs - lockMs) / 1000;
+
+    if (
+      Math.abs(calculatedLeft - recordedLeft) > 30
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  // Make a signal-provided countdown available
+  // when the Kalshi API has no close timestamp.
+  const originalLoad = loadRosieSignals;
+
+  loadRosieSignals = async function () {
+    const previousAt = rosieAt;
+
+    await originalLoad();
+
+    if (
+      !freshRosie() ||
+      rosieAt === previousAt ||
+      !marketTicker ||
+      kalshiClose > 0 ||
+      String(first(
+        rosie.ticker,
+        rosie.market_ticker,
+        ""
+      )) !== String(marketTicker)
+    ) {
+      return;
+    }
+
+    const remaining = num(first(
+      rosie.seconds_left,
+      rosie.seconds_remaining
+    ));
+
+    if (
+      remaining !== null &&
+      remaining > 0 &&
+      remaining <= 900
+    ) {
+      latestRoundSeconds = remaining;
+      latestRoundAt = Date.now();
+    }
+  };
+
+  // Display accurate waiting states.
+  const originalShowStage = showStage;
+
+  showStage = function (name, data) {
+    originalShowStage(name, data);
+
+    const key = name.toLowerCase();
+    const element = $(key);
+    const note = $(key + "Time");
+
+    if (!element || !note) return;
+
+    if (
+      note.textContent === "CONNECTING" &&
+      freshRosie()
+    ) {
+      element.textContent = "—";
+      note.textContent = "WAITING FOR ROUND CLOCK";
+    }
+  };
+
+  // Reset old round-clock information when
+  // changing to a new Kalshi ticker.
+  const originalReset = resetMarketCache;
+
+  resetMarketCache = function (ticker) {
+    const changed =
+      ticker && ticker !== marketTicker;
+
+    originalReset(ticker);
+
+    if (changed) {
+      kalshiClose = 0;
+      latestRoundSeconds = null;
+      latestRoundAt = 0;
+    }
+  };
+
+  console.log(
+    "ROSIE TEST V5.4 — Stage display fix active"
+  );
+
+  refreshRosieDisplay();
+})();
+
+/* ROSIE V5.5 — INDICATORS ABOVE HOLD / EXIT
+   Preserves chart, Trade Command,
+   Flip Watch, Trading and Learning.
+*/
+
+(function moveRosieIndicators() {
+  const indicators = document.querySelector(
+    ".indicators-fold"
+  );
+
+  const holdPanel = document.getElementById(
+    "holdPanel"
+  );
+
+  if (!indicators || !holdPanel) {
+    console.warn(
+      "Rosie indicator or Hold/Exit panel missing"
+    );
+    return;
+  }
+
+  // Move indicators inside Trade Command,
+  // immediately before Hold / Exit.
+  holdPanel.parentNode.insertBefore(
+    indicators,
+    holdPanel
+  );
+
+  // Keep the indicators expandable.
+  // Start collapsed to save screen space.
+  indicators.open = false;
+
+  // Add spacing to match existing layout.
+  indicators.style.width = "100%";
+  indicators.style.margin = "14px 0";
+  indicators.style.order = "initial";
+
+  console.log(
+    "Rosie indicators positioned above Hold/Exit"
+  );
+})();
+
 </script>
 </body>
 </html>
