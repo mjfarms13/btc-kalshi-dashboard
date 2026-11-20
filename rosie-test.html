@@ -1705,12 +1705,18 @@ function connectCoinbase() {
       "wss://ws-feed.exchange.coinbase.com"
     );
 
+    
     socket.onopen = () => {
       socket.send(JSON.stringify({
         type: "subscribe",
         product_ids: ["BTC-USD"],
         channels: ["matches"]
       }));
+
+      put("status", "RUNNING");
+      console.log("Rosie Coinbase connected");
+    };
+
     };
 
     socket.onmessage = event => {
@@ -3183,11 +3189,15 @@ function updateLiveIndicators() {
       : rsiValue.toFixed(1)
   );
 
+  
   const macdValue = num(first(
+    data.macd_15m,
     data.macd_histogram,
-    data.indicators?.macd_histogram,
-    data.macd_hist
+    data.macd_hist,
+    data.indicators?.macd_hist,
+    data.indicators?.macd_histogram
   ));
+
 
   put(
     "macd",
