@@ -4172,6 +4172,35 @@ updateLearningPanel = updateLearningPanelV51;
 })();
 
 
+/* ROSIE TEST V5.8 — KEEP INDICATORS ABOVE HOLD / EXIT */
+
+(function fixIndicatorPositionV58() {
+  const indicators = document.querySelector(
+    ".indicators-fold"
+  );
+  const hold = document.getElementById("holdPanel");
+
+  if (!indicators || !hold) return;
+
+  // Keep both panels in the same parent.
+  hold.parentNode.insertBefore(indicators, hold);
+
+  // Prevent old flex-order rules from moving it.
+  indicators.style.setProperty(
+    "order", "0", "important"
+  );
+  hold.style.setProperty(
+    "order", "1", "important"
+  );
+
+  indicators.style.width = "100%";
+  indicators.style.margin = "14px 0";
+
+  console.log(
+    "Rosie indicators placed above Hold / Exit"
+  );
+})();
+
 </script>
 </body>
 </html>
