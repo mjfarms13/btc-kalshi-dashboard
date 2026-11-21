@@ -4326,6 +4326,40 @@ updateLearningPanel = updateLearningPanelV51;
   console.log("ROSIE V6 forward display installed");
 })();
 
+/* ROSIE V6 — EMBEDDED DASHBOARD HEIGHT */
+
+(function () {
+  const parentOrigin =
+    "https://btc-kalshi-api.onrender.com";
+
+  function reportHeight() {
+    const height = Math.ceil(
+      document.documentElement.scrollHeight
+    );
+
+    if (height > 0) {
+      window.parent.postMessage(
+        {
+          type: "ROSIE_DASHBOARD_HEIGHT",
+          height: height
+        },
+        parentOrigin
+      );
+    }
+  }
+
+  if (window.parent === window) return;
+
+  window.addEventListener("load", reportHeight);
+
+  if (typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(reportHeight)
+      .observe(document.body);
+  }
+
+  reportHeight();
+})();
+
 </script>
 </body>
 </html>
