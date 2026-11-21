@@ -4360,6 +4360,94 @@ updateLearningPanel = updateLearningPanelV51;
   reportHeight();
 })();
 
+/* ROSIE V6.1 — RESTORE TODAY'S RESULTS
+   Display only. No history, signal, or trading changes.
+*/
+
+(function restoreTodayResults() {
+  const total = document.getElementById("learningResults");
+  if (!total) return;
+
+  const totalRow = total.parentElement;
+  const parent = totalRow.parentElement;
+
+  const grid = document.createElement("div");
+  grid.style.cssText =
+    "display:grid;grid-template-columns:1fr 1fr;" +
+    "gap:8px;margin:8px 0;";
+
+  totalRow.style.cssText =
+    "background:#253348;border-radius:8px;" +
+    "padding:10px;";
+
+  const todayRow = document.createElement("div");
+  todayRow.className = "small";
+  todayRow.style.cssText = totalRow.style.cssText;
+
+  const label = document.createElement("div");
+  label.textContent = "TODAY'S RESULTS";
+
+  const value = document.createElement("b");
+  value.id = "rosieTodayResults";
+  value.textContent = "CHECKING";
+
+  todayRow.append(label, value);
+
+  parent.insertBefore(grid, totalRow);
+  grid.append(totalRow, todayRow);
+
+  const originalUpdate = updateLearningPanel;
+
+  updateLearningPanel = function () {
+    originalUpdate();
+
+    const data = rosie || {};
+    const record = data.performance_record || {};
+
+    const today =
+      record.today ||
+      record.daily?.today ||
+      data.daily_statistics?.today ||
+      data.today_statistics ||
+      data.today_stats ||
+      null;
+
+    if (!today || typeof today !== "object") {
+      value.textContent = "DATA UNAVAILABLE";
+      return;
+    }
+
+    const wins = num(today.wins);
+    const losses = num(today.losses);
+
+    const total = num(
+      today.completed ??
+      today.calls ??
+      today.total
+    );
+
+    const accuracy = num(today.accuracy);
+
+    if (wins !== null && losses !== null) {
+      value.textContent =
+        wins + "W / " + losses + "L" +
+        (accuracy !== null
+          ? " · " + accuracy.toFixed(1) + "%"
+          : "");
+    } else if (total !== null) {
+      value.textContent =
+        total + " RESULTS" +
+        (accuracy !== null
+          ? " · " + accuracy.toFixed(1) + "%"
+          : "");
+    } else {
+      value.textContent = "DATA UNAVAILABLE";
+    }
+  };
+
+  updateLearningPanel();
+})();
+
 </script>
 </body>
 </html>
