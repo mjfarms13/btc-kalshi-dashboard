@@ -3634,48 +3634,6 @@ function updateLearningPanelV51() {
     "ROUND ENDING is reported separately. " +
     "No automatic strategy changes."
     
-  /* ROSIE V6 — FORWARD LEARNING RESULTS */
-
-  const forward = learning.forward_validation;
-
-  addLine("🧠 FORWARD LEARNING · LIVE TEST", true);
-
-  if (!forward || !forward.by_phase) {
-    addLine("Waiting for forward-learning data.");
-  } else {
-    addLine(
-      "Pending predictions: " +
-      (forward.pending_predictions ?? 0)
-    );
-
-    addLine("Original / Shadow", true);
-
-    for (const phase of ["EARLY", "MID", "FINAL"]) {
-      const stats = forward.by_phase[phase] || {};
-      const samples = stats.samples ?? 0;
-
-      addLine(
-        phase + ": " +
-        rateText(stats.original_accuracy) +
-        " / " +
-        rateText(stats.adaptive_accuracy) +
-        " · " + samples + " graded"
-      );
-    }
-
-    addLine("ROUND ENDING · tracked separately");
-
-    addLine(
-      "Frozen predictions compared with actual " +
-      "Kalshi settlements. No automatic trading."
-    );
-  }
-
-  );
-}
-
-// Replace only the dashboard display function.
-updateLearningPanel = updateLearningPanelV51;
 
 /* END ROSIE TEST V5.1 */
 
