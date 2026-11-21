@@ -5079,7 +5079,20 @@ updateLearningPanel = updateLearningPanelV51;
 
   reportChartPosition();
 })();
+reportChartPosition);
+
+  if (typeof ResizeObserver !== "undefined") {
+    const chart = document.getElementById("chart");
+    if (chart) {
+      new ResizeObserver(reportChartPosition)
+        .observe(chart);
+    }
+  }
+
+  reportChartPosition();
+})();
 
 </script>
 </body>
 </html>
+
