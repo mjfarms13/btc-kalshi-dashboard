@@ -4228,6 +4228,103 @@ function updateLearningPanelV51() {
 })();
 
   
+/* ROSIE V6 — SAFE FORWARD LEARNING DISPLAY
+   Does not modify predictions, trading,
+   chart, stage locks, or existing layout.
+*/
+
+(function () {
+  const previousLearningUpdate = updateLearningPanel;
+
+  updateLearningPanel = function () {
+    previousLearningUpdate();
+
+    const comparison = document.getElementById(
+      "rosieShadowBreakdown"
+    );
+
+    if (!comparison) return;
+
+    const section = document.createElement("div");
+    section.style.cssText =
+      "border-top:1px solid #42536c;" +
+      "margin-top:14px;padding-top:12px;" +
+      "font-size:11px;line-height:1.9;" +
+      "color:#bdcbe0;";
+
+    const heading = document.createElement("div");
+    heading.textContent =
+      "🧠 FORWARD LEARNING · LIVE TEST";
+    heading.style.cssText =
+      "font-weight:800;font-size:13px;" +
+      "color:#edf3ff;margin-bottom:6px;";
+    section.appendChild(heading);
+
+    function line(message) {
+      const element = document.createElement("div");
+      element.textContent = message;
+      section.appendChild(element);
+    }
+
+    function rate(value) {
+      const n = num(value);
+      return n === null ? "—" : n.toFixed(1) + "%";
+    }
+
+    const data = rosie || {};
+    const learning =
+      data.adaptive_learning ||
+      data.adaptive_brain?.learning ||
+      {};
+
+    const forward =
+      learning.forward_validation ||
+      data.adaptive_brain?.forward_validation ||
+      null;
+
+    if (!forward || !forward.by_phase) {
+      line("Forward results not yet available.");
+      line("Checking backend learning report.");
+      comparison.appendChild(section);
+      return;
+    }
+
+    line("Original / Shadow · settled calls");
+
+    for (const phase of ["EARLY", "MID", "FINAL"]) {
+      const stats = forward.by_phase[phase] || {};
+
+      const original = rate(
+        stats.original_accuracy
+      );
+
+      const shadow = rate(
+        stats.shadow_accuracy ??
+        stats.adaptive_accuracy
+      );
+
+      const count =
+        stats.samples ??
+        stats.graded ??
+        "—";
+
+      line(
+        phase + ": " +
+        original + " / " +
+        shadow + " · " +
+        count + " graded"
+      );
+    }
+
+    line("ROUND ENDING tracked separately.");
+    line("Shadow testing only · No automatic trading.");
+
+    comparison.appendChild(section);
+  };
+
+  console.log("ROSIE V6 forward display installed");
+})();
+
 </script>
 </body>
 </html>
