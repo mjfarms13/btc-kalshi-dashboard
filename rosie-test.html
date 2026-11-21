@@ -4921,6 +4921,125 @@ updateLearningPanel = updateLearningPanelV51;
   console.log("ROSIE V6.3 uniform stats panels active");
   refreshRosieDisplay();
 })();
+
+  
+/* ROSIE V6.6 — CLEAN PERFORMANCE LAYOUT
+   Display only. Preserves all existing data,
+   predictions, learning and manual trading.
+*/
+
+(function () {
+  const previousUpdate = updateLearningPanel;
+
+  updateLearningPanel = function () {
+    previousUpdate();
+
+    const record = rosie?.performance_record || {};
+    const overall = record.overall || {};
+    const today =
+      record.today ||
+      record.daily?.today ||
+      rosie?.daily_statistics?.today ||
+      rosie?.today_statistics ||
+      rosie?.today_stats ||
+      {};
+
+    // Keep total results on the left.
+    // Show overall accuracy on the right.
+    const tiles = document.querySelectorAll(
+      "#adaptivePanel .rosie-summary-tile"
+    );
+
+    if (tiles.length >= 2) {
+      const label = tiles[1].querySelector(
+        ".rosie-summary-label"
+      );
+      const value = tiles[1].querySelector(
+        ".rosie-summary-value"
+      );
+
+      const accuracy = num(
+        overall.accuracy ?? record.accuracy
+      );
+
+      if (label) {
+        label.textContent = "OVERALL ACCURACY";
+      }
+
+      if (value) {
+        value.textContent = accuracy === null
+          ? "—"
+          : accuracy.toFixed(1) + "%";
+      }
+    }
+
+    // Move today's overall result into
+    // the Today's Breakdown section.
+    const cards = document.querySelectorAll(
+      "#adaptivePanel .rosie-stat-card"
+    );
+
+    const todayCard = cards[0];
+    const allTimeCard = cards[1];
+
+    if (todayCard) {
+      const heading = todayCard.querySelector(
+        ".rosie-stat-card-title"
+      );
+
+      if (heading) {
+        heading.textContent =
+          "📊 TODAY · INDIVIDUAL BREAKDOWN";
+
+        const summary = document.createElement("div");
+        summary.style.cssText =
+          "font-size:15px;" +
+          "font-weight:850;" +
+          "color:#edf3ff;" +
+          "margin:9px 0 12px;";
+
+        const wins = num(today.wins);
+        const losses = num(today.losses);
+        const accuracy = num(today.accuracy);
+
+        summary.textContent =
+          wins !== null && losses !== null
+            ? wins + "W / " + losses + "L" +
+              (accuracy !== null
+                ? " · " + accuracy.toFixed(1) + "%"
+                : "")
+            : "TODAY'S TOTAL UNAVAILABLE";
+
+        heading.insertAdjacentElement(
+          "afterend",
+          summary
+        );
+      }
+    }
+
+    // Overall accuracy is already at the top,
+    // so remove its duplicate from All Time.
+    if (allTimeCard) {
+      const rows = allTimeCard.querySelectorAll(
+        ".rosie-stat-row"
+      );
+
+      for (const row of rows) {
+        const label = row.querySelector("span");
+
+        if (
+          label?.textContent.trim() ===
+          "OVERALL ACCURACY"
+        ) {
+          row.remove();
+        }
+      }
+    }
+  };
+
+  updateLearningPanel();
+})();
+
 </script>
 </body>
 </html>
