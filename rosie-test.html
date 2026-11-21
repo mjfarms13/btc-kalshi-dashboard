@@ -4448,6 +4448,121 @@ updateLearningPanel = updateLearningPanelV51;
   updateLearningPanel();
 })();
 
+/* ROSIE V6.2 — TODAY'S INDIVIDUAL BREAKDOWN
+   Display only. No changes to trading,
+   predictions, tracking or saved history.
+*/
+
+(function () {
+  const todayBox = document.getElementById(
+    "rosieTodayResults"
+  );
+
+  if (!todayBox) return;
+
+  const container = document.createElement("div");
+  container.id = "rosieTodayBreakdown";
+  container.style.cssText =
+    "margin:12px 0;padding:12px;" +
+    "background:#172438;" +
+    "border:1px solid #38516b;" +
+    "border-radius:10px;";
+
+  todayBox.closest(".box")?.querySelector(
+    ".small"
+  )?.parentElement;
+
+  const performanceBox = todayBox.closest(".box");
+
+  if (!performanceBox) return;
+
+  const grid = todayBox.parentElement.parentElement;
+
+  grid.insertAdjacentElement("afterend", container);
+
+  const previousUpdate = updateLearningPanel;
+
+  updateLearningPanel = function () {
+    previousUpdate();
+
+    const record = rosie?.performance_record || {};
+    const today = record.today || {};
+    const phases = today.by_phase || {};
+    const overall = record.overall || {};
+
+    const identical =
+      today.completed != null &&
+      overall.completed != null &&
+      Number(today.completed) === Number(overall.completed) &&
+      Number(today.wins) === Number(overall.wins) &&
+      Number(today.losses) === Number(overall.losses);
+
+    container.replaceChildren();
+
+    function add(text, bold = false, color = "#cbd8e9") {
+      const row = document.createElement("div");
+      row.textContent = text;
+      row.style.cssText =
+        "padding:7px 0;" +
+        "border-bottom:1px solid #304158;" +
+        "font-size:12px;" +
+        "line-height:1.5;" +
+        "color:" + color + ";" +
+        (bold ? "font-weight:800;" : "");
+      container.appendChild(row);
+    }
+
+    add("📊 TODAY · INDIVIDUAL BREAKDOWN", true, "#edf3ff");
+
+    if (!today.by_phase || identical) {
+      add(
+        identical
+          ? "Daily totals match historical totals. Verify tracker date filtering."
+          : "Waiting for today's stage results.",
+        false,
+        "#f5c46a"
+      );
+      return;
+    }
+
+    for (const [key, label] of [
+      ["EARLY", "EARLY · 2 MIN"],
+      ["MID", "MID · 5 MIN"],
+      ["FINAL", "FINAL · 10 MIN"],
+      ["LIVE", "ROUND ENDING"]
+    ]) {
+      const s = phases[key] ||
+        (key === "LIVE" ? phases.ROUND_ENDING : null);
+
+      if (!s) {
+        add(label + ": NO DATA");
+        continue;
+      }
+
+      const w = num(s.wins);
+      const l = num(s.losses);
+      const a = num(s.accuracy);
+
+      add(
+        label + ": " +
+        (w === null ? "—" : w + "W") +
+        " / " +
+        (l === null ? "—" : l + "L") +
+        " · " +
+        (a === null ? "—" : a.toFixed(1) + "%")
+      );
+    }
+
+    add(
+      "ROUND ENDING is tracked separately.",
+      false,
+      "#9baac0"
+    );
+  };
+
+  updateLearningPanel();
+})();
+
 </script>
 </body>
 </html>
