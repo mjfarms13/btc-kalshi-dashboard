@@ -5040,6 +5040,46 @@ updateLearningPanel = updateLearningPanelV51;
   updateLearningPanel();
 })();
 
+/* ROSIE V6.7 — REPORT CHART POSITION */
+
+(function () {
+  const parentOrigin =
+    "https://btc-kalshi-api.onrender.com";
+
+  function reportChartPosition() {
+    if (window.parent === window) return;
+
+    const chart = document.getElementById("chart");
+    if (!chart) return;
+
+    const bottom = Math.ceil(
+      chart.getBoundingClientRect().bottom +
+      window.scrollY + 16
+    );
+
+    if (!Number.isFinite(bottom) || bottom <= 0) {
+      return;
+    }
+
+    window.parent.postMessage({
+      type: "ROSIE_CHART_POSITION",
+      chartBottom: bottom
+    }, parentOrigin);
+  }
+
+  window.addEventListener("load", reportChartPosition);
+
+  if (typeof ResizeObserver !== "undefined") {
+    const chart = document.getElementById("chart");
+    if (chart) {
+      new ResizeObserver(reportChartPosition)
+        .observe(chart);
+    }
+  }
+
+  reportChartPosition();
+})();
+
 </script>
 </body>
 </html>
