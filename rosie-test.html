@@ -4563,7 +4563,364 @@ updateLearningPanel = updateLearningPanelV51;
   updateLearningPanel();
 })();
 
+/* ROSIE V6.3 — UNIFORM STATS PANELS
+   Makes TODAY, ALL TIME, SHADOW VALIDATION,
+   and FORWARD LEARNING all use the same style.
+   Display only. No signal, tracking, or trading changes.
+*/
 
+(function installUniformStatsV63() {
+  if (!document.getElementById("rosieUniformStatsStyle")) {
+    const style = document.createElement("style");
+    style.id = "rosieUniformStatsStyle";
+    style.textContent = `
+      .rosie-summary-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+        margin:10px 0 14px;
+      }
+      .rosie-summary-tile{
+        background:#253348;
+        border:1px solid #38516b;
+        border-radius:10px;
+        padding:12px;
+      }
+      .rosie-summary-label{
+        font-size:11px;
+        color:#a9bbd4;
+        font-weight:700;
+        letter-spacing:.4px;
+      }
+      .rosie-summary-value{
+        font-size:16px;
+        color:#edf3ff;
+        font-weight:800;
+        margin-top:6px;
+        line-height:1.35;
+      }
+      .rosie-stat-card{
+        margin:12px 0;
+        padding:12px;
+        background:#172438;
+        border:1px solid #38516b;
+        border-radius:12px;
+      }
+      .rosie-stat-card-title{
+        font-size:13px;
+        font-weight:800;
+        color:#edf3ff;
+        margin-bottom:8px;
+      }
+      .rosie-stat-row{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:12px;
+        padding:9px 0;
+        border-bottom:1px solid #304158;
+        font-size:12px;
+        line-height:1.45;
+        color:#cbd8e9;
+      }
+      .rosie-stat-row:last-of-type{
+        border-bottom:0;
+      }
+      .rosie-stat-row span{
+        color:#cbd8e9;
+      }
+      .rosie-stat-row b{
+        color:#edf3ff;
+        text-align:right;
+        font-weight:800;
+      }
+      .rosie-stat-note{
+        margin-top:8px;
+        padding-top:8px;
+        border-top:1px solid #304158;
+        font-size:11px;
+        color:#9baac0;
+        line-height:1.5;
+      }
+      @media(max-width:520px){
+        .rosie-summary-grid{
+          grid-template-columns:1fr 1fr;
+        }
+        .rosie-stat-row{
+          flex-direction:column;
+          gap:4px;
+        }
+        .rosie-stat-row b{
+          text-align:left;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function n(v) {
+    const x = num(v);
+    return x === null ? null : x;
+  }
+
+  function pctText(v) {
+    const x = n(v);
+    return x === null ? "—" : x.toFixed(1) + "%";
+  }
+
+  function phase(source, key) {
+    if (!source || typeof source !== "object") return {};
+    return source[key] || (key === "LIVE" ? source.ROUND_ENDING : null) || {};
+  }
+
+  function wlText(stats) {
+    const w = n(stats?.wins);
+    const l = n(stats?.losses);
+    const a = n(stats?.accuracy);
+
+    if (w === null && l === null && a === null) {
+      return "—";
+    }
+
+    return (
+      (w === null ? "—" : w + "W") +
+      " / " +
+      (l === null ? "—" : l + "L") +
+      (a === null ? "" : " · " + a.toFixed(1) + "%")
+    );
+  }
+
+  function validationText(stats) {
+    const original = pctText(stats?.original_accuracy);
+    const adaptive = pctText(stats?.adaptive_accuracy);
+    const samples = stats?.samples ?? stats?.eligible_test_samples ?? "—";
+
+    return original + " / " + adaptive + " · " + samples + " samples";
+  }
+
+  function forwardText(stats) {
+    const original = pctText(stats?.original_accuracy);
+    const shadow = pctText(
+      stats?.shadow_accuracy ?? stats?.adaptive_accuracy
+    );
+    const graded = stats?.samples ?? stats?.graded ?? "—";
+
+    return original + " / " + shadow + " · " + graded + " graded";
+  }
+
+  function rowHTML(label, value) {
+    return `
+      <div class="rosie-stat-row">
+        <span>${label}</span>
+        <b>${value}</b>
+      </div>
+    `;
+  }
+
+  function cardHTML(title, rows, note) {
+    return `
+      <div class="rosie-stat-card">
+        <div class="rosie-stat-card-title">${title}</div>
+        ${rows.join("")}
+        ${note ? `<div class="rosie-stat-note">${note}</div>` : ""}
+      </div>
+    `;
+  }
+
+  updateLearningPanel = function () {
+    const data = rosie || {};
+    const brain = data.adaptive_brain || {};
+    const learning =
+      data.adaptive_learning ||
+      brain.learning ||
+      {};
+
+    const validation =
+      learning.validation ||
+      brain.validation ||
+      {};
+
+    const record = data.performance_record || {};
+    const overall = record.overall || {};
+    const overallPhases =
+      overall.by_phase ||
+      record.by_phase ||
+      {};
+
+    const today =
+      record.today ||
+      record.daily?.today ||
+      data.daily_statistics?.today ||
+      data.today_statistics ||
+      data.today_stats ||
+      {};
+
+    const todayPhases = today.by_phase || {};
+
+    const forward =
+      learning.forward_validation ||
+      brain.forward_validation ||
+      {};
+
+    const shadowDirection = dir(
+      first(
+        data.adaptive_direction,
+        brain.adaptive_direction,
+        brain.direction
+      )
+    );
+
+    const originalDirection = currentRosieDirection(data);
+
+    put("learningDirection", shadowDirection || "WAIT");
+    put(
+      "learningAgreement",
+      shadowDirection && originalDirection
+        ? (shadowDirection === originalDirection ? "YES" : "NO")
+        : "—"
+    );
+
+    const status = first(
+      learning.status,
+      brain.status,
+      "WAITING FOR DATA"
+    );
+
+    put("learningStatus", status);
+
+    const adaptiveAccuracy = n(validation.adaptive_accuracy);
+    const originalAccuracy = n(validation.original_accuracy);
+
+    const explanation = [
+      status,
+      "Shadow only",
+      adaptiveAccuracy === null
+        ? ""
+        : "Adaptive: " + adaptiveAccuracy.toFixed(1) + "%",
+      originalAccuracy === null
+        ? ""
+        : "Original: " + originalAccuracy.toFixed(1) + "%",
+      shadowDirection
+        ? "Current shadow: " + shadowDirection
+        : "Current shadow: WAIT",
+      first(data.reason, brain.reason, "")
+    ].filter(Boolean).join(" · ");
+
+    put("learningReason", explanation);
+
+    const totalResults = n(
+      first(
+        overall.completed,
+        overall.calls,
+        overall.total,
+        record.completed,
+        record.calls,
+        record.total
+      )
+    );
+
+    const totalAccuracy = n(
+      first(overall.accuracy, record.accuracy)
+    );
+
+    put("learningResults", totalResults === null ? "—" : totalResults);
+    put(
+      "learningAccuracy",
+      totalAccuracy === null ? "—" : totalAccuracy.toFixed(1) + "%"
+    );
+
+    const todayWins = n(today.wins);
+    const todayLosses = n(today.losses);
+    const todayAccuracy = n(today.accuracy);
+
+    const todaySummary =
+      todayWins !== null || todayLosses !== null
+        ? (
+            (todayWins === null ? "—" : todayWins + "W") +
+            " / " +
+            (todayLosses === null ? "—" : todayLosses + "L") +
+            (todayAccuracy === null ? "" : " · " + todayAccuracy.toFixed(1) + "%")
+          )
+        : "DATA UNAVAILABLE";
+
+    const panel = document.getElementById("adaptivePanel");
+    const box = panel?.querySelector(".box");
+    if (!box) return;
+
+    const validationPhases = validation.by_phase || {};
+    const forwardPhases = forward.by_phase || {};
+
+    box.innerHTML = `
+      <b>RECORDED PERFORMANCE</b>
+
+      <div class="rosie-summary-grid">
+        <div class="rosie-summary-tile">
+          <div class="rosie-summary-label">TOTAL RESULTS</div>
+          <div class="rosie-summary-value">${totalResults === null ? "—" : totalResults}</div>
+        </div>
+        <div class="rosie-summary-tile">
+          <div class="rosie-summary-label">TODAY'S RESULTS</div>
+          <div class="rosie-summary-value">${todaySummary}</div>
+        </div>
+      </div>
+
+      ${cardHTML(
+        "📊 TODAY · INDIVIDUAL BREAKDOWN",
+        [
+          rowHTML("EARLY · 2 MIN", wlText(phase(todayPhases, "EARLY"))),
+          rowHTML("MID · 5 MIN", wlText(phase(todayPhases, "MID"))),
+          rowHTML("FINAL · 10 MIN", wlText(phase(todayPhases, "FINAL"))),
+          rowHTML("ROUND ENDING", wlText(phase(todayPhases, "LIVE")))
+        ],
+        "ROUND ENDING is tracked separately."
+      )}
+
+      ${cardHTML(
+        "📈 ALL TIME · RECORDED PERFORMANCE",
+        [
+          rowHTML("OVERALL ACCURACY", totalAccuracy === null ? "—" : totalAccuracy.toFixed(1) + "%"),
+          rowHTML("EARLY · 2 MIN", wlText(phase(overallPhases, "EARLY"))),
+          rowHTML("MID · 5 MIN", wlText(phase(overallPhases, "MID"))),
+          rowHTML("FINAL · 10 MIN", wlText(phase(overallPhases, "FINAL"))),
+          rowHTML("ROUND ENDING", wlText(phase(overallPhases, "LIVE")))
+        ],
+        "ROUND ENDING is tracked separately from the three locked stages."
+      )}
+
+      ${cardHTML(
+        "🧠 SHADOW VALIDATION · HISTORICAL",
+        [
+          rowHTML(
+            "TRAINING / TESTING",
+            (learning.training_markets ?? "—") +
+            " / " +
+            (learning.testing_markets ?? "—") +
+            " markets"
+          ),
+          rowHTML("EARLY · 2 MIN", validationText(phase(validationPhases, "EARLY"))),
+          rowHTML("MID · 5 MIN", validationText(phase(validationPhases, "MID"))),
+          rowHTML("FINAL · 10 MIN", validationText(phase(validationPhases, "FINAL"))),
+          rowHTML("ROUND ENDING", validationText(phase(validationPhases, "LIVE")))
+        ],
+        "Original / Adaptive · Historical validation only."
+      )}
+
+      ${cardHTML(
+        "🧪 FORWARD LEARNING · LIVE TEST",
+        [
+          rowHTML("EARLY · 2 MIN", forwardText(phase(forwardPhases, "EARLY"))),
+          rowHTML("MID · 5 MIN", forwardText(phase(forwardPhases, "MID"))),
+          rowHTML("FINAL · 10 MIN", forwardText(phase(forwardPhases, "FINAL"))),
+          rowHTML("ROUND ENDING", forwardText(phase(forwardPhases, "LIVE")))
+        ],
+        "Original / Shadow · Settled calls only."
+      )}
+    `;
+  };
+
+  console.log("ROSIE V6.3 uniform stats panels active");
+  refreshRosieDisplay();
+})();
 </script>
 </body>
 </html>
